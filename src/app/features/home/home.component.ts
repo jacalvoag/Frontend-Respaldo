@@ -4,12 +4,11 @@ import { Project } from '../../core/models/project.model';
 import { ProjectService } from '../../core/services/project.service';
 import { ActiveProjectsComponent } from './components/active-projects.component/active-projects.component';
 import { GeneralInfoComponent } from './components/general-info.component/general-info.component';
-import { NotificationsComponent } from './components/notifications.component/notifications.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, ActiveProjectsComponent, GeneralInfoComponent, NotificationsComponent],
+  imports: [CommonModule, ActiveProjectsComponent, GeneralInfoComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
