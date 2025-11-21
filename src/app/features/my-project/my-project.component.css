@@ -37,6 +37,98 @@
 
 }
 
+.base-card{
+
+    background-color: #E8F5E8;
+
+    padding: 5px;
+    border: 3px solid #7CB342;
+    border-radius: 10px;
+    border-left: 15px solid #7CB342;
+    position: relative;
+    
+
+    & h3{
+
+        color: #2E7D32;
+        font-size: 1.3rem;
+        margin-bottom: 3px;
+
+    }
+
+    & p {
+
+        color: #558B5F;
+        margin-top: 5px;
+
+    }
+
+    & a{
+
+        text-decoration: none;
+    }
+
+}
+
+.base-card--terminated{
+
+  background-color: #F0EAD2;
+
+  border-color: #7F4F24;
+  
+
+  & h3{
+
+    color: #7F4F24;
+    font-size: 1.3rem;
+    margin-bottom: 3px;
+
+  }
+
+  & p {
+
+    color: #936639;
+    margin-top: 5px;
+
+  }
+  
+
+}
+
+.section-header{
+
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.svg-button{
+    vertical-align: middle;  
+}
+
+.section-title{
+
+    margin: 0px;
+
+}
+
+.badge {
+
+  background-color: #C8E6C9;
+  border-radius: 30px;
+  color: #1B5E20;
+  padding: 2px 10px;
+  font-weight: 400;
+  text-align: end;
+}
+
+.badge--terminated{
+
+  background-color: #E6CCB2;
+  color: #582F0E;
+
+}
+
 .badge-container{
 
   text-align: end;

@@ -1,7 +1,5 @@
 <div class="my-projects-container">
 
-
-
   @if (showGrid && textError === '') {
     <div class="section-header">
       <h2 class="section-title">Todos los proyectos</h2>
@@ -12,11 +10,7 @@
         Añadir proyecto
       </button>
     </div>
-
-
-
   }
-
 
   @if (loading) {
     <div class="loading-container">
@@ -24,87 +18,53 @@
     </div>
   } @else {
 
-    <!-- MOSTRAR GRID SOLO SI showGrid === true -->
     @if (showGrid && textError === '') {
       <div class="projects-grid">
         @for (project of projects; track project.id) {
+          <div 
+            class="base-card"
+            [class.base-card--terminated]="project.status === 'Terminado'">
 
-          @if (project.status === 'Terminado') {
-            <div class="base-card base-card--terminated">
-              <div class="info-container">
-                <a [routerLink]="['proyecto', project.id]" class="project-link">
-                  <h3>{{ project.name }}</h3>
-                </a>
-                <p>{{ project.zones }} zonas de estudio</p>
-              </div>
+            <div class="info-container">
+              <a [routerLink]="['proyecto', project.id]" class="project-link">
+                <h3>{{ project.name }}</h3>
+              </a>
+              <p>{{ project.numberOfZones }} zonas de estudio</p>
+            </div>
 
-              <div class="badge-container">
-                <span class="badge badge--terminated">{{ project.status }}</span>
+            <div class="badge-container">
+              <span 
+                class="badge"
+                [class.badge--terminated]="project.status === 'Terminado'">
+                {{ project.status }}
+              </span>
 
-                <button 
-                  class="button-option"
-                  (click)="toggleMenu(project.id)"
-                  [attr.aria-expanded]="openMenuId === project.id">
-                  <svg class="svg-button-option" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
-                    <path d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"/>
+              <button 
+                class="button-option"
+                (click)="toggleMenu(project.id)"
+                [attr.aria-expanded]="openMenuId === project.id">
+                <svg class="svg-button-option" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
+                  <path d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"/>
+                </svg>
+              </button>
+
+              <div 
+                class="options-menu"
+                [class.options-menu--open]="openMenuId === project.id">
+                <button class="menu-item menu-item--danger">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="currentColor">
+                    <path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h160v-40h240v40h160v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520Z"/>
                   </svg>
+                  Eliminar
                 </button>
-
-                <div 
-                  class="options-menu"
-                  [class.options-menu--open]="openMenuId === project.id">
-                  <button class="menu-item menu-item--danger">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="currentColor">
-                      <path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h160v-40h240v40h160v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520Z"/>
-                    </svg>
-                    Eliminar
-                  </button>
-                </div>
               </div>
             </div>
-          } @else {
-            <div class="base-card">
-              <div class="info-container">
-                <a [routerLink]="['proyecto', project.id]" class="project-link">
-                  <h3>{{ project.name }}</h3>
-                </a>
-                <p>{{ project.zones }} zonas de estudio</p>
-              </div>
-
-              <div class="badge-container">
-                <span class="badge">{{ project.status }}</span>
-
-                <button 
-                  class="button-option"
-                  (click)="toggleMenu(project.id)"
-                  [attr.aria-expanded]="openMenuId === project.id">
-                  <svg class="svg-button-option" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
-                    <path d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"/>
-                  </svg>
-                </button>
-
-                <div 
-                  class="options-menu"
-                  [class.options-menu--open]="openMenuId === project.id">
-                  <button class="menu-item menu-item--danger">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="currentColor">
-                      <path d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h160v-40h240v40h160v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520Z"/>
-                    </svg>
-                    Eliminar
-                  </button>
-                </div>
-              </div>
-            </div>
-          }
-
+          </div>
         } @empty {
-          <p>No hay nada skibidiCausa</p>
+          <p>No tienes proyectos skibidicausa/p>
         }
       </div>
     }
-
-    <!-- SIEMPRE MOSTRAR EL DETALLE (si existe) -->
-    <router-outlet></router-outlet>
 
   }
 </div>

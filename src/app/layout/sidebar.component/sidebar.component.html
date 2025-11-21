@@ -1,44 +1,51 @@
-<aside>
+<aside class="sidebar">
     <section class="section-options">
-        <button routerLink="/home" routerLinkActive="icon-selected">
-            <svg class="icon-sidebar" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                <path fill="currentColor" d="M13 9V3h8v6h-8ZM3 13V3h8v10H3Zm10 8V11h8v10h-8ZM3 21v-6h8v6H3Z"/>
-            </svg>
-            <p class="name-option">Home</p>
-        </button>
-
-        <button routerLink="/my-project" routerLinkActive="icon-selected">
-            <svg class="icon-sidebar" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 1200 1200">
-                <path fill="currentColor" d="M719.57 272.035c18.461 0 35.451 3.565 50.975 10.698c46.078 23.193 73.285 67.272 73.631 116.424V737.73c-8.643 53.824-70.25 39.188-71.742 0V418.037c-5.49-18.231-40.693-10.672-41.535 0v733.785c-8.951 74.928-105.773 52.934-108.242-1.258V701.23c-6.191-28.982-46.936-15.813-47.829 1.259c1.728 149.353 1.259 298.715 1.259 448.075c-9.656 74.543-106.007 55.47-108.243 1.258l-1.258-733.785c-5.643-17.838-38.263-10.996-39.019 0V737.73c-8.644 53.824-70.25 39.188-71.742 0V399.157c.871-47.056 18.117-94.197 59.156-116.424c13.426-7.133 29.788-10.699 49.087-10.699l255.502.001zm-1.269-153.758c0 65.323-52.955 118.278-118.278 118.278c-65.322 0-118.277-52.955-118.277-118.278C481.745 52.955 534.7 0 600.021 0c65.325 0 118.28 52.955 118.28 118.277z"/>
-            </svg>
-            <p class="name-option">Mis proyectos</p>
-        </button>
-
-        <button routerLink="/team-projects" routerLinkActive="icon-selected">
-            <svg class="icon-sidebar" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16">
-                
-                <path fill="currentColor" d="M8 2.002a1.998 1.998 0 1 0 0 3.996a1.998 1.998 0 0 0 0-3.996ZM12.5 3a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0-3Zm-9 0a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0-3ZM5 7.993A1 1 0 0 1 6 7h4a1 1 0 0 1 1 1v3a3.02 3.02 0 0 1-.146.927A3.001 3.001 0 0 1 5 11V7.993ZM4 8c0-.365.097-.706.268-1H2a1 1 0 0 0-1 1v2.5a2.5 2.5 0 0 0 3.436 2.319A3.983 3.983 0 0 1 4 10.999V8Zm8 0v3c0 .655-.157 1.273-.436 1.819A2.5 2.5 0 0 0 15 10.5V8a1 1 0 0 0-1-1h-2.268c.17.294.268.635.268 1Z"/>
-            </svg>
-            <p class="name-option">Colaboraciones</p>
-        </button>
-
-        <button routerLink="/reports" routerLinkActive="icon-selected">
-            <svg class="icon-sidebar" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 17 16" fill="currentColor">
-                <g fill="currentColor" fill-rule="evenodd">
-                    <path d="M2 0v16h13V4.024L9 4V.062L2 0zm11 13H4v-1h9v1zm0-2H4v-1h9v1zm0-4v1H4V7h9z"/>
-                    <path d="M10 0v2.844h4.752L10 0z"/>
-                </g>
-            </svg>
-            <p class="name-option">Reportes</p>
-        </button>
+        <div class="sidebar-option-container">
+            <button routerLink="/home" routerLinkActive="icon-selected">
+                <svg class="icon-sidebar" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M13 9V3h8v6h-8ZM3 13V3h8v10H3Zm10 8V11h8v10h-8ZM3 21v-6h8v6H3Z"/>
+                </svg>
+                <p class="name-option">Home</p>
+            </button>
+        </div>
+        <div class="sidebar-option-container">
+            <button routerLink="/myprojects" routerLinkActive="icon-selected">
+                <svg class="icon-sidebar" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 1200 1200">
+                    <path fill="currentColor" d="M719.57 272.035c18.461 0 35.451 3.565 50.975 10.698c46.078 23.193 73.285 67.272 73.631 116.424V737.73c-8.643 53.824-70.25 39.188-71.742 0V418.037c-5.49-18.231-40.693-10.672-41.535 0v733.785c-8.951 74.928-105.773 52.934-108.242-1.258V701.23c-6.191-28.982-46.936-15.813-47.829 1.259c1.728 149.353 1.259 298.715 1.259 448.075c-9.656 74.543-106.007 55.47-108.243 1.258l-1.258-733.785c-5.643-17.838-38.263-10.996-39.019 0V737.73c-8.644 53.824-70.25 39.188-71.742 0V399.157c.871-47.056 18.117-94.197 59.156-116.424c13.426-7.133 29.788-10.699 49.087-10.699l255.502.001zm-1.269-153.758c0 65.323-52.955 118.278-118.278 118.278c-65.322 0-118.277-52.955-118.277-118.278C481.745 52.955 534.7 0 600.021 0c65.325 0 118.28 52.955 118.28 118.277z"/>
+                </svg>
+                <p class="name-option">Mis proyectos</p>
+            </button>
+        </div>
+        <div class="sidebar-option-container">
+            <button class="sidebar-option" routerLink="/team-projects" routerLinkActive="icon-selected">
+                <svg class="icon-sidebar" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16">
+                    
+                    <path fill="currentColor" d="M8 2.002a1.998 1.998 0 1 0 0 3.996a1.998 1.998 0 0 0 0-3.996ZM12.5 3a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0-3Zm-9 0a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0-3ZM5 7.993A1 1 0 0 1 6 7h4a1 1 0 0 1 1 1v3a3.02 3.02 0 0 1-.146.927A3.001 3.001 0 0 1 5 11V7.993ZM4 8c0-.365.097-.706.268-1H2a1 1 0 0 0-1 1v2.5a2.5 2.5 0 0 0 3.436 2.319A3.983 3.983 0 0 1 4 10.999V8Zm8 0v3c0 .655-.157 1.273-.436 1.819A2.5 2.5 0 0 0 15 10.5V8a1 1 0 0 0-1-1h-2.268c.17.294.268.635.268 1Z"/>
+                </svg>
+                <p class="name-option">Colaboraciones</p>
+            </button>
+        </div>
+            <div class="sidebar-option-container last-option">
+                <button class="sidebar-option" routerLink="/reports" routerLinkActive="icon-selected">
+                    <svg class="icon-sidebar" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 17 16" fill="currentColor">
+                        <g fill="currentColor" fill-rule="evenodd">
+                            <path d="M2 0v16h13V4.024L9 4V.062L2 0zm11 13H4v-1h9v1zm0-2H4v-1h9v1zm0-4v1H4V7h9z"/>
+                            <path d="M10 0v2.844h4.752L10 0z"/>
+                        </g>
+                    </svg>
+                    <p class="name-option">Reportes</p>
+                </button>
+            </div>
     </section>
 
-    <section class="settings-section">
-        <button routerLink="/configuration" routerLinkActive="icon-selected">
-            <svg class="icon-sidebar" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 42 42">
-                <path fill="currentColor" d="M6.62 24.5c.4 1.62 1.06 3.13 1.93 4.49l-2.43 2.44c-1.09 1.09-1.08 1.74-.12 2.7l2.37 2.37c.97.971 1.63.95 2.7-.12l2.55-2.56c1.2.688 2.5 1.22 3.88 1.56v3.12c0 1.55.47 2 1.82 2h3.36c1.37 0 1.82-.48 1.82-2v-3.12c1.38-.34 2.68-.87 3.88-1.56l2.61 2.619c1.08 1.068 1.729 1.09 2.699.131l2.381-2.381c.949-.949.97-1.602-.131-2.699l-2.5-2.5a14.665 14.665 0 0 0 1.938-4.49h3.302c1.368 0 1.818-.48 1.818-2v-3c0-1.48-.393-2-1.818-2h-3.302c-.34-1.38-.87-2.68-1.562-3.88l2.382-2.37c1.05-1.05 1.14-1.7.13-2.7l-2.38-2.38c-.95-.95-1.632-.94-2.7.13l-2.26 2.25A14.946 14.946 0 0 0 24.5 6.62V3.5c0-1.48-.391-2-1.82-2h-3.36c-1.35 0-1.82.49-1.82 2v3.12c-1.62.4-3.13 1.06-4.49 1.93L10.75 6.3C9.68 5.23 9 5.22 8.05 6.17L5.67 8.55c-1.01 1-.92 1.65.13 2.7l2.37 2.37c-.68 1.2-1.21 2.5-1.55 3.88h-3.3c-1.35 0-1.82.49-1.82 2v3c0 1.55.47 2 1.82 2h3.3zm8.66-3.5c0-3.16 2.56-5.72 5.72-5.72s5.721 2.56 5.721 5.72a5.72 5.72 0 1 1-11.441 0z"/>
-            </svg>
-            <p class="name-option">Configuración</p>
-        </button>
+    <section class="section-options ">
+        <div class="sidebar-option-container">
+            <button class="sidebar-option" routerLink="/configuration" routerLinkActive="icon-selected">
+                <svg class="icon-sidebar" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 42 42">
+                    <path fill="currentColor" d="M6.62 24.5c.4 1.62 1.06 3.13 1.93 4.49l-2.43 2.44c-1.09 1.09-1.08 1.74-.12 2.7l2.37 2.37c.97.971 1.63.95 2.7-.12l2.55-2.56c1.2.688 2.5 1.22 3.88 1.56v3.12c0 1.55.47 2 1.82 2h3.36c1.37 0 1.82-.48 1.82-2v-3.12c1.38-.34 2.68-.87 3.88-1.56l2.61 2.619c1.08 1.068 1.729 1.09 2.699.131l2.381-2.381c.949-.949.97-1.602-.131-2.699l-2.5-2.5a14.665 14.665 0 0 0 1.938-4.49h3.302c1.368 0 1.818-.48 1.818-2v-3c0-1.48-.393-2-1.818-2h-3.302c-.34-1.38-.87-2.68-1.562-3.88l2.382-2.37c1.05-1.05 1.14-1.7.13-2.7l-2.38-2.38c-.95-.95-1.632-.94-2.7.13l-2.26 2.25A14.946 14.946 0 0 0 24.5 6.62V3.5c0-1.48-.391-2-1.82-2h-3.36c-1.35 0-1.82.49-1.82 2v3.12c-1.62.4-3.13 1.06-4.49 1.93L10.75 6.3C9.68 5.23 9 5.22 8.05 6.17L5.67 8.55c-1.01 1-.92 1.65.13 2.7l2.37 2.37c-.68 1.2-1.21 2.5-1.55 3.88h-3.3c-1.35 0-1.82.49-1.82 2v3c0 1.55.47 2 1.82 2h3.3zm8.66-3.5c0-3.16 2.56-5.72 5.72-5.72s5.721 2.56 5.721 5.72a5.72 5.72 0 1 1-11.441 0z"/>
+                </svg>
+                <p class="name-option">Configuración</p>
+            </button>
+        </div>
     </section>
 </aside>

@@ -1,12 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Project } from '../../../../core/models/project.model';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-active-projects',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './active-projects.component.html',
   styleUrl: './active-projects.component.css',
 })

@@ -19,17 +19,17 @@ export class MyProjectComponent implements OnInit {
   loading = true;
   textError: string = '';
   openMenuId: number | null = null;
-  showGrid = true; // ← NUEVO
+  showGrid = true; // 
 
   constructor(
     private projectService: ProjectService,
-    private router: Router,        // ← NUEVO
-    private route: ActivatedRoute  // ← NUEVO
+    private router: Router,        
+    private route: ActivatedRoute  
   ) {}
 
   ngOnInit(): void {
     this.loadProjects();
-    this.setupRouteListener(); // ← NUEVO
+    this.setupRouteListener();
   }
 
   loadProjects(): void {

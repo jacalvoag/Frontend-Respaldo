@@ -1,1 +1,32 @@
-<p>study-zones.component works!</p>
+<div class="my-projects-container">
+
+    <div class="section-header">
+        <h2 class="section-title">Zonas de estudio</h2>
+        <button class="button-light">
+        <svg class="svg-button" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        </svg>
+        Editar zona de estudio
+        </button>
+    </div>
+
+    @for (zone of zones(); track zone.idZone) {
+        <div class="info-card">
+        <div class="first-container">
+            <div class="name-project">
+            <h3>Hola skibidi{{zone.zoneName }}</h3>
+            </div>
+
+            <div class="badge-container">
+            </div>
+        </div>
+
+        <div class="info-project">
+            <p>{{ zone.zoneDescription}}</p>
+        </div>
+        </div>
+    } @empty {
+        <p class="empty-message">No hay zonas de estudio aún</p>
+    }
+
+</div>

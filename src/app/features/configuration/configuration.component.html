@@ -1,0 +1,144 @@
+<div class="configuration-container">
+  
+  @if (showSuccessMessage()) {
+    <div class="success-message">
+      Cambios guardados exitosamente
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading-container">
+      <h4>Cargando configuración...</h4>
+    </div>
+  } @else {
+    <div class="configuration-layout">
+      <aside class="config-sidebar">
+        <button 
+          class="sidebar-item" 
+          [class.sidebar-item--active]="activeSection() === 'perfil'"
+          (click)="setActiveSection('perfil')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Perfil</span>
+        </button>
+
+        <button 
+          class="sidebar-item" 
+          [class.sidebar-item--active]="activeSection() === 'ajuste'"
+          (click)="setActiveSection('ajuste')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 1v6m0 6v6m8.66-15.66l-4.24 4.24m-4.24 4.24L3.34 22.66M23 12h-6m-6 0H1m19.66 8.66l-4.24-4.24m-4.24-4.24L3.34 3.34"></path>
+          </svg>
+          <span>Ajuste de la cuenta</span>
+        </button>
+      </aside>
+
+      <main class="config-content">
+        @if (activeSection() === 'perfil') {
+          <div class="content-header">
+            <h2 class="content-title">Perfil</h2>
+            <div style="display: flex; gap: 10px;">
+              <button 
+                class="button-modal-action button-modal-action--elverde" 
+                (click)="toggleEditMode()">
+                {{ isEditMode() ? 'Cancelar' : 'Editar' }}
+              </button>
+              <button 
+                class="button-modal-action button-modal-action--elverde" 
+                (click)="onSaveChanges()"
+                [disabled]="!isEditMode()">
+                Guardar Cambios
+              </button>
+            </div>
+          </div>
+
+          <div class="profile-section">
+            <!-- Foto de perfil -->
+            <div class="profile-photo-section">
+              <div class="photo-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <div class="photo-actions">
+                <button 
+                  class="button-modal-action button-modal-action--elverde" 
+                  (click)="onChangePhoto()"
+                  [disabled]="!isEditMode()">
+                  Cambiar foto
+                </button>
+                <button 
+                  class="button-modal-action button-modal-action--red" 
+                  (click)="onDeletePhoto()"
+                  [disabled]="!isEditMode()">
+                  Eliminar foto
+                </button>
+              </div>
+            </div>
+
+            <!-- Formulario -->
+            <form [formGroup]="profileForm" class="profile-form">
+              <div class="form-group">
+                <label for="fullName">Full name</label>
+                <input 
+                  id="fullName" 
+                  class="form-input" 
+                  formControlName="fullName" 
+                  type="text">
+              </div>
+
+              <div class="form-group">
+                <label for="bio">Bio</label>
+                <input 
+                  id="bio" 
+                  class="form-input" 
+                  formControlName="bio" 
+                  type="text">
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input 
+                  id="email" 
+                  class="form-input" 
+                  formControlName="email" 
+                  type="email">
+              </div>
+
+              <div class="form-group">
+                <label for="phone">Num. Teléfono</label>
+                <input 
+                  id="phone" 
+                  class="form-input" 
+                  formControlName="phone" 
+                  type="tel">
+              </div>
+
+              <div class="form-group">
+                <label for="location">Ubicación</label>
+                <input 
+                  id="location" 
+                  class="form-input" 
+                  formControlName="location" 
+                  type="text">
+              </div>
+            </form>
+          </div>
+        }
+
+        @if (activeSection() === 'ajuste') {
+          <app-account-settings
+            [isEditMode]="isEditMode"
+            (editModeChange)="onEditModeChange($event)"
+            (saveSuccess)="onSaveSuccess()">
+          </app-account-settings>
+        }
+
+      </main>
+    </div>
+  }
+</div>

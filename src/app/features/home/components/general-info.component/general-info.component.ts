@@ -4,7 +4,7 @@ import { GeneralStats } from '../../../../core/models/stats.model';
 import { StatsService } from '../../../../core/services/stats.service';
 
 @Component({
-  selector: 'app-general-info', 
+  selector: 'app-general-info',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './general-info.component.html',

@@ -1,38 +1,4 @@
-aside {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  gap: 5px;
-  height: 100%;
-  background-color: #fff;
-  padding: 10px;
-  border: 2px solid #E2E8F0;
-  border-radius: 8px;
-  width: auto;  
-
-}
-
-aside button {
-  background-color: #6a994e;
-  border: 1px solid #6a994e;
-  border-radius: 8px;
-  height: 45px;
-  display: flex;             
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  width: 45px;
-}
-
-aside button:hover {
-
-  background-color: rgba(39, 149, 6, 0.753);
-}
-
-aside button.icon-selected {
+.icon-selected {
   background-color: #2E7D32;
   border-color: #2E7D32;
 
@@ -41,56 +7,94 @@ aside button.icon-selected {
   }
 }
 
-aside button svg,
-aside button img {
-  width: 26px;              
-  height: 26px;
-  display: block;
-}
-
-.section-options {
+.sidebar {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   align-items: center;
+  justify-content: space-between;
+  width: 60px; 
+  height: 100dvh;
+  background-color: #fff;
+  border-right: 1px solid #E2E8F0;
+  padding: 10px;
+  overflow: hidden;
+  transition: width 0.4s ease;
+}
 
+.sidebar:hover {
+  width: 200px;
+}
+
+.sidebar-option-container {
+  width: 45px;
+  margin-bottom: 10px;
+  transition: width 0.4s ease;
+
+}
+
+.sidebar-option-container button {
+  background-color: #6a994e;
+  border: 1px solid #6a994e;
+  border-radius: 8px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  cursor: pointer;
+  transition: background-color 0.2s ease, width 0.4s ease;
+  width: 100%;
+  padding-left: 10px;
+  gap: 10px;
+  color: #fff; 
+  overflow: hidden;
+}
+
+.sidebar-option-container button:hover {
+  background-color: rgba(39, 149, 6, 0.753);
+
+}
+
+.sidebar-option-container button.icon-selected {
+  background-color: #2E7D32;
+  border-color: #2E7D32;
 }
 
 .icon-sidebar {
-  color: #fff;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  color: #fff; 
 }
 
-.name-option{
-
-  display: none;
-
+.name-option {
   color: #fff;
   font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
 
-  text-align: start;
-  margin-left: 10px;
+.sidebar:hover .name-option {
+  width: 120px;
+  opacity: 1;
+}
+
+.sidebar:hover .sidebar-option-container{
+
+  width: 160px;
+
+}
+
+.last-option{
+
+  margin-bottom: 0;
+  
 
 
 }
 
-aside:hover{
-  width: 180px;
-  transition: all 1.3s ease;
 
 
-  & .name-option{
-    display: block;
-    width: 110px;
-  }
 
-  & .settings-options{
-    width: 100%;
-
-
-  }
-
-  & button{
-    width: auto;
-    align-items: center;
-  }
-}

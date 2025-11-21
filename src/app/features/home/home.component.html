@@ -1,2 +1,13 @@
-<h1>Manuel toca a Sebastián y Fredy gromea en roblox</h1>
-<app-notifications></app-notifications>
+<div class="home-container">
+  <div class="home-layout">
+    <!-- Columna izquierda: Proyectos Activos -->
+    <section class="left-section">
+      <app-active-projects [projects]="projects" [loading]="loading"></app-active-projects>
+    </section>
+
+    <!-- Columna derecha: Resumen General -->
+    <section class="right-section">
+      <app-general-info></app-general-info>
+    </section>
+  </div>
+</div>
