@@ -5,55 +5,34 @@
             <div class="welcome">
                 <h1 class="logo">SYLVARA</h1>
                 <h2>¡BIENVENIDO DE VUELTA!</h2>
-                <p>Estamos Felices De Verte Nuevamente</p>
+                <p>Nos alegramos de volver a verte</p>
                 
-
             </div>
 
             <form [formGroup]="loginForm" (submit)="handleSubmit() " class="form"> 
-    
                 <input id="email" class="input" formControlName="email" type="email" placeholder="Ingresa tu correo electronico" >
-
-                
                 <input id="password" class="input" formControlName="password" type="password" placeholder="Ingresa tu contraseña">
                 
                 <div class="remember-group">
-
                     <div>
-
                         <input id="remember-me" class="remember-input" type="checkbox" >
                         <label for="remember-me">Recordarme</label>
-
                     </div>
-
                     <a href="">¿Olvidaste tu contraseña?</a>
-
                 </div>
 
                 <button class="button-login-register">Iniciar sesión</button>
 
-
                 <div class="register-link">
-
-                    <span>¿Todavía no tienes una cuenta? </span>
-
-                    <a href="">Registrate</a>
-
+                    <span>¿No tienes una cuenta? </span>
+                    <a href="">Registrate aquí</a>
                 </div>
             </form>
-
-
-
         </section>
 
         <section class="image-login-section">
-
-            <img class="image-login" src="https://www.shutterstock.com/image-photo/rows-carrot-daucus-carota-plants-600nw-2593335025.jpg" alt="">
-
+            <img class="image-login" src="https://images.unsplash.com/photo-1508930993032-fbbaf4f2821a?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="">
         </section>
-
     </div>
-
-
 
 </main>

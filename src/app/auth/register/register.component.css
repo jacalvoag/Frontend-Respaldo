@@ -6,28 +6,44 @@
     width: 100%;
     max-width: 100%;
     flex: 0 0 35%;
-
     color: #000;
 
 }
 
-
 .logo{
-    font-family: 'socrates';
+    font-family: 'philosopher';
     text-align: center;
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     letter-spacing: 3px;
-
     color: #0E3520;
 }
 
 .welcome{
-
     text-align: center;
+    padding-bottom: 20px;
+}
+
+.welcome h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0px;
+}
+
+.welcome p {
+    margin-top: 10px;
+}
+
+.input {
+    font-size: 0.9rem;
+    border-radius: 10px;
+    border: 1px solid #7c7c7c;
+}
+
+.button-login-register {
+    font-size: 1.3rem;
+    border-radius: 15px;
 }
 
 .login-main{
-
     display: flex;
     height: 100%;
     width: 100%;
@@ -37,14 +53,11 @@
 }
 
 .login-container{
-
     display: flex;
     border-radius: 20px;
     box-shadow: 0px 0px 3px 4px rgba(0, 0, 0, 0.15);
-
-
+    height: calc(100dvh - 30px);
     background-color: white;
-
 }
 
 .image-login-section{
@@ -53,44 +66,33 @@
 }
 
 .image-login{
-
     height: 100%;
     width: 100%;
     object-fit: cover;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
-
 }
 
 .remember-group{
-
     display: flex;
     justify-content: space-between;
     width: 100%;
     font-size: 0.8rem;
     position: relative;
     align-items: center;
-
     color: #7C7C7C;
-
-
 }
 
 .remember-group input {
-
     accent-color: #2B6B48;
     vertical-align: middle;
     position: relative;
     bottom: 2px;
-
 }
 
 .remember-group a {
-
     text-decoration: none;
     color: #0E3520;
-
-
 }
 
 .login-main label {
@@ -106,11 +108,7 @@
 }
 
 .register-link { 
-
-
-
     font-size: 0.8rem;
-
     & a{
         text-decoration: none;
         color: #0E3520;
@@ -119,5 +117,4 @@
     & span{
         color: #7C7C7C;
     }
-
 }
