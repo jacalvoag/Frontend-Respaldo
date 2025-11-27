@@ -45,21 +45,21 @@ export const routes: Routes = [
             path: 'myprojects/proyecto/:id',
             loadComponent: () => import('./features/my-project/project-details/project-information/project-information.component')
             .then(m => m.ProjectDetailComponent),
-            data: { title: 'Mis proyectos > Detalles del Proyecto' }
+            data: { title: 'Mis proyectos > [name_project]' }
         },
 
         {
             path: 'myprojects/proyecto/:id/zone/:idZone',
             loadComponent: () => import('./features/my-project/project-details/study-zones.component/study-zones.component')
             .then(m => m.StudyZonesComponent),
-            data: { title: 'Mis proyectos > Detalles del Proyecto' }
+            data: { title: 'Mis proyectos > [name_project] > [name_zone]' }
         },
 
         {
             path: 'myprojects/proyecto/:id/proyecto-analisis',
             loadComponent: () => import('./features/my-project/project-details/biodiversity-analysis/biodiversity-analysis.component')
             .then(m => m.BiodiversityAnalysisComponent),
-            data: { title: 'Mis proyectos > Análisis de biodiversidad' }
+            data: { title: 'Mis proyectos > [name_project]' }
         },
 
         {

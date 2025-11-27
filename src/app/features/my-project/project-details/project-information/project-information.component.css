@@ -1,10 +1,7 @@
 .buttons-header{
-
     display: flex;
     flex-direction: row;
     gap: 10px;
-
-
 }
 
 .info-card{
@@ -18,7 +15,6 @@
 }
 
 .info-card--terminated{
-
     background-color: #F0EAD2;
     color: #582F0E;
     border: solid #582F0E;
@@ -26,38 +22,25 @@
 }
 
 .first-container{
-
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
     padding: 0 1.3rem;
 
-
     & h3{
         font-size: 1.8rem;
         margin-bottom: 20px;
         margin-top: 14px;
-        
-
     }
-    
-
-
 }
 
 .info-project{
-
     display: flex;
     padding: 0 1.3rem ;
-
 
     & p{
         font-size: 1.2rem;
         margin: 0;
     }
-
-
 }
-
-
