@@ -1,7 +1,11 @@
 .my-project-container {
-
   width: 100%;
   height: 100%;
+}
+
+.rayita {
+  margin-top: 10px;
+  border: 1px solid #1B5E20;
 }
 
 .projects-grid {
@@ -11,10 +15,7 @@
   margin-top: 20px;
 }
 
-
-
 .loading-container{
-
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -22,84 +23,62 @@
   align-items: center;
   width: 100%;
   font-size: 1.5rem;
-
   color: #000;
-
 }
 
-
 .info-container{
-
   display: flex;
   flex-direction: column;
   gap: 0px;
   margin-left: 10px;
-
 }
 
 .base-card{
-
     background-color: #E8F5E8;
-
     padding: 5px;
     border: 3px solid #7CB342;
     border-radius: 10px;
     border-left: 15px solid #7CB342;
     position: relative;
     
-
     & h3{
 
         color: #2E7D32;
         font-size: 1.3rem;
-        margin-bottom: 3px;
-
+        margin-top: 10px;
+        margin-bottom: 15px;
     }
 
     & p {
-
         color: #558B5F;
         margin-top: 5px;
-
+        margin-bottom: 5px;
     }
 
     & a{
-
         text-decoration: none;
     }
-
 }
 
 .base-card--terminated{
-
   background-color: #F0EAD2;
-
   border-color: #7F4F24;
-  
 
   & h3{
-
     color: #7F4F24;
     font-size: 1.3rem;
     margin-bottom: 3px;
-
   }
 
   & p {
-
     color: #936639;
     margin-top: 5px;
-
   }
-  
-
 }
 
 .section-header{
-
     display: flex;
     justify-content: space-between;
-
 }
 
 .svg-button{
@@ -107,13 +86,11 @@
 }
 
 .section-title{
-
     margin: 0px;
-
+  font-size: 1.5rem;
 }
 
 .badge {
-
   background-color: #C8E6C9;
   border-radius: 30px;
   color: #1B5E20;
@@ -123,22 +100,17 @@
 }
 
 .badge--terminated{
-
   background-color: #E6CCB2;
   color: #582F0E;
-
 }
 
 .badge-container{
-
   text-align: end;
-  margin-bottom: 7px;
+  margin-bottom: 10px;
   display: flex;
   justify-content: end;
   position: relative;
-
 }
-
 
 .button-option{
   display: flex;
@@ -173,7 +145,6 @@
   visibility: hidden;
   transform: translateY(-8px);
   transition: all 0.2s ease;
-
   color: #fff;
 }
 
