@@ -1,8 +1,8 @@
-// study-zones.component.ts
 import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet, RouterLinkWithHref, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from '../../../../core/models/project.model';
+import { Zones } from '../../../../core/models/zones.model';
 import { ProjectService } from '../../../../core/services/project.service';
 import { filter } from 'rxjs';
 
@@ -15,7 +15,7 @@ import { filter } from 'rxjs';
 })
 export class StudyZonesComponent implements OnInit, OnDestroy {
   project = signal<Project | null>(null);
-  zones = signal<Project['zone']>([]);
+  zones = signal<Zones[]>([]); 
   private paramSub!: Subscription;
   showGrid = true;
 
@@ -27,17 +27,27 @@ export class StudyZonesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.paramSub = this.route.paramMap.subscribe(params => {
-      const idZone = +params.get('idZone')!;
-      if (idZone) this.loadProject(idZone);
+      const projectId = +params.get('id')!;  
+      const zoneId = +params.get('idZone')!; 
+      
+      if (projectId && zoneId) {
+        this.loadZone(projectId, zoneId);
+      }
       this.setupRouteListener();
     });
   }
 
-  private loadProject(idZone: number): void {
-    this.projectService.getProjectById(idZone).subscribe({
+  private loadZone(projectId: number, zoneId: number): void {
+    this.projectService.getProjectById(projectId).subscribe({
       next: (data) => {
         this.project.set(data || null);
-        this.zones.set(data?.zone ?? []);
+        
+        if (data?.zone) {
+          const specificZone = data.zone.find(z => z.idZone === zoneId);
+          this.zones.set(specificZone ? [specificZone] : []);
+        } else {
+          this.zones.set([]);
+        }
       },
       error: () => {
         this.project.set(null);
