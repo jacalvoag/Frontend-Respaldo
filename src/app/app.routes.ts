@@ -1,6 +1,7 @@
 // src/app/routes.ts
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './layout/main-layout.component/main-layout.component';
+import { Title } from '@angular/platform-browser';
 
 export const routes: Routes = [
     {
@@ -56,24 +57,19 @@ export const routes: Routes = [
         },
 
         {
-            path: 'myprojects/proyecto/:id/proyecto-analisis',
+            path: 'myprojects/proyecto/:id/project-analysis',
             loadComponent: () => import('./features/my-project/project-details/biodiversity-analysis/biodiversity-analysis.component')
             .then(m => m.BiodiversityAnalysisComponent),
             data: { title: 'Mis proyectos > [name_project]' }
         },
 
         {
-            path: 'team-projects',
-            loadComponent: () => import('./features/team-projects/team-projects.module')
-            .then(m => m.TeamProjectsModule),
-            data: { title: 'Colaboraciones' }
+            path: 'myprojects/proyecto/:id/zone/:idZone/species-zone',
+            loadComponent: () => import('./features/my-project/project-details/species-zone/species-zone.component')
+            .then(m =>m.SpeciesZoneComponent),
+            data: {title: 'Especies'}
         },
-        {
-            path: 'reports',
-            loadComponent: () => import('./features/reports/reports.module')
-            .then(m => m.ReportsModule),
-            data: { title: 'Reportes' }
-        },
+
         {
             path: 'configuration',
             loadComponent: () => import('./features/configuration/configuration.component')
