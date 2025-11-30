@@ -3,7 +3,7 @@
   @if (showGrid && textError === '') {
     <div class="section-header">
       <h2 class="section-title">Todos los proyectos</h2>
-      <button class="button-light">
+      <button class="button-light" (click)="openNewProjectModal()">
         <svg class="svg-button" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
           <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
         </svg>
@@ -12,7 +12,7 @@
     </div>
   }
 
-<div class="rayita"></div>
+  <div class="rayita"></div>
 
   @if (loading) {
     <div class="loading-container">
@@ -63,10 +63,17 @@
             </div>
           </div>
         } @empty {
-          <p>No tienes proyectos skibidicausa/p>
+          <p>No tienes proyectos aún</p>
         }
       </div>
     }
 
   }
 </div>
+
+@if (showNewProjectModal) {
+  <app-newproject-form
+    (closeModal)="closeNewProjectModal()"
+    (projectCreated)="onProjectCreated($event)">
+  </app-newproject-form>
+}

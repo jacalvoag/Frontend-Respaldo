@@ -1,0 +1,49 @@
+<div class="modal-overlay" (click)="onOverlayClick($event)">
+    <div class="modal-container">
+        <div class="modal-header">
+        <h2>Nuevo Proyecto</h2>
+        <button class="close-button" (click)="onClose()">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
+            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+            </svg>
+        </button>
+        </div>
+
+        <form [formGroup]="projectForm" (submit)="onSubmit()" class="modal-form">
+        <div class="form-group">
+            <label for="name">Nombre del proyecto *</label>
+            <input 
+            id="name" 
+            class="form-input" 
+            formControlName="name" 
+            type="text"
+            placeholder="Ej: Rancho Cuba Libre">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Descripción (opcional)</label>
+            <textarea 
+            id="description" 
+            class="form-textarea" 
+            formControlName="description"
+            rows="4"
+            placeholder="Describe tu proyecto..."></textarea>
+        </div>
+
+        <div class="modal-actions">
+            <button 
+            type="button" 
+            class="button-modal-action button-modal-action--gray" 
+            (click)="onClose()">
+            Cancelar
+            </button>
+            <button 
+            type="submit" 
+            class="button-modal-action button-modal-action--elverde"
+            [disabled]="!projectForm.valid">
+            Crear Proyecto
+            </button>
+        </div>
+        </form>
+    </div>
+</div>
