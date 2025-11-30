@@ -20,7 +20,7 @@ export class MyProjectComponent implements OnInit {
   textError: string = '';
   openMenuId: number | null = null;
   showGrid = true;
-  showNewProjectModal = false; // Nueva propiedad
+  showNewProjectModal = false;
 
   constructor(
     private projectService: ProjectService,
