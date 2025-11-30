@@ -18,23 +18,31 @@
 <div class="projects-grid">
     @for (zone of info()?.zone; track zone.idZone; let i = $index) {
         <div>
-        <div class="base-card">
-            <div class="info-container">
-                <h3>{{zone.zoneName}}</h3>
-                <p>S' = [biod_index]</p>
-                <p>D = [biod_index]</p>
-                <p>d = [biod_index]</p>
-                <p>J' = [biod_index]</p>
-            </div>
+            <div class="base-card">
+                <div class="info-container">
+                    <h3>{{zone.zoneName}}</h3>
+                    <p>S' = [biod_index]</p>
+                    <p>D = [biod_index]</p>
+                    <p>d = [biod_index]</p>
+                    <p>J' = [biod_index]</p>
+                </div>
 
-            <div class="badge-container">
-                        <span class="badge">{{zone.squareFootage}}</span>
-                    </div>
+                <div class="badge-container">
+                            <span class="badge">{{zone.squareFootage}}</span>
+                        </div>
+            </div>
         </div>
-    </div>
     }
 </div>
 
 <div>
     <h2>Gráficas por zona de estudio</h2>
+</div>
+
+<div class="charts-grid">
+    @for (zone of info()?.zone; track zone.idZone; let i = $index) {
+        <div>
+            <app-study-zone-charts></app-study-zone-charts>
+        </div>
+    }
 </div>

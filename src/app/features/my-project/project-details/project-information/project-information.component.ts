@@ -11,7 +11,7 @@ import { filter } from 'rxjs';
   templateUrl: './project-information.component.html',
   styleUrl: './project-information.component.css',
   standalone: true,
-  imports: [RouterLink, RouterOutlet, RouterLinkWithHref] 
+  imports: [RouterLink, RouterLinkWithHref] // RouterOutlet
 })
 export class ProjectDetailComponent implements OnInit, OnDestroy {
   info = signal<Project | null>(null);

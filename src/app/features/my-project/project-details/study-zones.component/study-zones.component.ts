@@ -11,7 +11,7 @@ import { filter } from 'rxjs';
   templateUrl: './study-zones.component.html',
   styleUrl: './study-zones.component.css',
   standalone: true,
-  imports: [RouterLink, RouterOutlet, RouterLinkWithHref]
+  imports: [RouterLink, RouterLinkWithHref] // RouterOutlet
 })
 export class StudyZonesComponent implements OnInit, OnDestroy {
   project = signal<Project | null>(null);

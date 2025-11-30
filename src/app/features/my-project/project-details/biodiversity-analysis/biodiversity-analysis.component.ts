@@ -1,15 +1,16 @@
 import { Component, OnInit, OnDestroy, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from '../../../../core/models/project.model';
 import { ProjectService } from '../../../../core/services/project.service';
 import { filter } from 'rxjs';
-
+import { StudyZoneChartsComponent } from '../study-zone-charts/study-zone-charts.components';
 
 @Component({
   selector: 'app-biodiversity-analysis',
   standalone: true,
-  imports: [RouterLink],
+  imports: [CommonModule, StudyZoneChartsComponent], // RouterLink
   templateUrl: './biodiversity-analysis.component.html',
   styleUrls: ['./biodiversity-analysis.component.css'],
 })
