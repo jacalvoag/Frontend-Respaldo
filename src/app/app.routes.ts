@@ -1,6 +1,7 @@
 // src/app/routes.ts
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './layout/main-layout.component/main-layout.component';
+import { Title } from '@angular/platform-browser';
 
 export const routes: Routes = [
     {
@@ -14,6 +15,12 @@ export const routes: Routes = [
         loadComponent: () => import('./auth/register/register.component')
         .then(m => m.RegisterComponent),
         data: { title: 'Registro' }
+    },
+    {
+        path: 'landing',
+        loadComponent:() => import('./auth/landing/landing.component')
+        .then(m => m.Landing),
+        data: { title: 'Bienvenido a nuestra landing page' }
     },
 
     {
@@ -39,35 +46,30 @@ export const routes: Routes = [
             path: 'myprojects/proyecto/:id',
             loadComponent: () => import('./features/my-project/project-details/project-information/project-information.component')
             .then(m => m.ProjectDetailComponent),
-            data: { title: 'Mis proyectos > Detalles del Proyecto' }
+            data: { title: 'Mis proyectos > [name_project]' }
         },
 
         {
             path: 'myprojects/proyecto/:id/zone/:idZone',
             loadComponent: () => import('./features/my-project/project-details/study-zones.component/study-zones.component')
             .then(m => m.StudyZonesComponent),
-            data: { title: 'Mis proyectos > Detalles del Proyecto' }
+            data: { title: 'Mis proyectos > [name_project] > [name_zone]' }
         },
 
         {
-            path: 'myprojects/proyecto/:id/proyecto-analisis',
+            path: 'myprojects/proyecto/:id/project-analysis',
             loadComponent: () => import('./features/my-project/project-details/biodiversity-analysis/biodiversity-analysis.component')
             .then(m => m.BiodiversityAnalysisComponent),
-            data: { title: 'Mis proyectos > Análisis de biodiversidad' }
+            data: { title: 'Mis proyectos > [name_project]' }
         },
 
         {
-            path: 'team-projects',
-            loadComponent: () => import('./features/team-projects/team-projects.module')
-            .then(m => m.TeamProjectsModule),
-            data: { title: 'Colaboraciones' }
+            path: 'myprojects/proyecto/:id/zone/:idZone/species-zone',
+            loadComponent: () => import('./features/my-project/project-details/species-zone/species-zone.component')
+            .then(m =>m.SpeciesZoneComponent),
+            data: {title: 'Especies'}
         },
-        {
-            path: 'reports',
-            loadComponent: () => import('./features/reports/reports.module')
-            .then(m => m.ReportsModule),
-            data: { title: 'Reportes' }
-        },
+
         {
             path: 'configuration',
             loadComponent: () => import('./features/configuration/configuration.component')

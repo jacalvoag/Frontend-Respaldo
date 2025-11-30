@@ -1,0 +1,128 @@
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">  
+
+<div class="landing-container">
+  
+  <section class="hero-section">
+    <nav class="navbar">
+      <div class="logo">
+        <h1>SYLVARA</h1>
+      </div>
+      <button class="btn-login" (click)="navigateToLogin()">
+        Iniciar sesión
+      </button>
+    </nav>
+
+    <div class="hero-content">
+      <div class="hero-text">
+        <h2 class="hero-title">Registra tu tierra, calcula su vida.</h2>
+        <p class="hero-subtitle">La gestión de la biodiversidad al alcance de tu mano.</p>
+        <button class="btn-register" (click)="navigateToRegister()">
+          Registrarse
+        </button>
+      </div>
+
+      <div class="hero-image">
+        <div class="app-preview">
+          <div class="preview-header">
+            <div class="preview-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+          <div class="preview-content">
+            <div class="preview-sidebar">
+              <div class="sidebar-item active"></div>
+              <div class="sidebar-item"></div>
+              <div class="sidebar-item"></div>
+              <div class="sidebar-item"></div>
+            </div>
+            <div class="preview-main">
+              <div class="preview-card"></div>
+              <div class="preview-card"></div>
+              <div class="preview-card small"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-wave">
+      <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 0L60 10C120 20 240 40 360 46.7C480 53 600 47 720 43.3C840 40 960 40 1080 46.7C1200 53 1320 67 1380 73.3L1440 80V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0V0Z" fill="white"/>
+      </svg>
+    </div>
+  </section>
+
+  <section class="why-section">
+    <h2 class="section-title">¿Por Qué Sylvara?</h2>
+    
+    <div class="features-grid">
+      @for (feature of features; track feature.title) {
+        <div class="feature-card">
+          <div class="feature-icon">
+            <span class="material-icons">{{ feature.icon }}</span>
+          </div>
+          <h3 class="feature-title">{{ feature.title }}</h3>
+          <p class="feature-description">{{ feature.description }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="characteristics-section">
+    <div class="characteristics-content">
+      <div class="characteristics-image">
+        <div class="phone-mockup">
+          <div class="phone-screen">
+            <div class="screen-header"></div>
+            <div class="screen-content">
+              <div class="content-bar"></div>
+              <div class="content-bar short"></div>
+              <div class="content-bar"></div>
+              <div class="content-card"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="characteristics-text">
+        <h2 class="section-title">Gestión completa de biodiversidad</h2>
+        <ul class="features-list">
+          <li>
+            <span class="material-icons">check_circle</span>
+            <span>Cálculos avanzados de biodiversidad (Shannon, Simpson, Margalef)</span>
+          </li>
+          <li>
+            <span class="material-icons">check_circle</span>
+            <span>Registro y organización de especies por predio</span>
+          </li>
+          <li>
+            <span class="material-icons">check_circle</span>
+            <span>Gestión de múltiples zonas de estudio</span>
+          </li>
+          <li>
+            <span class="material-icons">check_circle</span>
+            <span>Generación de reportes detallados</span>
+          </li>
+          <li>
+            <span class="material-icons">check_circle</span>
+            <span>Colaboración en proyectos compartidos</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2 class="cta-title">Comienza a gestionar tu biodiversidad hoy</h2>
+      <p class="cta-subtitle">Únete a los profesionales que confían en Sylvara</p>
+      <button class="btn-cta" (click)="navigateToRegister()">
+        Crear cuenta gratis
+      </button>
+    </div>
+  </section>
+
+</div>

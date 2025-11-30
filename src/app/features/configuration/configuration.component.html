@@ -36,14 +36,23 @@
         </button>
       </aside>
 
-      <!-- Contenido principal -->
       <main class="config-content">
         @if (activeSection() === 'perfil') {
           <div class="content-header">
             <h2 class="content-title">Perfil</h2>
-            <button class="button-modal-action button-modal-action--elverde" (click)="onSaveChanges()">
-              Guardar Cambios
-            </button>
+            <div style="display: flex; gap: 10px;">
+              <button 
+                class="button-modal-action button-modal-action--elverde" 
+                (click)="toggleEditMode()">
+                {{ isEditMode() ? 'Cancelar' : 'Editar' }}
+              </button>
+              <button 
+                class="button-modal-action button-modal-action--elverde" 
+                (click)="onSaveChanges()"
+                [disabled]="!isEditMode()">
+                Guardar Cambios
+              </button>
+            </div>
           </div>
 
           <div class="profile-section">
@@ -56,10 +65,16 @@
                 </svg>
               </div>
               <div class="photo-actions">
-                <button class="button-modal-action button-modal-action--elverde" (click)="onChangePhoto()">
+                <button 
+                  class="button-modal-action button-modal-action--elverde" 
+                  (click)="onChangePhoto()"
+                  [disabled]="!isEditMode()">
                   Cambiar foto
                 </button>
-                <button class="button-modal-action button-modal-action--red" (click)="onDeletePhoto()">
+                <button 
+                  class="button-modal-action button-modal-action--red" 
+                  (click)="onDeletePhoto()"
+                  [disabled]="!isEditMode()">
                   Eliminar foto
                 </button>
               </div>
@@ -116,115 +131,11 @@
         }
 
         @if (activeSection() === 'ajuste') {
-          <div class="content-header">
-            <h2 class="content-title">Ajustes de la cuenta</h2>
-            <button class="button-modal-action button-modal-action--elverde" (click)="onSaveAccountSettings()">
-              Guardar Cambios
-            </button>
-          </div>
-
-          <form [formGroup]="accountForm" class="account-form">
-            <!-- Cambiar contraseña -->
-            <div class="form-section">
-              <h3 class="section-subtitle">Cambiar contraseña</h3>
-              
-              <div class="password-fields">
-                <div class="form-group">
-                  <label for="newPassword">Nueva contraseña</label>
-                  <input 
-                    id="newPassword" 
-                    class="form-input" 
-                    formControlName="newPassword" 
-                    type="password"
-                    placeholder="**********">
-                </div>
-
-                <div class="form-group">
-                  <label for="confirmPassword">Confirmar contraseña</label>
-                  <input 
-                    id="confirmPassword" 
-                    class="form-input" 
-                    formControlName="confirmPassword" 
-                    type="password"
-                    placeholder="**********">
-                </div>
-              </div>
-            </div>
-
-            <!-- Email -->
-            <div class="form-section">
-              <h3 class="section-subtitle">Email</h3>
-              <div class="email-field">
-                <input 
-                  class="form-input form-input--email" 
-                  formControlName="email" 
-                  type="email">
-                <button 
-                  type="button" 
-                  class="button-change" 
-                  (click)="onChangeEmail()">
-                  Cambiar
-                </button>
-              </div>
-            </div>
-
-            <!-- Edad -->
-            <div class="form-section">
-              <h3 class="section-subtitle">Edad</h3>
-              <input 
-                class="form-input form-input--age" 
-                formControlName="age" 
-                type="number"
-                placeholder="28">
-            </div>
-
-            <!-- Eliminar cuenta -->
-            <div class="form-section form-section--danger">
-              <h3 class="section-subtitle section-subtitle--danger">Eliminar cuenta</h3>
-              <p class="danger-text">
-                Eliminar la cuenta hara que se eliminen todos tus trabajos y no podrás conservar ningún progreso dentro de la aplicación
-              </p>
-              
-              <div class="danger-actions">
-                <button 
-                  type="button" 
-                  class="button-modal-action button-modal-action--red" 
-                  (click)="onDeactivateAccount()">
-                  Desactivar cuenta
-                </button>
-                <button 
-                  type="button" 
-                  class="button-danger-outline" 
-                  (click)="onDeleteAccount()">
-                  Eliminar cuenta
-                </button>
-              </div>
-            </div>
-          </form>
-
-          <!-- Modal de confirmación de eliminación -->
-          @if (showDeleteModal()) {
-            <div class="modal-overlay" (click)="cancelDeleteAccount()">
-              <div class="modal-content" (click)="$event.stopPropagation()">
-                <h3 class="modal-title">¿Estás seguro?</h3>
-                <p class="modal-text">
-                  Esta acción no se puede deshacer. Se eliminarán todos tus datos permanentemente.
-                </p>
-                <div class="modal-actions">
-                  <button 
-                    class="button-modal-action button-modal-action--gray" 
-                    (click)="cancelDeleteAccount()">
-                    Cancelar
-                  </button>
-                  <button 
-                    class="button-modal-action button-modal-action--red" 
-                    (click)="confirmDeleteAccount()">
-                    Eliminar definitivamente
-                  </button>
-                </div>
-              </div>
-            </div>
-          }
+          <app-account-settings
+            [isEditMode]="isEditMode"
+            (editModeChange)="onEditModeChange($event)"
+            (saveSuccess)="onSaveSuccess()">
+          </app-account-settings>
         }
 
       </main>

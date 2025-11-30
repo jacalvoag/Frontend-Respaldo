@@ -1,0 +1,59 @@
+<div class="modal-overlay" (click)="onOverlayClick($event)">
+    <div class="modal-container">
+        <div class="modal-header">
+        <h2>{{ isEditMode ? 'Editar zona de estudio' : 'Nueva zona de estudio' }}</h2>
+        <button class="close-button" (click)="onClose()">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
+            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+            </svg>
+        </button>
+        </div>
+
+        <form [formGroup]="zoneForm" (submit)="onSubmit()" class="modal-form">
+        <div class="form-group">
+            <label for="zoneName">Nombre de la zona de estudio *</label>
+            <input 
+            id="zoneName" 
+            class="form-input" 
+            formControlName="zoneName" 
+            type="text"
+            placeholder="Obligatorio">
+        </div>
+
+        <div class="form-group">
+            <label for="zoneDescription">Descripción de la zona de estudio (opcional)</label>
+            <textarea 
+            id="zoneDescription" 
+            class="form-textarea" 
+            formControlName="zoneDescription"
+            rows="4"
+            placeholder="Opcional"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="squareFootage">Extensión de la zona de estudio (m2) *</label>
+            <input 
+            id="squareFootage" 
+            class="form-input" 
+            formControlName="squareFootage" 
+            type="text"
+            placeholder="Obligatorio">
+        </div>
+
+        <div class="modal-actions">
+            <button 
+            type="button" 
+            class="button-modal-action button-modal-action--gray" 
+            (click)="onClose()">
+            Cancelar
+            </button>
+            <button 
+            type="submit" 
+            class="button-modal-action button-modal-action--elverde"
+            [disabled]="!zoneForm.valid">
+            {{ isEditMode ? 'Guardar' : 'Guardar' }}
+            </button>
+        </div>
+        </form>
+    </div>
+</div>

@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user.model';
+import { AccountSettingsComponent } from './account-settings/account-settings.component';
 
 @Component({
   selector: 'app-configuration',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, AccountSettingsComponent],
   templateUrl: './configuration.component.html',
   styleUrls: ['./configuration.component.css']
 })
@@ -15,9 +16,8 @@ export class ConfigurationModule implements OnInit {
   activeSection = signal<'perfil' | 'ajuste'>('perfil');
   showSuccessMessage = signal(false);
   loading = signal(true);
-  showDeleteModal = signal(false);
+  isEditMode = signal(false);
   profileForm: FormGroup;
-  accountForm: FormGroup;
 
   constructor(private userService: UserService) {
     this.profileForm = new FormGroup({
@@ -27,17 +27,11 @@ export class ConfigurationModule implements OnInit {
       phone: new FormControl('', [Validators.required]),
       location: new FormControl('', [Validators.required])
     });
-
-    this.accountForm = new FormGroup({
-      newPassword: new FormControl('', [Validators.required, Validators.minLength(8)]),
-      confirmPassword: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      age: new FormControl('', [Validators.required, Validators.min(1), Validators.max(120)])
-    });
   }
 
   ngOnInit(): void {
     this.loadUserProfile();
+    this.profileForm.disable();
   }
 
   loadUserProfile(): void {
@@ -50,12 +44,6 @@ export class ConfigurationModule implements OnInit {
           phone: user.phone,
           location: user.location
         });
-
-        this.accountForm.patchValue({
-          email: user.email,
-          age: user.age || ''
-        });
-
         this.loading.set(false);
       },
       error: (err) => {
@@ -67,6 +55,17 @@ export class ConfigurationModule implements OnInit {
 
   setActiveSection(section: 'perfil' | 'ajuste'): void {
     this.activeSection.set(section);
+    this.isEditMode.set(false);
+    this.profileForm.disable();
+  }
+
+  toggleEditMode(): void {
+    this.isEditMode.set(!this.isEditMode());
+    if (this.isEditMode()) {
+      this.profileForm.enable();
+    } else {
+      this.profileForm.disable();
+    }
   }
 
   onSaveChanges(): void {
@@ -81,6 +80,8 @@ export class ConfigurationModule implements OnInit {
           console.log('Cambios guardados:', user);
           this.showSuccessMessage.set(true);
           setTimeout(() => this.showSuccessMessage.set(false), 3000);
+          this.isEditMode.set(false);
+          this.profileForm.disable();
         },
         error: (err) => {
           console.error('Error guardando cambios', err);
@@ -89,103 +90,20 @@ export class ConfigurationModule implements OnInit {
     }
   }
 
-  onChangePassword(): void {
-    const newPassword = this.accountForm.get('newPassword')?.value;
-    const confirmPassword = this.accountForm.get('confirmPassword')?.value;
-
-    if (newPassword !== confirmPassword) {
-      alert('Las contraseñas no coinciden');
-      return;
-    }
-
-    if (newPassword && confirmPassword) {
-      this.userService.changePassword({ newPassword, confirmPassword }).subscribe({
-        next: () => {
-          console.log('Contraseña cambiada');
-          this.showSuccessMessage.set(true);
-          setTimeout(() => this.showSuccessMessage.set(false), 3000);
-          this.accountForm.patchValue({ newPassword: '', confirmPassword: '' });
-        },
-        error: (err) => {
-          console.error('Error cambiando contraseña', err);
-        }
-      });
-    }
-  }
-
-  onChangeEmail(): void {
-    const newEmail = this.accountForm.get('email')?.value;
-    if (newEmail) {
-      this.userService.changeEmail(newEmail).subscribe({
-        next: () => {
-          console.log('Email cambiado');
-          this.showSuccessMessage.set(true);
-          setTimeout(() => this.showSuccessMessage.set(false), 3000);
-        },
-        error: (err) => {
-          console.error('Error cambiando email', err);
-        }
-      });
-    }
-  }
-
-  onSaveAccountSettings(): void {
-    if (this.accountForm.valid) {
-      const age = this.accountForm.get('age')?.value;
-      
-      this.userService.updateUserProfile({ id: 1, age } as User).subscribe({
-        next: () => {
-          console.log('Configuración guardada');
-          this.showSuccessMessage.set(true);
-          setTimeout(() => this.showSuccessMessage.set(false), 3000);
-        },
-        error: (err) => {
-          console.error('Error guardando configuración', err);
-        }
-      });
-    }
-  }
-
-  onDeactivateAccount(): void {
-    if (confirm('¿Estás seguro que deseas desactivar tu cuenta?')) {
-      this.userService.deactivateAccount().subscribe({
-        next: () => {
-          console.log('Cuenta desactivada');
-          alert('Cuenta desactivada exitosamente');
-        },
-        error: (err) => {
-          console.error('Error desactivando cuenta', err);
-        }
-      });
-    }
-  }
-
-  onDeleteAccount(): void {
-    this.showDeleteModal.set(true);
-  }
-
-  confirmDeleteAccount(): void {
-    this.userService.deleteAccount().subscribe({
-      next: () => {
-        console.log('Cuenta eliminada');
-        alert('Cuenta eliminada exitosamente');
-        this.showDeleteModal.set(false);
-      },
-      error: (err) => {
-        console.error('Error eliminando cuenta', err);
-      }
-    });
-  }
-
-  cancelDeleteAccount(): void {
-    this.showDeleteModal.set(false);
-  }
-
   onChangePhoto(): void {
     console.log('Cambiar foto');
   }
 
   onDeletePhoto(): void {
     console.log('Eliminar foto');
+  }
+
+  onEditModeChange(newMode: boolean): void {
+    this.isEditMode.set(newMode);
+  }
+
+  onSaveSuccess(): void {
+    this.showSuccessMessage.set(true);
+    setTimeout(() => this.showSuccessMessage.set(false), 3000);
   }
 }

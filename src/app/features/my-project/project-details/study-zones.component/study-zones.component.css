@@ -1,0 +1,101 @@
+.buttons-header{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.info-card{
+    background-color: #E8F5E8;
+    border-radius: 12px;
+    border: solid #558B5F;
+    border-width: 4px;
+    margin: 30px 0px;
+    padding: 1rem ;
+
+}
+
+.info-card--terminated{
+    background-color: #F0EAD2;
+    color: #582F0E;
+    border: solid #582F0E;
+    border-width: 4px;
+}
+
+.first-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.3rem;
+
+    & h3{
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        margin-top: 14px;
+    }
+}
+
+.info-project{
+    display: flex;
+    padding: 0 1.3rem ;
+
+    & p{
+        font-size: 1.2rem;
+        margin: 0;
+    }
+}
+
+.badge {
+  background-color: #C8E6C9;
+  border-radius: 30px;
+  color: #1B5E20;
+  padding: 2px 10px;
+  font-weight: 400;
+  text-align: end;
+}
+
+.badge-container {
+  text-align: end;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: end;
+  position: relative;
+}
+
+.indices {
+    display: flex;
+    margin-top: 40px;
+}
+
+.cuadrito {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 30px 20px;
+    border: 3px solid #7CB342;
+    border-radius: 5px;
+    margin: 0 40px;
+    gap: 15px;
+
+    width: 270px;      
+    height: 150px;     
+    overflow: hidden;
+}
+
+
+.cuadrito section {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.index-value {
+    color: #2E7D32;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.index-name {
+    color: #2E7D32;
+    font-size: 1rem;
+}
