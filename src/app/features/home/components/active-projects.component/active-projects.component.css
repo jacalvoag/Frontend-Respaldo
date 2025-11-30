@@ -6,7 +6,7 @@
   display: flex;
   flex-direction: column;
   gap: 25px;
-  height: 100%;
+  height: 97%;
 }
 
 .card-header {
@@ -55,7 +55,8 @@
 }
 
 .project-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: 50px 1fr auto;
   align-items: center;
   gap: 18px;
   padding: 20px;
@@ -64,6 +65,9 @@
   border-left: 8px solid #7CB342;
   border-radius: 12px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 90px;
+  min-height: 90px;
+  max-height: 90px;
 }
 
 .project-item:hover {
@@ -89,6 +93,7 @@
 
 .project-info {
   flex: 1;
+  overflow: hidden;
 }
 
 .project-info h3 {
@@ -96,6 +101,9 @@
   font-size: 1.25rem;
   color: #2E7D32;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .project-info p {
@@ -103,6 +111,9 @@
   font-size: 1rem;
   color: #558B5F;
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .status-badge {
@@ -112,24 +123,6 @@
   border-radius: 15px;
   font-size: 0.95rem;
   font-weight: 600;
-}
-
-.button-new-project {
-  width: 100%;
-  padding: 16px;
-  background-color: #2E7D32;
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  margin-top: auto;
-}
-
-.button-new-project:hover {
-  background-color: #1B5E20;
 }
 
 .loading-state {

@@ -13,7 +13,7 @@
     </div>
   } @else {
     <div class="projects-list">
-      @for (project of activeProjects; track project.id) {
+      @for (project of displayProjects; track project.id) {
         <div class="project-item">
           <div class="project-icon">
             <span class="material-icons">folder</span>
@@ -28,7 +28,5 @@
         <p class="empty-state">No hay proyectos activos</p>
       }
     </div>
-
-    <button class="button-new-project">Nuevo Proyecto</button>
   }
 </div>

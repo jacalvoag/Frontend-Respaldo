@@ -14,10 +14,10 @@ export class ActiveProjectsComponent {
   @Input() projects: Project[] = [];
   @Input() loading: boolean = false;
 
-  // Filtra solo los proyectos activos (primeros 3)
-  get activeProjects(): Project[] {
-    return this.projects.filter(p => p.status === 'Activo').slice(0, 3);
-  }
+ // Filtra solo los proyectos activos (primeros 4)
+get displayProjects(): Project[] {
+  return this.projects.filter(p => p.status === 'Activo').slice(0, 4);
+}
 
   // Cuenta total de proyectos activos
   get activeCount(): number {
