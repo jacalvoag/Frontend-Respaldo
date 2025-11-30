@@ -5,19 +5,22 @@ import { Project } from '../../../../core/models/project.model';
 import { Zones } from '../../../../core/models/zones.model';
 import { ProjectService } from '../../../../core/services/project.service';
 import { filter } from 'rxjs';
+import { NewZoneFormComponent } from '../../forms/newzone-form/newzone-form.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-study-zones',
   templateUrl: './study-zones.component.html',
   styleUrl: './study-zones.component.css',
   standalone: true,
-  imports: [RouterLink, RouterOutlet, RouterLinkWithHref]
+  imports: [RouterLink, RouterOutlet, RouterLinkWithHref, NewZoneFormComponent, CommonModule]
 })
 export class StudyZonesComponent implements OnInit, OnDestroy {
   project = signal<Project | null>(null);
   zones = signal<Zones[]>([]); 
   private paramSub!: Subscription;
   showGrid = true;
+  showEditZoneModal = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -54,6 +57,19 @@ export class StudyZonesComponent implements OnInit, OnDestroy {
         this.zones.set([]);
       }
     });
+  }
+
+  openEditZoneModal(): void {
+    this.showEditZoneModal = true;
+  }
+
+  closeEditZoneModal(): void {
+    this.showEditZoneModal = false;
+  }
+
+  onZoneUpdated(updatedZone: Zones): void {
+    this.zones.set([updatedZone]);
+    console.log('Zona actualizada:', updatedZone);
   }
 
   goBack(): void {

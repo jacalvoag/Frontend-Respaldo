@@ -45,7 +45,7 @@
             <div class="section-header">
                 <h2 class="section-title">Zonas de estudio</h2>
                 <div class="buttons-header">
-                    <button class="button-light">
+                    <button class="button-light" (click)="openNewZoneModal()">
                         <svg class="svg-button" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
                             <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
                         </svg>
@@ -72,7 +72,7 @@
             <div class="section-header">
                 <h2 class="section-title">Zonas de estudio</h2>
                 <div class="buttons-header">
-                    <button class="button-light">
+                    <button class="button-light" (click)="openNewZoneModal()">
                         <svg class="svg-button" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
                             <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
                         </svg>
@@ -159,4 +159,12 @@
     (closeModal)="closeEditModal()"
     (projectUpdated)="onProjectUpdated($event)">
   </app-newproject-form>
+}
+
+
+@if (showNewZoneModal) {
+  <app-newzone-form
+    (closeModal)="closeNewZoneModal()"
+    (zoneCreated)="onZoneCreated($event)">
+  </app-newzone-form>
 }
