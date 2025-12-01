@@ -1,53 +1,43 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { Observable, of } from 'rxjs'; 
+import { delay } from 'rxjs/operators'; 
+import { HttpClient } from '@angular/common/http'; 
 import { PasswordChange, User } from '../models/user.model';
+
+const BASE_URL = 'http://localhost:8080/api/users'; 
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserService {
-    private mockUser: User = {
-        id: 1,
-        fullName: 'María Gónzález',
-        bio: 'Estudiante de 4to semestre en la Universidad Politécnica de Chiapas',
-        email: 'ariaria@gmail.com',
-        age: 28,    
-    };
-    // Este método simula una llamada a la API
+    constructor(private http: HttpClient) { } 
+
     getUserProfile(): Observable<User> {
-        return of(this.mockUser).pipe(delay(300));
+        return this.http.get<User>(`${BASE_URL}/profile`);
     }
 
-    // Simula actualizar el perfil del usuario
     updateUserProfile(user: User): Observable<User> {
-        this.mockUser = { ...this.mockUser, ...user };
-        return of(this.mockUser).pipe(delay(500));
+        return this.http.put<User>(`${BASE_URL}/profile`, user); 
     }
 
-    // Simula cambiar la contraseña
     changePassword(passwordData: PasswordChange): Observable<boolean> {
-        console.log('Cambio de contraseña simulado', passwordData);
-        return of(true).pipe(delay(500));
+        console.log('Llamada a API: cambiar contraseña');
+        return this.http.put<boolean>(`${BASE_URL}/config/password`, passwordData);
     }
 
-    // Simula cambiar el email
     changeEmail(newEmail: string): Observable<User> {
-        this.mockUser.email = newEmail;
-        return of(this.mockUser).pipe(delay(500));
+        console.log('Llamada a API: cambiar email');
+        const body = { newEmail: newEmail }; 
+        return this.http.put<User>(`${BASE_URL}/config/email`, body);
     }
 
-    // Simula desactivar la cuenta
     deactivateAccount(): Observable<boolean> {
-        console.log('Cuenta desactivada');
+        console.log('Cuenta desactivada (MOCK)');
         return of(true).pipe(delay(500));
     }
 
-    // Simula eliminar la cuenta
     deleteAccount(): Observable<boolean> {
-        console.log('Cuenta eliminada');
-        return of(true).pipe(delay(500));
+        console.log('Llamada a API: eliminar cuenta');
+        return this.http.delete<boolean>(`${BASE_URL}/config/delete`);
     }
 }
-
-
