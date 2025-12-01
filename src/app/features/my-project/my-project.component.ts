@@ -10,7 +10,7 @@ import { NewProjectFormComponent } from './forms/newproject-forms/newproject-for
 @Component({
   selector: 'app-my-project',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLinkWithHref, NewProjectFormComponent],
+  imports: [CommonModule, RouterLinkWithHref, NewProjectFormComponent], // RouterOutlet
   templateUrl: './my-project.component.html',
   styleUrls: ['./my-project.component.css']
 })
