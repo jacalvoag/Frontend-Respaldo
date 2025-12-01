@@ -1,13 +1,47 @@
 <div class="home-container">
   <div class="home-layout">
-    <!-- Columna izquierda: Proyectos Activos -->
     <section class="left-section">
-      <app-active-projects [projects]="projects" [loading]="loading"></app-active-projects>
+      <div class="active-projects-card">
+        <h2>Proyectos Activos</h2>
+        @if (loading) {
+          <p>Cargando proyectos...</p>
+        } @else {
+          @if (projects.length > 0) {
+            <div class="projects-list">
+              @for (project of projects; track project.id) {
+                <div class="project-item">
+                  <h3>{{ project.name }}</h3>
+                  <p>{{ project.description }}</p>
+                  <span class="status">{{ project.status }}</span>
+                  <span class="zones">Zonas: {{ project.numberOfZones }}</span>
+                </div>
+              }
+            </div>
+          } @else {
+            <p>No hay proyectos activos</p>
+          }
+        }
+      </div>
     </section>
 
-    <!-- Columna derecha: Resumen General -->
     <section class="right-section">
-      <app-general-info></app-general-info>
+      <div class="general-info-card">
+        <h2>Resumen General</h2>
+        <div class="stats">
+          <div class="stat-item">
+            <span class="stat-number">{{ totalProjects }}</span>
+            <span class="stat-label">Total Proyectos</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">{{ activeProjects }}</span>
+            <span class="stat-label">Activos</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">{{ completedProjects }}</span>
+            <span class="stat-label">Completados</span>
+          </div>
+        </div>
+      </div>
     </section>
   </div>
 </div>

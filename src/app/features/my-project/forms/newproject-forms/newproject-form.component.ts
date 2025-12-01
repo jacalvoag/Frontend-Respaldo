@@ -11,7 +11,7 @@ import { Project } from '../../../../core/models/project.model';
   styleUrls: ['./newproject-form.component.css']
 })
 export class NewProjectFormComponent implements OnInit {
-  @Input() project: Project | null = null; // Para modo edición
+  @Input() project: Project | null = null;
   @Output() closeModal = new EventEmitter<void>();
   @Output() projectCreated = new EventEmitter<any>();
   @Output() projectUpdated = new EventEmitter<any>();
@@ -38,18 +38,28 @@ export class NewProjectFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.projectForm.valid) {
-      const newProject = {
-        id: Date.now(), // ID temporal
-        name: this.projectForm.value.name,
-        description: this.projectForm.value.description || '',
-        status: 'Activo' as 'Activo' | 'Terminado',
-        numberOfZones: 0,
-        zone: []
+      const userId = this.getUserIdFromStorage();
+      
+      const projectPayload = {
+        userId: userId,
+        projectName: this.projectForm.value.name,
+        projectStatus: 'activo',
+        projectDescription: this.projectForm.value.description || null
       };
       
-      this.projectCreated.emit(newProject);
+      console.log('📤 JSON enviado al backend:', JSON.stringify(projectPayload, null, 2));
+      
+      this.projectCreated.emit(projectPayload);
       this.onClose();
     }
+  }
+
+  private getUserIdFromStorage(): number {
+    const userId = localStorage.getItem('user_id');
+    if (!userId) {
+      throw new Error('Usuario no autenticado. Por favor inicia sesión.');
+    }
+    return parseInt(userId);
   }
 
   onClose(): void {

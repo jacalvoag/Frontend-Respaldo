@@ -50,9 +50,23 @@ export class MyProjectComponent implements OnInit {
     this.showNewProjectModal = false;
   }
 
-  onProjectCreated(newProject: Project): void {
-    this.projects = [newProject, ...this.projects];
-    console.log('✅ Nuevo proyecto agregado');
+  /**
+   * ✅ CORREGIDO: Recibe el payload del backend y lo envía al servicio
+   */
+  onProjectCreated(projectPayload: any): void {
+    console.log('📥 Payload recibido del modal:', projectPayload);
+    
+    this.projectService.createProject(projectPayload).subscribe({
+      next: (createdProject: Project) => {
+        console.log('✅ Proyecto creado exitosamente:', createdProject);
+        this.projects = [createdProject, ...this.projects];
+        this.closeNewProjectModal();
+      },
+      error: (err: any) => {
+        console.error('❌ Error creando proyecto:', err);
+        alert('Error al crear proyecto: ' + err.message);
+      }
+    });
   }
 
   deleteProject(projectId: number): void {

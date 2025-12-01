@@ -9,7 +9,6 @@ import { Zones } from '../models/zones.model';
 
 const BASE_URL = `${environment.apiUrl}`;
 
-
 interface BackendProject {
   projectId?: number;
   userId: number;
@@ -17,6 +16,14 @@ interface BackendProject {
   projectStatus: 'activo' | 'inactivo' | 'completado';
   projectDescription?: string;
   createdAt?: string;
+}
+
+// ✅ Interface para el payload que enviamos al backend
+interface CreateProjectPayload {
+  userId: number;
+  projectName: string;
+  projectStatus: string;
+  projectDescription: string | null;
 }
 
 interface HomeStats {
@@ -37,9 +44,6 @@ export class ProjectService {
 
   // ==================== PROJECT CRUD ====================
 
-  /**
-   * GET /projects/user/{userId} - Obtener proyectos del usuario autenticado
-   */
   getUserProjects(): Observable<Project[]> {
     const userId = this.getUserIdFromStorage();
     
@@ -50,9 +54,6 @@ export class ProjectService {
     );
   }
 
-  /**
-   * GET /projects/{id} - Obtener proyecto por ID
-   */
   getProjectById(id: number): Observable<Project> {
     return this.http.get<BackendProject>(`${BASE_URL}/projects/${id}`).pipe(
       map(backendProject => this.adaptBackendProject(backendProject)),
@@ -63,27 +64,19 @@ export class ProjectService {
 
   /**
    * POST /projects - Crear nuevo proyecto
+   * ✅ CORREGIDO: Envía el JSON exacto que espera el backend
    */
-  createProject(project: Partial<Project>): Observable<Project> {
-    const userId = this.getUserIdFromStorage();
+  createProject(projectPayload: CreateProjectPayload): Observable<Project> {
+    console.log('📤 Enviando al backend:', JSON.stringify(projectPayload, null, 2));
     
-    const backendProject: BackendProject = {
-      userId: userId,
-      projectName: project.name || '',
-      projectStatus: project.status === 'Terminado' ? 'completado' : 'activo',
-      projectDescription: project.description || ''
-    };
-
-    return this.http.post<BackendProject>(`${BASE_URL}/projects`, backendProject).pipe(
+    // ✅ Enviar directamente el payload sin transformaciones
+    return this.http.post<BackendProject>(`${BASE_URL}/projects`, projectPayload).pipe(
       map(created => this.adaptBackendProject(created)),
       tap(newProject => console.log('✅ Proyecto creado:', newProject)),
       catchError(this.handleError)
     );
   }
 
-  /**
-   * PUT /projects/{id} - Actualizar proyecto
-   */
   updateProject(id: number, project: Partial<Project>): Observable<Project> {
     const userId = this.getUserIdFromStorage();
     
@@ -102,9 +95,6 @@ export class ProjectService {
     );
   }
 
-  /**
-   * DELETE /projects/{id} - Eliminar proyecto
-   */
   deleteProject(id: number): Observable<void> {
     return this.http.delete<void>(`${BASE_URL}/projects/${id}`).pipe(
       tap(() => console.log('✅ Proyecto eliminado:', id)),
@@ -114,9 +104,6 @@ export class ProjectService {
 
   // ==================== HOME STATS ====================
 
-  /**
-   * GET /home - Obtener estadísticas del home
-   */
   getHomeStats(): Observable<HomeStats> {
     return this.http.get<HomeStats>(`${BASE_URL}/home`).pipe(
       tap(stats => console.log('✅ Estadísticas obtenidas:', stats)),
@@ -126,25 +113,20 @@ export class ProjectService {
 
   // ==================== ADAPTADORES ====================
 
-  /**
-   * Convierte un proyecto del backend al formato del frontend
-   */
   private adaptBackendProject(backendProject: BackendProject): Project {
     return {
       id: backendProject.projectId || 0,
       name: backendProject.projectName,
-      numberOfZones: 0, // Se cargará con las zonas
+      numberOfZones: 0,
       status: backendProject.projectStatus === 'completado' ? 'Terminado' : 'Activo',
       description: backendProject.projectDescription || '',
       zone: []
     };
   }
 
- 
   private adaptBackendProjects(backendProjects: BackendProject[]): Project[] {
     return backendProjects.map(p => this.adaptBackendProject(p));
   }
-
 
   private getUserIdFromStorage(): number {
     const userId = localStorage.getItem('user_id');
@@ -153,7 +135,6 @@ export class ProjectService {
     }
     return parseInt(userId);
   }
-
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'Ocurrió un error desconocido';
