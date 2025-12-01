@@ -9,8 +9,8 @@ import { PasswordChange, User } from '../models/user.model';
 export class UserService {
     private mockUser: User = {
         id: 1,
-        fullName: 'María',
-        bio: 'González',
+        fullName: 'María Gónzález',
+        bio: 'Estudiante de 4to semestre en la Universidad Politécnica de Chiapas',
         email: 'ariaria@gmail.com',
         phone: '961232323',
         location: 'La triste suchiapa',

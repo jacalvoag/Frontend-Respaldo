@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { Project } from '../../../../core/models/project.model';
 import { ProjectService } from '../../../../core/services/project.service';
 import { filter } from 'rxjs';
-import { StudyZoneChartsComponent } from '../study-zone-charts/study-zone-charts.components';
+import { StudyZoneChartsComponent } from '../study-zone-charts/study-zone-charts.component';
 import { Zones } from '../../../../core/models/zones.model';
 
 @Component({
@@ -18,10 +18,9 @@ import { Zones } from '../../../../core/models/zones.model';
 
 export class BiodiversityAnalysisComponent implements OnInit, OnDestroy {
   info = signal<Project | null>(null);
+  public zonesList = signal<Zones[]>([]);
   private paramSub!: Subscription;
   showGrid= true;
-  
-  @Input() public zonesList: Zones[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -31,10 +30,10 @@ export class BiodiversityAnalysisComponent implements OnInit, OnDestroy {
 
   public transformAnalysisToChartData(analysis: Zones['biodiversityAnalysis']): any[] {
     return [
-      { name: "Shannon-Wiener (S')", value: analysis.shannonWiener },
-      { name: "Simpson (D')", value: analysis.simpson },
-      { name: "Margaleft (d)", value: analysis.margaleft },
-      { name: "Pielou (J')", value: analysis.pielou }
+      { name: "S'", value: analysis.shannonWiener },
+      { name: "D'", value: analysis.simpson },
+      { name: "d", value: analysis.margaleft },
+      { name: "J'", value: analysis.pielou }
     ];
   }
 
@@ -50,14 +49,23 @@ export class BiodiversityAnalysisComponent implements OnInit, OnDestroy {
   }
 
   loadInfo(id: number): void {
-    this.projectService.getProjectById(id).subscribe({
-      next: (data) => 
-        this.info.set(data || null),
-      error: () => this.info.set(null)
-    });
-  }
-
-  
+  this.projectService.getProjectById(id).subscribe({
+    next: (data) => {
+      this.info.set(data || null);
+      
+      // ✅ CAMBIO CLAVE: Asignar todas las zonas al signal zonesList
+      if (data?.zone) {
+        this.zonesList.set(data.zone);
+      } else {
+        this.zonesList.set([]);
+      }
+    },
+    error: () => {
+      this.info.set(null);
+      this.zonesList.set([]); // Limpiar la lista de zonas en caso de error
+    }
+  });
+}
 
   goBack(): void {
     this.router.navigate(['../'], { relativeTo: this.route });

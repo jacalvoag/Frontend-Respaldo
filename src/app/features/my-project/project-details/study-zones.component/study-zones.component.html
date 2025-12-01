@@ -28,55 +28,53 @@
 
     <div class="rayita"></div>
 
-    @for (zone of zones(); track zone.idZone) {
-        <div class="info-card">
-            <div class="first-container">
-                <div class="name-project">
-                    <h3>{{zone.zoneName }}</h3>
-                </div>
-                <div class="badge-container">
-                    <span class="badge">
-                        {{zone.squareFootage}}
-                    </span>
-                </div>
+    @if (activeZone(); as zone) {
+    <div class="info-card">
+        <div class="first-container">
+            <div class="name-project">
+                <h3>{{ zone.zoneName }}</h3>
             </div>
+            <div class="badge-container">
+                <span class="badge">
+                    {{ zone.squareFootage }}
+                </span>
+            </div>
+        </div>
 
         <div class="info-project">
             <p>{{ zone.zoneDescription}}</p>
         </div>
-        </div>
+    </div>
 
-        <div class="section-header">
-            <h2 class="section-title">Índices de biodiversidad</h2>
-        </div>
+    <div class="section-header">
+        <h2 class="section-title">Índices de biodiversidad</h2>
+    </div>
 
-        <div class="indices">
-            <span class="cuadrito">
-                <section class="index-value">{{zone.biodiversityAnalysis.shannonWiener}}</section>
-                <section class="index-name">Shannon Wiener</section>
-            </span>
+    <div class="indices">
+        <span class="cuadrito">
+            <section class="index-value">{{ zone.biodiversityAnalysis.shannonWiener}}</section>
+            <section class="index-name">Shannon Wiener</section>
+        </span>
+        
+        <span class="cuadrito">
+            <section class="index-value">{{ zone.biodiversityAnalysis.simpson}}</section>
+            <section class="index-name">Simpson</section>
+        </span>
 
-            <span class="cuadrito">
-                <section class="index-value">{{zone.biodiversityAnalysis.simpson}}</section>
-                <section class="index-name">Simpson</section>
-            </span>
+        <span class="cuadrito">
+            <section class="index-value">{{ zone.biodiversityAnalysis.margaleft}}</section>
+            <section class="index-name">Margalef</section>
+        </span>
 
-            <span class="cuadrito">
-                <section class="index-value">{{zone.biodiversityAnalysis.margaleft}}</section>
-                <section class="index-name">Margalef</section>
-            </span>
+        <span class="cuadrito">
+            <section class="index-value">{{ zone.biodiversityAnalysis.pielou}}</section>
+            <section class="index-name">Pielou</section>
+        </span>
+    </div>
 
-            <span class="cuadrito">
-                <section class="index-value">{{zone.biodiversityAnalysis.pielou}}</section>
-                <section class="index-name">Pielou</section>
-            </span>
-        </div>
-
-
-
-    } @empty {
-        <p class="empty-message">No hay zonas de estudio aún</p>
-    }
+} @else {
+    <p class="empty-message">Cargando zona o la zona seleccionada no existe.</p>
+}
 
 
 
