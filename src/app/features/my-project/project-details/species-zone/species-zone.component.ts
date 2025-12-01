@@ -15,6 +15,7 @@ import { NewSpecieFormComponent } from '../../forms/newspecie-form/newspecie-for
   styleUrl: './species-zone.component.css',
 })
 export class SpeciesZoneComponent implements OnInit, OnDestroy {
+  // Señales para manejar el estado del componente
   currentZone = signal<Zones | null>(null);
   recordedSpecies = signal<RercordedSpecies[]>([]);
   loading = signal(true);

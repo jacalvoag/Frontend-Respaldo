@@ -1,0 +1,194 @@
+// src/app/core/services/study-zone.service.ts
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap, map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
+import { Zones } from '../models/zones.model';
+import { RercordedSpecies } from '../models/recorded-species.model';
+
+const BASE_URL = `${environment.apiUrl}`;
+
+// ==================== BACKEND INTERFACES ====================
+// Solo para comunicación con el backend, no se exportan
+interface BackendStudyZone {
+  studyZoneId?: number;
+  projectId: number;
+  studyZoneName: string;
+  studyZoneDescription?: string;
+  squareArea: number;
+  createdAt?: string;
+}
+
+interface BackendBiodiversityIndices {
+  shannonWiener: number;
+  simpson: number;
+  margalef: number;
+  pielou: number;
+}
+
+interface StudyZoneDetails {
+  studyZone: BackendStudyZone;
+  biodiversityIndices: BackendBiodiversityIndices;
+  speciesCount: number;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class StudyZoneService {
+
+  constructor(private http: HttpClient) { }
+
+  // ==================== STUDY ZONE CRUD ====================
+
+  /**
+   * GET /project-details/{projectId}/study-zones
+   * Obtener zonas de estudio de un proyecto
+   */
+  getStudyZonesByProject(projectId: number): Observable<Zones[]> {
+    return this.http.get<BackendStudyZone[]>(`${BASE_URL}/project-details/${projectId}/study-zones`).pipe(
+      map(backendZones => this.adaptBackendZones(backendZones)),
+      tap(zones => console.log('✅ Zonas obtenidas:', zones.length)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * GET /study-zones/{id} - Obtener zona por ID
+   */
+  getStudyZoneById(id: number): Observable<Zones> {
+    return this.http.get<BackendStudyZone>(`${BASE_URL}/study-zones/${id}`).pipe(
+      map(backendZone => this.adaptBackendZone(backendZone)),
+      tap(zone => console.log('✅ Zona obtenida:', zone.zoneName)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * POST /project-details/{projectId}/study-zones
+   * Crear zona de estudio en un proyecto
+   */
+  createStudyZone(projectId: number, zone: Partial<Zones>): Observable<Zones> {
+    const squareArea = this.extractSquareArea(zone.squareFootage || '0');
+
+    const backendZone: BackendStudyZone = {
+      projectId: projectId,
+      studyZoneName: zone.zoneName || '',
+      studyZoneDescription: zone.zoneDescription || '',
+      squareArea: squareArea
+    };
+
+    return this.http.post<BackendStudyZone>(`${BASE_URL}/project-details/${projectId}/study-zones`, backendZone).pipe(
+      map(created => this.adaptBackendZone(created)),
+      tap(newZone => console.log('✅ Zona creada:', newZone)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * PUT /study-zone-details/{zoneId}
+   * Actualizar zona de estudio
+   */
+  updateStudyZone(zoneId: number, zone: Partial<Zones>): Observable<Zones> {
+    const squareArea = this.extractSquareArea(zone.squareFootage || '0');
+
+    const updateData = {
+      studyZoneName: zone.zoneName || '',
+      studyZoneDescription: zone.zoneDescription || '',
+      squareArea: squareArea
+    };
+
+    return this.http.put<BackendStudyZone>(`${BASE_URL}/study-zone-details/${zoneId}`, updateData).pipe(
+      map(updated => this.adaptBackendZone(updated)),
+      tap(updatedZone => console.log('✅ Zona actualizada:', updatedZone)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * DELETE /project-details/{projectId}/study-zones/{zoneId}
+   * Eliminar zona de estudio
+   */
+  deleteStudyZone(projectId: number, zoneId: number): Observable<void> {
+    return this.http.delete<void>(`${BASE_URL}/project-details/${projectId}/study-zones/${zoneId}`).pipe(
+      tap(() => console.log('✅ Zona eliminada:', zoneId)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * GET /study-zone-details/{zoneId}/biodiversity
+   * Obtener índices de biodiversidad de la zona
+   */
+  getStudyZoneBiodiversity(zoneId: number): Observable<BackendBiodiversityIndices> {
+    return this.http.get<StudyZoneDetails>(`${BASE_URL}/study-zone-details/${zoneId}/biodiversity`).pipe(
+      map(details => details.biodiversityIndices),
+      tap(indices => console.log('✅ Índices de biodiversidad obtenidos:', indices)),
+      catchError(this.handleError)
+    );
+  }
+
+  // ==================== ADAPTADORES ====================
+
+  /**
+   * Convierte una zona del backend al formato del frontend
+   */
+  private adaptBackendZone(backendZone: BackendStudyZone, index: number = 0): Zones {
+    return {
+      idZone: backendZone.studyZoneId || 0,
+      zoneName: backendZone.studyZoneName,
+      zoneDescription: backendZone.studyZoneDescription || '',
+      zoneNumber: index + 1,
+      squareFootage: `${backendZone.squareArea}m²`,
+      biodiversityAnalysis: {
+        shannonWiener: 0,
+        simpson: 0,
+        margaleft: 0,
+        pielou: 0
+      },
+      recordedSpecies: []
+    };
+  }
+
+  /**
+   * Convierte múltiples zonas del backend al frontend
+   */
+  private adaptBackendZones(backendZones: BackendStudyZone[]): Zones[] {
+    return backendZones.map((zone, index) => this.adaptBackendZone(zone, index));
+  }
+
+  /**
+   * Extrae el número del campo squareFootage (ej: "420m²" -> 420)
+   */
+  private extractSquareArea(squareFootage: string): number {
+    const match = squareFootage.match(/[\d.]+/);
+    return match ? parseFloat(match[0]) : 0;
+  }
+
+  // ==================== HELPER METHODS ====================
+
+  /**
+   * Manejo centralizado de errores
+   */
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'Ocurrió un error desconocido';
+
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      if (error.error?.error) {
+        errorMessage = error.error.error;
+      } else if (error.error?.message) {
+        errorMessage = error.error.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      } else {
+        errorMessage = `Código: ${error.status} - ${error.statusText}`;
+      }
+    }
+
+    console.error('❌ Error en StudyZoneService:', errorMessage);
+    return throwError(() => new Error(errorMessage));
+  }
+}

@@ -1,193 +1,178 @@
+// src/app/core/services/project.service.ts
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap, map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 import { Project } from '../models/project.model';
-import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { Zones } from '../models/zones.model';
+
+const BASE_URL = `${environment.apiUrl}`;
+
+
+interface BackendProject {
+  projectId?: number;
+  userId: number;
+  projectName: string;
+  projectStatus: 'activo' | 'inactivo' | 'completado';
+  projectDescription?: string;
+  createdAt?: string;
+}
+
+interface HomeStats {
+  totalProjects: number;
+  activeProjects: number;
+  completedProjects: number;
+  totalStudyZones: number;
+  totalSpecies: number;
+  recentProjects: BackendProject[];
+}
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class ProjectService {
 
+  constructor(private http: HttpClient) { }
 
-    private mockProjects: Project[] = [
-        {
-            id: 1, name: 'Rancho Cuba Libre', numberOfZones: 12, status: 'Activo',
-            description: 'Proyecto de la materia de Análisis de Especies de 4 semestre. Predio de aproximadamente 1680 metros cuadrados divididos en 4 zonas de estudio.',
-            zone: [
-                {
-                    idZone: 1,
-                    zoneName: 'Parcela El Roble',
-                    zoneDescription: 'Zona de estudio número 1. Ubicada en la parte noroeste del predio y con una superficie de 420 metros cuadrados aproximadamente. Posee una elevación de terreno bastante homogénea.',
-                    zoneNumber: 1,
-                    squareFootage: '420m2',
-                    biodiversityAnalysis: {
-                        shannonWiener: 1.89,
-                        simpson: 0.47,
-                        margaleft: 6.12,
-                        pielou: 3.78
-                    },
-                    recordedSpecies: [{
-                        speciesId: 1,
-                        speciesName: 'Mango',
-                        samplingUnit: '10m^2',
-                        functionalType: 'Frutal',
-                        numberOfIndividuals: '13',
-                        heightOrStratum: '10 - 40m',
-                        speciesPhoto: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.es%2Ffotos-vectores-gratis%2Fmango&psig=AOvVaw3nBEZfdj2GfdTNkzf4vs8c&ust=1764656993745000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCLiw29zhm5EDFQAAAAAdAAAAABAL'
-                    }]
-                }
-            ]
-        },
-        {
-            id: 2, name: 'Tomate Invernadero', numberOfZones: 2, status: 'Terminado',
-            description: 'Proyecto de la materia de Análisis de Especies de 4 semestre. Predio de aproximadamente 1680 metros cuadrados divididos en 4 zonas de estudio.',
-            zone: [
-                {
-                    idZone: 2,
-                    zoneName: 'Parcela El Roble',
-                    zoneDescription: 'Zona de estudio número 1. Ubicada en la parte noroeste del predio y con una superficie de 420 metros cuadrados aproximadamente. Posee una elevación de terreno bastante homogénea.',
-                    zoneNumber: 1,
-                    squareFootage: '420m2',
-                    biodiversityAnalysis: {
-                        shannonWiener: 1.89,
-                        simpson: 0.47,
-                        margaleft: 6.12,
-                        pielou: 3.78
-                    },
-                    recordedSpecies: [{
-                        speciesId: 1,
-                        speciesName: 'Mango',
-                        samplingUnit: '',
-                        functionalType: '',
-                        numberOfIndividuals: '',
-                        heightOrStratum: '',
-                    }]
+  // ==================== PROJECT CRUD ====================
 
-                },
-                {
-                    idZone: 3,
-                    zoneName: 'HOLA GGZ',
-                    zoneDescription: 'SKIBIDIPARCELA. Ubicada en la parte noroeste del predio y con una superficie de 420 metros cuadrados aproximadamente. Posee una elevación de terreno bastante homogénea.',
-                    zoneNumber: 2,
-                    squareFootage: '420m2',
-                    biodiversityAnalysis: {
-                        shannonWiener: 1.89,
-                        simpson: 0.47,
-                        margaleft: 6.12,
-                        pielou: 3.78
-                    },
-                    recordedSpecies: [{
-                        speciesId: 1,
-                        speciesName: 'Mango',
-                        samplingUnit: '',
-                        functionalType: '',
-                        numberOfIndividuals: '',
-                        heightOrStratum: '',
-                    }]
+  /**
+   * GET /projects/user/{userId} - Obtener proyectos del usuario autenticado
+   */
+  getUserProjects(): Observable<Project[]> {
+    const userId = this.getUserIdFromStorage();
+    
+    return this.http.get<BackendProject[]>(`${BASE_URL}/projects/user/${userId}`).pipe(
+      map(backendProjects => this.adaptBackendProjects(backendProjects)),
+      tap(projects => console.log('✅ Proyectos obtenidos:', projects.length)),
+      catchError(this.handleError)
+    );
+  }
 
-                },
+  /**
+   * GET /projects/{id} - Obtener proyecto por ID
+   */
+  getProjectById(id: number): Observable<Project> {
+    return this.http.get<BackendProject>(`${BASE_URL}/projects/${id}`).pipe(
+      map(backendProject => this.adaptBackendProject(backendProject)),
+      tap(project => console.log('✅ Proyecto obtenido:', project.name)),
+      catchError(this.handleError)
+    );
+  }
 
-            ]
-        },
-        {
-            id: 3, name: 'Frijol Secano 2024', numberOfZones: 20, status: 'Activo',
-            description: 'Proyecto de la materia de Análisis de Especies de 4 semestre. Predio de aproximadamente 1680 metros cuadrados divididos en 4 zonas de estudio.',
-            zone: [
-                {
-                    idZone: 4,
-                    zoneName: 'Parcela El Roble',
-                    zoneDescription: 'Zona de estudio número 1. Ubicada en la parte noroeste del predio y con una superficie de 420 metros cuadrados aproximadamente. Posee una elevación de terreno bastante homogénea.',
-                    zoneNumber: 2,
-                    squareFootage: '420m2',
-                    biodiversityAnalysis: {
-                        shannonWiener: 1.89,
-                        simpson: 0.47,
-                        margaleft: 6.12,
-                        pielou: 3.78
-                    },
-                    recordedSpecies: [{
-                        speciesId: 1,
-                        speciesName: 'Mango',
-                        samplingUnit: '',
-                        functionalType: '',
-                        numberOfIndividuals: '',
-                        heightOrStratum: '',
-                    }]
+  /**
+   * POST /projects - Crear nuevo proyecto
+   */
+  createProject(project: Partial<Project>): Observable<Project> {
+    const userId = this.getUserIdFromStorage();
+    
+    const backendProject: BackendProject = {
+      userId: userId,
+      projectName: project.name || '',
+      projectStatus: project.status === 'Terminado' ? 'completado' : 'activo',
+      projectDescription: project.description || ''
+    };
 
-                }
+    return this.http.post<BackendProject>(`${BASE_URL}/projects`, backendProject).pipe(
+      map(created => this.adaptBackendProject(created)),
+      tap(newProject => console.log('✅ Proyecto creado:', newProject)),
+      catchError(this.handleError)
+    );
+  }
 
-            ]
-        },
-        {
-            id: 5, name: 'Café Altura', numberOfZones: 15, status: 'Activo',
-            description: 'Proyecto de la materia de Análisis de Especies de 4 semestre. Predio de aproximadamente 1680 metros cuadrados divididos en 4 zonas de estudio.',
-            zone: [
-                {
-                    idZone: 5,
-                    zoneName: 'Parcela El Roble',
-                    zoneDescription: 'Zona de estudio número 1. Ubicada en la parte noroeste del predio y con una superficie de 420 metros cuadrados aproximadamente. Posee una elevación de terreno bastante homogénea.',
-                    zoneNumber: 2,
-                    squareFootage: '420m2',
-                    biodiversityAnalysis: {
-                        shannonWiener: 1.89,
-                        simpson: 0.47,
-                        margaleft: 6.12,
-                        pielou: 3.78
-                    },
-                    recordedSpecies: [{
-                        speciesId: 1,
-                        speciesName: 'Mango',
-                        samplingUnit: '',
-                        functionalType: '',
-                        numberOfIndividuals: '',
-                        heightOrStratum: '',
-                    }]
+  /**
+   * PUT /projects/{id} - Actualizar proyecto
+   */
+  updateProject(id: number, project: Partial<Project>): Observable<Project> {
+    const userId = this.getUserIdFromStorage();
+    
+    const backendProject: BackendProject = {
+      projectId: id,
+      userId: userId,
+      projectName: project.name || '',
+      projectStatus: project.status === 'Terminado' ? 'completado' : 'activo',
+      projectDescription: project.description || ''
+    };
 
-                }
+    return this.http.put<BackendProject>(`${BASE_URL}/projects/${id}`, backendProject).pipe(
+      map(updated => this.adaptBackendProject(updated)),
+      tap(updatedProject => console.log('✅ Proyecto actualizado:', updatedProject)),
+      catchError(this.handleError)
+    );
+  }
 
-            ]
-        },
-        {
-            id: 6,
-            name: 'Aguacate Orgánico',
-            numberOfZones: 8,
-            status: 'Activo',
-            description: 'Proyecto de cultivo de aguacate orgánico con prácticas sustentables.',
-            zone: [
-                {
-                    idZone: 6,
-                    zoneName: 'Parcela Norte',
-                    zoneDescription: 'Zona principal de cultivo.',
-                    zoneNumber: 1,
-                    squareFootage: '550m2',
-                    biodiversityAnalysis: {
-                        shannonWiener: 2.15,
-                        simpson: 0.52,
-                        margaleft: 7.20,
-                        pielou: 4.10
-                    },
-                    recordedSpecies: [{
-                        speciesId: 1,
-                        speciesName: 'Aguacate',
-                        samplingUnit: 'hola',
-                        functionalType: '',
-                        numberOfIndividuals: '',
-                        heightOrStratum: '',
-                    }]
-                }
-            ]
-        },
-    ];
+  /**
+   * DELETE /projects/{id} - Eliminar proyecto
+   */
+  deleteProject(id: number): Observable<void> {
+    return this.http.delete<void>(`${BASE_URL}/projects/${id}`).pipe(
+      tap(() => console.log('✅ Proyecto eliminado:', id)),
+      catchError(this.handleError)
+    );
+  }
+
+  // ==================== HOME STATS ====================
+
+  /**
+   * GET /home - Obtener estadísticas del home
+   */
+  getHomeStats(): Observable<HomeStats> {
+    return this.http.get<HomeStats>(`${BASE_URL}/home`).pipe(
+      tap(stats => console.log('✅ Estadísticas obtenidas:', stats)),
+      catchError(this.handleError)
+    );
+  }
+
+  // ==================== ADAPTADORES ====================
+
+  /**
+   * Convierte un proyecto del backend al formato del frontend
+   */
+  private adaptBackendProject(backendProject: BackendProject): Project {
+    return {
+      id: backendProject.projectId || 0,
+      name: backendProject.projectName,
+      numberOfZones: 0, // Se cargará con las zonas
+      status: backendProject.projectStatus === 'completado' ? 'Terminado' : 'Activo',
+      description: backendProject.projectDescription || '',
+      zone: []
+    };
+  }
+
+ 
+  private adaptBackendProjects(backendProjects: BackendProject[]): Project[] {
+    return backendProjects.map(p => this.adaptBackendProject(p));
+  }
 
 
-    getProjects(): Observable<Project[]> {
-        return of(this.mockProjects).pipe(
-            delay(300)
-        );
+  private getUserIdFromStorage(): number {
+    const userId = localStorage.getItem('user_id');
+    if (!userId) {
+      throw new Error('Usuario no autenticado. Por favor inicia sesión.');
+    }
+    return parseInt(userId);
+  }
+
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'Ocurrió un error desconocido';
+
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      if (error.error?.error) {
+        errorMessage = error.error.error;
+      } else if (error.error?.message) {
+        errorMessage = error.error.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      } else {
+        errorMessage = `Código: ${error.status} - ${error.statusText}`;
+      }
     }
 
-    getProjectById(id: number): Observable<Project | undefined> {
-        const project = this.mockProjects.find(p => p.id === id);
-        return of(project).pipe(delay(200));
-    }
+    console.error('❌ Error en ProjectService:', errorMessage);
+    return throwError(() => new Error(errorMessage));
+  }
 }

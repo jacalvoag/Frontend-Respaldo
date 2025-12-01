@@ -1,20 +1,21 @@
+// src/app/features/my-project/project-details/project-information/project-information.component.ts
 import { Component, OnInit, OnDestroy, signal, HostListener } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink, RouterOutlet, RouterLinkWithHref, NavigationEnd } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Project } from '../../../../core/models/project.model';
 import { ProjectService } from '../../../../core/services/project.service';
-import { filter } from 'rxjs';
+import { StudyZoneService } from '../../../../core/services/study-zone.service';
+import { Project } from '../../../../core/models/project.model';
+import { Zones } from '../../../../core/models/zones.model';
+import { CommonModule } from '@angular/common';
 import { NewProjectFormComponent } from '../../forms/newproject-forms/newproject-form.component';
 import { NewZoneFormComponent } from '../../forms/newzone-form/newzone-form.component';
-import { CommonModule } from '@angular/common';
-import { Zones } from '../../../../core/models/zones.model';
 
 @Component({
   selector: 'app-project-information',
   templateUrl: './project-information.component.html',
   styleUrl: './project-information.component.css',
   standalone: true,
-  imports: [RouterLink, RouterOutlet, RouterLinkWithHref, NewProjectFormComponent, NewZoneFormComponent, CommonModule] 
+  imports: [RouterLink, CommonModule, NewProjectFormComponent, NewZoneFormComponent]
 })
 export class ProjectDetailComponent implements OnInit, OnDestroy {
   info = signal<Project | null>(null);
@@ -23,28 +24,49 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   showEditModal = false;
   showNewZoneModal = false;
   openMenuId: number | null = null;
+  projectId: number = 0;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private studyZoneService: StudyZoneService
   ) {}
 
   ngOnInit(): void {
     this.paramSub = this.route.paramMap.subscribe(params => {
       const id = +params.get('id')!;
       if (id) {
-        this.loadInfo(id);
+        this.projectId = id;
+        this.loadProjectWithZones(id);
       }
-      this.setupRouteListener();
     });
   }
 
-  loadInfo(id: number): void {
-    this.projectService.getProjectById(id).subscribe({
-      next: (data) => 
-        this.info.set(data || null),
-      error: () => this.info.set(null)
+  loadProjectWithZones(projectId: number): void {
+    // Cargar proyecto
+    this.projectService.getProjectById(projectId).subscribe({
+      next: (project: Project) => {
+        this.info.set(project);
+        
+        // Cargar zonas
+        this.studyZoneService.getStudyZonesByProject(projectId).subscribe({
+          next: (zones: Zones[]) => {
+            const updatedProject = {
+              ...project,
+              zone: zones,
+              numberOfZones: zones.length
+            };
+            this.info.set(updatedProject);
+            console.log('✅ Proyecto con zonas cargado');
+          },
+          error: (err: any) => console.error('❌ Error cargando zonas:', err)
+        });
+      },
+      error: (err: any) => {
+        console.error('❌ Error cargando proyecto:', err);
+        this.info.set(null);
+      }
     });
   }
 
@@ -64,22 +86,12 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
     this.showNewZoneModal = false;
   }
 
-  onProjectUpdated(updatedProject: Project): void {
-    this.info.set(updatedProject);
-    console.log('Proyecto actualizado:', updatedProject);
+  onProjectUpdated(updated: Project): void {
+    this.loadProjectWithZones(this.projectId);
   }
 
   onZoneCreated(newZone: Zones): void {
-    const currentProject = this.info();
-    if (currentProject) {
-      const updatedProject = {
-        ...currentProject,
-        zone: [...currentProject.zone, newZone],
-        numberOfZones: currentProject.zone.length + 1
-      };
-      this.info.set(updatedProject);
-      console.log('Nueva zona creada:', newZone);
-    }
+    this.loadProjectWithZones(this.projectId);
   }
 
   toggleMenu(zoneId: number): void {
@@ -87,22 +99,23 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   }
 
   deleteZone(zoneId: number): void {
-    if (confirm('¿Estás seguro de que deseas eliminar esta zona de estudio? Esta acción eliminará también todas las especies registradas en esta zona.')) {
-      const currentProject = this.info();
-      if (currentProject) {
-        const updatedZones = currentProject.zone.filter(z => z.idZone !== zoneId);
-        const updatedProject = {
-          ...currentProject,
-          zone: updatedZones,
-          numberOfZones: updatedZones.length
-        };
-        this.info.set(updatedProject);
-        this.openMenuId = null;
-        console.log('Zona eliminada:', zoneId);
-        // Aquí puedes agregar la llamada al servicio cuando esté disponible:
-        // this.projectService.deleteZone(projectId, zoneId).subscribe(...)
-      }
+    if (confirm('¿Estás seguro de que deseas eliminar esta zona?')) {
+      this.studyZoneService.deleteStudyZone(this.projectId, zoneId).subscribe({
+        next: () => {
+          console.log('✅ Zona eliminada');
+          this.loadProjectWithZones(this.projectId);
+          this.openMenuId = null;
+        },
+        error: (err: any) => {
+          console.error('❌ Error:', err);
+          alert('Error: ' + err.message);
+        }
+      });
     }
+  }
+
+  toggleView(): void {
+    this.showGrid = !this.showGrid;
   }
 
   @HostListener('document:click', ['$event'])
@@ -113,19 +126,7 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  goBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
-  }
-
   ngOnDestroy(): void {
     this.paramSub.unsubscribe();
-  }
-
-  private setupRouteListener(): void {
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.showGrid = !this.route.firstChild;
-      });
   }
 }
