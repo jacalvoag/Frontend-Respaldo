@@ -1,6 +1,9 @@
-import { Component, Input, } from '@angular/core';
+import { Component, Input, } from '@angular/core'; // <-- Aquí mero*
 import { CommonModule } from '@angular/common';
 import { BarChartModule, Color, ScaleType, LegendPosition } from '@swimlane/ngx-charts';
+
+// *Si se necesita mayor rendimiento hay que importar  ChangeDetectionStrategy
+
 
 @Component({
   selector: 'app-study-zone-charts',
@@ -8,6 +11,7 @@ import { BarChartModule, Color, ScaleType, LegendPosition } from '@swimlane/ngx-
   templateUrl: './study-zone-charts.component.html',
   styleUrl: './study-zone-charts.component.css',
   standalone: true,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StudyZoneChartsComponent {
 
