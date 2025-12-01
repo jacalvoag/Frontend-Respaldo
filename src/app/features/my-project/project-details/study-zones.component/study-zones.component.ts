@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { Project } from '../../../../core/models/project.model';
 import { Zones } from '../../../../core/models/zones.model';
 import { ProjectService } from '../../../../core/services/project.service';
-import { StudyZoneChartsComponent } from '../study-zone-charts/study-zone-charts.components';
+import { StudyZoneChartsComponent } from '../study-zone-charts/study-zone-charts.component';
 import { filter } from 'rxjs';
 import { BiodiversityAnalysisComponent } from '../biodiversity-analysis/biodiversity-analysis.component';
 
@@ -14,7 +14,7 @@ import { BiodiversityAnalysisComponent } from '../biodiversity-analysis/biodiver
   templateUrl: './study-zones.component.html',
   styleUrl: './study-zones.component.css',
   standalone: true,
-  imports: [CommonModule, StudyZoneChartsComponent, BiodiversityAnalysisComponent, RouterLink, RouterLinkWithHref] // RouterOutlet
+  imports: [CommonModule, RouterLink, RouterLinkWithHref] // RouterOutlet, StudyZoneChartsComponent, BiodiversityAnalysisComponent,
 })
 export class StudyZonesComponent implements OnInit, OnDestroy {
   project = signal<Project | null>(null);
@@ -46,8 +46,6 @@ export class StudyZonesComponent implements OnInit, OnDestroy {
         this.project.set(data || null);
         
         if (data?.zone) {
-          // const specificZone = data.zone.find(z => z.idZone === zoneId);
-          //this.zones.set(specificZone ? [specificZone] : []);
           this.zones.set(data.zone);
         } else {
           this.zones.set([]);
