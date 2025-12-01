@@ -44,29 +44,29 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   }
 
   loadProjectWithZones(projectId: number): void {
-    this.projectService.getProjectById(projectId).subscribe({
-      next: (project: Project) => {
-        this.info.set(project);
-        
-        this.studyZoneService.getStudyZonesByProject(projectId).subscribe({
-          next: (zones: Zones[]) => {
-            const updatedProject = {
-              ...project,
-              zone: zones,
-              numberOfZones: zones.length
-            };
-            this.info.set(updatedProject);
-            console.log('✅ Proyecto con zonas cargado');
-          },
-          error: (err: any) => console.error('❌ Error cargando zonas:', err)
-        });
-      },
-      error: (err: any) => {
-        console.error('❌ Error cargando proyecto:', err);
-        this.info.set(null);
-      }
-    });
-  }
+  this.projectService.getProjectById(projectId).subscribe({
+    next: (project: Project) => {
+      this.info.set(project);
+      
+      this.studyZoneService.getStudyZonesByProject(projectId).subscribe({
+        next: (zones: Zones[]) => {
+          const updatedProject = {
+            ...project,
+            zone: zones,
+            numberOfZones: zones.length
+          };
+          this.info.set(updatedProject);
+          console.log('Proyecto con zonas cargado');
+        },
+        error: (err: any) => console.error('Error cargando zonas:', err)
+      });
+    },
+    error: (err: any) => {
+      console.error('Error cargando proyecto:', err);
+      this.info.set(null);
+    }
+  });
+}
 
   openEditModal(): void {
     console.log('🖊️ Abriendo modal de edición para proyecto:', this.info()?.id);
@@ -105,9 +105,28 @@ onProjectUpdated(event: { id: number; data: any }): void {
   });
 }
 
-  onZoneCreated(newZone: Zones): void {
-    this.loadProjectWithZones(this.projectId);
+onZoneCreated(zonePayload: any): void {
+  console.log('📥 Payload de zona recibido:', zonePayload);
+  
+  // Verificar que el projectId esté presente
+  if (!zonePayload.projectId) {
+    console.error('❌ Error: El payload no contiene projectId');
+    alert('Error: No se puede crear la zona sin un proyecto asociado');
+    return;
   }
+  
+  this.studyZoneService.createStudyZone(zonePayload).subscribe({
+    next: (createdZone) => {
+      console.log('✅ Zona creada exitosamente:', createdZone);
+      this.loadProjectWithZones(this.projectId);
+      this.closeNewZoneModal();
+    },
+    error: (err: any) => {
+      console.error('❌ Error creando zona:', err);
+      alert('Error al crear zona: ' + err.message);
+    }
+  });
+}
 
   toggleMenu(zoneId: number): void {
     this.openMenuId = this.openMenuId === zoneId ? null : zoneId;

@@ -54,13 +54,18 @@ export class ProjectService {
     );
   }
 
-  getProjectById(id: number): Observable<Project> {
-    return this.http.get<BackendProject>(`${BASE_URL}/projects/${id}`).pipe(
-      map(backendProject => this.adaptBackendProject(backendProject)),
-      tap(project => console.log('✅ Proyecto obtenido:', project.name)),
-      catchError(this.handleError)
-    );
-  }
+getProjectById(id: number): Observable<Project> {
+  return this.http.get<BackendProject>(`${BASE_URL}/projects/${id}`).pipe(
+    map(backendProject => {
+      console.log('Backend project recibido:', backendProject);
+      const adaptedProject = this.adaptBackendProject(backendProject);
+      console.log('Proyecto adaptado:', adaptedProject);
+      return adaptedProject;
+    }),
+    tap(project => console.log('Proyecto final:', project)),
+    catchError(this.handleError)
+  );
+}
 
   /**
    * POST /projects - Crear nuevo proyecto

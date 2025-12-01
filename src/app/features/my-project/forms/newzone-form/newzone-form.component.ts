@@ -1,7 +1,6 @@
 import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { StudyZoneService } from '../../../../core/services/study-zone.service';
 import { Zones } from '../../../../core/models/zones.model';
 
 @Component({
@@ -15,88 +14,80 @@ export class NewZoneFormComponent implements OnInit {
   @Input() zone: Zones | null = null;
   @Input() projectId: number = 0;
   @Output() closeModal = new EventEmitter<void>();
-  @Output() zoneCreated = new EventEmitter<Zones>();
-  @Output() zoneUpdated = new EventEmitter<Zones>();
+  @Output() zoneCreated = new EventEmitter<any>();
+  @Output() zoneUpdated = new EventEmitter<any>();
 
   zoneForm: FormGroup;
   isEditMode: boolean = false;
-  isLoading: boolean = false;
 
-  constructor(private studyZoneService: StudyZoneService) {
+  constructor() {
     this.zoneForm = new FormGroup({
       zoneName: new FormControl('', [Validators.required]),
       zoneDescription: new FormControl(''),
-      squareFootage: new FormControl('', [Validators.required])
+      squareFootage: new FormControl('', [Validators.required, Validators.min(0.01)])
     });
   }
 
   ngOnInit(): void {
-    console.log('NewZoneForm - projectId:', this.projectId);
+    console.log('NewZoneFormComponent - projectId recibido:', this.projectId);
+    console.log('NewZoneFormComponent - zone recibida:', this.zone);
     
     if (this.zone) {
       this.isEditMode = true;
-      const areaValue = this.zone.squareFootage.replace(/[^\d.]/g, '');
+      const areaValue = this.extractNumber(this.zone.squareFootage);
+      
       this.zoneForm.patchValue({
         zoneName: this.zone.zoneName,
         zoneDescription: this.zone.zoneDescription,
         squareFootage: areaValue
       });
+      
+      console.log('Modo edicion activado para zona:', this.zone.idZone);
+      console.log('Valores del formulario:', this.zoneForm.value);
     }
   }
 
   onSubmit(): void {
-    console.log('=== DEBUG onSubmit ===');
-    console.log('Form válido:', this.zoneForm.valid);
-    console.log('projectId:', this.projectId);
-    
-    if (this.zoneForm.valid && this.projectId && !this.isLoading) {
-      this.isLoading = true;
-
-      const zoneData: Partial<Zones> = {
-        zoneName: this.zoneForm.value.zoneName,
-        zoneDescription: this.zoneForm.value.zoneDescription || '',
-        squareFootage: `${this.zoneForm.value.squareFootage}m²`
-      };
-
-      console.log('Datos a enviar:', zoneData);
-
+    if (this.zoneForm.valid) {
+      const squareArea = parseFloat(this.zoneForm.value.squareFootage);
+      
       if (this.isEditMode && this.zone) {
-        console.log('Actualizando zona...');
-        this.studyZoneService.updateStudyZone(this.zone.idZone, zoneData).subscribe({
-          next: (updated: Zones) => {
-            console.log('✅ Zona actualizada:', updated);
-            this.zoneUpdated.emit(updated);
-            this.isLoading = false;
-            this.onClose();
-          },
-          error: (err: any) => {
-            console.error('❌ Error:', err);
-            alert('Error: ' + err.message);
-            this.isLoading = false;
-          }
-        });
+        const updatePayload = {
+          studyZoneName: this.zoneForm.value.zoneName,
+          studyZoneDescription: this.zoneForm.value.zoneDescription || null,
+          squareArea: squareArea
+        };
+        
+        console.log('PUT - Enviando actualizacion de zona:', JSON.stringify(updatePayload, null, 2));
+        this.zoneUpdated.emit({ id: this.zone.idZone, data: updatePayload });
+        
       } else {
-        console.log('Creando zona...');
-        this.studyZoneService.createStudyZone(this.projectId, zoneData).subscribe({
-          next: (created: Zones) => {
-            console.log('✅ Zona creada:', created);
-            this.zoneCreated.emit(created);
-            this.isLoading = false;
-            this.onClose();
-          },
-          error: (err: any) => {
-            console.error('❌ Error:', err);
-            alert('Error: ' + err.message);
-            this.isLoading = false;
-          }
-        });
+        if (!this.projectId) {
+          console.error('Error: projectId no esta definido');
+          alert('Error: No se puede crear la zona sin un proyecto asociado');
+          return;
+        }
+        
+        const createPayload = {
+          projectId: this.projectId,
+          studyZoneName: this.zoneForm.value.zoneName,
+          studyZoneDescription: this.zoneForm.value.zoneDescription || null,
+          squareArea: squareArea
+        };
+        
+        console.log('POST - Enviando creacion de zona:', JSON.stringify(createPayload, null, 2));
+        this.zoneCreated.emit(createPayload);
       }
+      
+      this.onClose();
     } else {
-      console.log('No se puede enviar:');
-      console.log('- Form válido:', this.zoneForm.valid);
-      console.log('- projectId:', this.projectId);
-      console.log('- isLoading:', this.isLoading);
+      console.error('Formulario invalido:', this.zoneForm.errors);
     }
+  }
+
+  private extractNumber(value: string): number {
+    const match = value.match(/[\d.]+/);
+    return match ? parseFloat(match[0]) : 0;
   }
 
   onClose(): void {

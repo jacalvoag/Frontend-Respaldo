@@ -40,23 +40,16 @@ export class StudyZoneService {
 
   constructor(private http: HttpClient) { }
 
-  // ==================== STUDY ZONE CRUD ====================
-
-  /**
-   * GET /project-details/{projectId}/study-zones
-   * Obtener zonas de estudio de un proyecto
-   */
   getStudyZonesByProject(projectId: number): Observable<Zones[]> {
+    console.log('GET a /project-details/' + projectId + '/study-zones');
+    
     return this.http.get<BackendStudyZone[]>(`${BASE_URL}/project-details/${projectId}/study-zones`).pipe(
       map(backendZones => this.adaptBackendZones(backendZones)),
-      tap(zones => console.log('✅ Zonas obtenidas:', zones.length)),
+      tap(zones => console.log('Zonas obtenidas:', zones.length)),
       catchError(this.handleError)
     );
   }
 
-  /**
-   * GET /study-zones/{id} - Obtener zona por ID
-   */
   getStudyZoneById(id: number): Observable<Zones> {
     return this.http.get<BackendStudyZone>(`${BASE_URL}/study-zones/${id}`).pipe(
       map(backendZone => this.adaptBackendZone(backendZone)),
@@ -65,46 +58,40 @@ export class StudyZoneService {
     );
   }
 
-  /**
-   * POST /project-details/{projectId}/study-zones
-   * Crear zona de estudio en un proyecto
-   */
-  createStudyZone(projectId: number, zone: Partial<Zones>): Observable<Zones> {
-    const squareArea = this.extractSquareArea(zone.squareFootage || '0');
-
-    const backendZone: BackendStudyZone = {
-      projectId: projectId,
-      studyZoneName: zone.zoneName || '',
-      studyZoneDescription: zone.zoneDescription || '',
-      squareArea: squareArea
-    };
-
-    return this.http.post<BackendStudyZone>(`${BASE_URL}/project-details/${projectId}/study-zones`, backendZone).pipe(
-      map(created => this.adaptBackendZone(created)),
-      tap(newZone => console.log('✅ Zona creada:', newZone)),
-      catchError(this.handleError)
-    );
+createStudyZone(zonePayload: any): Observable<Zones> {
+  const projectId = zonePayload.projectId;
+  
+  if (!projectId) {
+    throw new Error('projectId es requerido para crear una zona');
   }
+  
+  console.log('POST a /project-details/' + projectId + '/study-zones');
+  console.log('Payload:', JSON.stringify(zonePayload, null, 2));
+  
+  return this.http.post<BackendStudyZone>(
+    `${BASE_URL}/project-details/${projectId}/study-zones`,
+    zonePayload
+  ).pipe(
+    map(created => this.adaptBackendZone(created)),
+    tap(newZone => console.log('Zona creada:', newZone)),
+    catchError(this.handleError)
+  );
+}
 
   /**
    * PUT /study-zone-details/{zoneId}
    * Actualizar zona de estudio
    */
-  updateStudyZone(zoneId: number, zone: Partial<Zones>): Observable<Zones> {
-    const squareArea = this.extractSquareArea(zone.squareFootage || '0');
+updateStudyZone(zoneId: number, zonePayload: any): Observable<Zones> {
+  console.log('PUT a /study-zone-details/' + zoneId);
+  console.log('Payload:', JSON.stringify(zonePayload, null, 2));
 
-    const updateData = {
-      studyZoneName: zone.zoneName || '',
-      studyZoneDescription: zone.zoneDescription || '',
-      squareArea: squareArea
-    };
-
-    return this.http.put<BackendStudyZone>(`${BASE_URL}/study-zone-details/${zoneId}`, updateData).pipe(
-      map(updated => this.adaptBackendZone(updated)),
-      tap(updatedZone => console.log('✅ Zona actualizada:', updatedZone)),
-      catchError(this.handleError)
-    );
-  }
+  return this.http.put<BackendStudyZone>(`${BASE_URL}/study-zone-details/${zoneId}`, zonePayload).pipe(
+    map(updated => this.adaptBackendZone(updated)),
+    tap(updatedZone => console.log('Zona actualizada:', updatedZone)),
+    catchError(this.handleError)
+  );
+}
 
   /**
    * DELETE /project-details/{projectId}/study-zones/{zoneId}

@@ -36,7 +36,9 @@
             id="squareFootage" 
             class="form-input" 
             formControlName="squareFootage" 
-            type="text"
+            type="number"
+            step="0.01"
+            min="0.01"
             placeholder="Obligatorio">
         </div>
 
@@ -51,7 +53,7 @@
             type="submit" 
             class="button-modal-action button-modal-action--elverde"
             [disabled]="!zoneForm.valid">
-            {{ isEditMode ? 'Guardar' : 'Guardar' }}
+            {{ isEditMode ? 'Guardar cambios' : 'Crear zona' }}
             </button>
         </div>
         </form>
