@@ -77,27 +77,31 @@ export class ProjectService {
     );
   }
 
-  updateProject(id: number, project: Partial<Project>): Observable<Project> {
-    const userId = this.getUserIdFromStorage();
-    
-    const backendProject: BackendProject = {
-      projectId: id,
-      userId: userId,
-      projectName: project.name || '',
-      projectStatus: project.status === 'Terminado' ? 'completado' : 'activo',
-      projectDescription: project.description || ''
-    };
 
-    return this.http.put<BackendProject>(`${BASE_URL}/projects/${id}`, backendProject).pipe(
-      map(updated => this.adaptBackendProject(updated)),
-      tap(updatedProject => console.log('✅ Proyecto actualizado:', updatedProject)),
-      catchError(this.handleError)
-    );
-  }
+updateProject(id: number, projectData: any): Observable<Project> {
+  console.log('📤 PUT a /projects/' + id);
+  console.log('📤 Payload que se enviará:', JSON.stringify(projectData, null, 2));
+  
+  const payload = {
+    projectId: projectData.projectId || id,
+    userId: projectData.userId,
+    projectName: projectData.projectName,
+    projectStatus: projectData.projectStatus,
+    projectDescription: projectData.projectDescription
+  };
+  
+  console.log('Payload final:', JSON.stringify(payload, null, 2));
+  
+  return this.http.put<BackendProject>(`${BASE_URL}/projects/${id}`, payload).pipe(
+    map(updated => this.adaptBackendProject(updated)),
+    tap(updatedProject => console.log('Proyecto actualizado:', updatedProject)),
+    catchError(this.handleError)
+  );
+}
 
   deleteProject(id: number): Observable<void> {
     return this.http.delete<void>(`${BASE_URL}/projects/${id}`).pipe(
-      tap(() => console.log('✅ Proyecto eliminado:', id)),
+      tap(() => console.log('Proyecto eliminado:', id)),
       catchError(this.handleError)
     );
   }

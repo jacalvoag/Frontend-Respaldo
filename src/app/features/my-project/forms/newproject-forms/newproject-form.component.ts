@@ -11,10 +11,10 @@ import { Project } from '../../../../core/models/project.model';
   styleUrls: ['./newproject-form.component.css']
 })
 export class NewProjectFormComponent implements OnInit {
-  @Input() project: Project | null = null;
+  @Input() project: Project | null = null; // ✅ Para modo edición
   @Output() closeModal = new EventEmitter<void>();
   @Output() projectCreated = new EventEmitter<any>();
-  @Output() projectUpdated = new EventEmitter<any>();
+  @Output() projectUpdated = new EventEmitter<any>(); // ✅ Nuevo evento
 
   projectForm: FormGroup;
   isEditMode: boolean = false;
@@ -33,6 +33,7 @@ export class NewProjectFormComponent implements OnInit {
         name: this.project.name,
         description: this.project.description
       });
+      console.log('📝 Modo edición activado para proyecto:', this.project.id);
     }
   }
 
@@ -40,16 +41,32 @@ export class NewProjectFormComponent implements OnInit {
     if (this.projectForm.valid) {
       const userId = this.getUserIdFromStorage();
       
-      const projectPayload = {
-        userId: userId,
-        projectName: this.projectForm.value.name,
-        projectStatus: 'activo',
-        projectDescription: this.projectForm.value.description || null
-      };
+      if (this.isEditMode && this.project) {
+        // ✅ MODO EDICIÓN
+        const updatePayload = {
+          projectId: this.project.id,
+          userId: userId,
+          projectName: this.projectForm.value.name,
+          projectStatus: this.project.status === 'Terminado' ? 'completado' : 'activo',
+          projectDescription: this.projectForm.value.description || null
+        };
+        
+        console.log('📤 PUT - Enviando actualización:', JSON.stringify(updatePayload, null, 2));
+        this.projectUpdated.emit({ id: this.project.id, data: updatePayload });
+        
+      } else {
+        // ✅ MODO CREACIÓN
+        const createPayload = {
+          userId: userId,
+          projectName: this.projectForm.value.name,
+          projectStatus: 'activo',
+          projectDescription: this.projectForm.value.description || null
+        };
+        
+        console.log('📤 POST - Enviando creación:', JSON.stringify(createPayload, null, 2));
+        this.projectCreated.emit(createPayload);
+      }
       
-      console.log('📤 JSON enviado al backend:', JSON.stringify(projectPayload, null, 2));
-      
-      this.projectCreated.emit(projectPayload);
       this.onClose();
     }
   }

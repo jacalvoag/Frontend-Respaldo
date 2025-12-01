@@ -44,12 +44,10 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   }
 
   loadProjectWithZones(projectId: number): void {
-    // Cargar proyecto
     this.projectService.getProjectById(projectId).subscribe({
       next: (project: Project) => {
         this.info.set(project);
         
-        // Cargar zonas
         this.studyZoneService.getStudyZonesByProject(projectId).subscribe({
           next: (zones: Zones[]) => {
             const updatedProject = {
@@ -71,6 +69,7 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   }
 
   openEditModal(): void {
+    console.log('🖊️ Abriendo modal de edición para proyecto:', this.info()?.id);
     this.showEditModal = true;
   }
 
@@ -86,9 +85,25 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
     this.showNewZoneModal = false;
   }
 
-  onProjectUpdated(updated: Project): void {
-    this.loadProjectWithZones(this.projectId);
-  }
+  /**
+   * ✅ NUEVO: Manejador del evento projectUpdated
+   */
+onProjectUpdated(event: { id: number; data: any }): void {
+  console.log('📥 Evento de actualización recibido:', event);
+  
+  // ✅ Enviar solo event.data, el id ya está en la URL
+  this.projectService.updateProject(event.id, event.data).subscribe({
+    next: (updatedProject: Project) => {
+      console.log('✅ Proyecto actualizado exitosamente:', updatedProject);
+      this.loadProjectWithZones(this.projectId);
+      this.closeEditModal();
+    },
+    error: (err: any) => {
+      console.error('❌ Error actualizando proyecto:', err);
+      alert('Error al actualizar proyecto: ' + err.message);
+    }
+  });
+}
 
   onZoneCreated(newZone: Zones): void {
     this.loadProjectWithZones(this.projectId);
