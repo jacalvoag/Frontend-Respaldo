@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { Project } from '../../../../core/models/project.model';
 import { ProjectService } from '../../../../core/services/project.service';
 import { filter } from 'rxjs';
-import { StudyZoneChartsComponent } from '../study-zone-charts/study-zone-charts.components';
+import { StudyZoneChartsComponent } from '../study-zone-charts/study-zone-charts.component';
 import { Zones } from '../../../../core/models/zones.model';
 
 @Component({

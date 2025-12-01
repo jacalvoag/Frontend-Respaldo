@@ -55,10 +55,4 @@ export class NewProjectFormComponent implements OnInit {
   onClose(): void {
     this.closeModal.emit();
   }
-
-  onOverlayClick(event: MouseEvent): void {
-    if (event.target === event.currentTarget) {
-      this.onClose();
-    }
-  }
 }

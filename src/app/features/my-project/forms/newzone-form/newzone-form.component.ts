@@ -75,9 +75,4 @@ export class NewZoneFormComponent implements OnInit {
     this.closeModal.emit();
   }
 
-  onOverlayClick(event: MouseEvent): void {
-    if (event.target === event.currentTarget) {
-      this.onClose();
-    }
-  }
 }

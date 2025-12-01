@@ -29,10 +29,10 @@ export class ProjectService {
                     recordedSpecies: [{
                         speciesId: 1,
                         speciesName: 'Mango',
-                        samplingUnit: '',
-                        functionalType: '',
-                        numberOfIndividuals: '',
-                        heightOrStratum: '',
+                        samplingUnit: '10m^2',
+                        functionalType: 'Frutal',
+                        numberOfIndividuals: '13',
+                        heightOrStratum: '10 - 40m',
                     }]
                 }
             ]
@@ -168,7 +168,7 @@ export class ProjectService {
                     recordedSpecies: [{
                         speciesId: 1,
                         speciesName: 'Aguacate',
-                        samplingUnit: '',
+                        samplingUnit: 'hola',
                         functionalType: '',
                         numberOfIndividuals: '',
                         heightOrStratum: '',
