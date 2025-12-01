@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { Zones } from '../../../../core/models/zones.model';
 import { RercordedSpecies } from '../../../../core/models/recorded-species.model';
 import { ProjectService } from '../../../../core/services/project.service';
+import { SpeciesService } from '../../../../core/services/species.service';
 import { NewSpecieFormComponent } from '../../forms/newspecie-form/newspecie-form.component';
 
 @Component({
@@ -15,7 +16,6 @@ import { NewSpecieFormComponent } from '../../forms/newspecie-form/newspecie-for
   styleUrl: './species-zone.component.css',
 })
 export class SpeciesZoneComponent implements OnInit, OnDestroy {
-  // Señales para manejar el estado del componente
   currentZone = signal<Zones | null>(null);
   recordedSpecies = signal<RercordedSpecies[]>([]);
   loading = signal(true);
@@ -23,39 +23,52 @@ export class SpeciesZoneComponent implements OnInit, OnDestroy {
   showAddSpeciesModal = false;
   showEditSpeciesModal = false;
   selectedSpecies: RercordedSpecies | null = null;
+  zoneId: number = 0;
+  projectId: number = 0;
 
   private paramSub!: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private speciesService: SpeciesService
   ) {}
 
   ngOnInit(): void {
     this.paramSub = this.route.paramMap.subscribe(params => {
-      const projectId = +params.get('id')!;
-      const zoneId = +params.get('idZone')!;
+      this.projectId = +params.get('id')!;
+      this.zoneId = +params.get('idZone')!;
 
-      this.loadSpeciesData(projectId, zoneId);
+      this.loadZoneData(this.projectId, this.zoneId);
+      this.loadSpeciesData(this.zoneId);
     });
   }
 
-  private loadSpeciesData(projectId: number, zoneId: number): void {
-    this.loading.set(true);
-
+  private loadZoneData(projectId: number, zoneId: number): void {
     this.projectService.getProjectById(projectId).subscribe({
       next: (data) => {
         if (data) {
           const zone = data.zone.find(z => z.idZone === zoneId);
-          
           if (zone) {
             this.currentZone.set(zone);
-            this.recordedSpecies.set(zone.recordedSpecies || []);
           }
         }
-        
+      },
+      error: (err) => {
+        console.error('Error cargando zona:', err);
+      }
+    });
+  }
+
+  private loadSpeciesData(zoneId: number): void {
+    this.loading.set(true);
+
+    this.speciesService.getSpeciesByZone(zoneId).subscribe({
+      next: (species: RercordedSpecies[]) => {
+        this.recordedSpecies.set(species);
         this.loading.set(false);
+        console.log('Especies cargadas:', species.length);
       },
       error: (err) => {
         console.error('Error cargando especies:', err);
@@ -94,8 +107,8 @@ export class SpeciesZoneComponent implements OnInit, OnDestroy {
   }
 
   onSpeciesCreated(newSpecies: RercordedSpecies): void {
-    const currentSpecies = this.recordedSpecies();
-    this.recordedSpecies.set([...currentSpecies, newSpecies]);
+    // Recargar las especies desde el servidor
+    this.loadSpeciesData(this.zoneId);
     console.log('Nueva especie creada:', newSpecies);
   }
 
@@ -111,24 +124,24 @@ export class SpeciesZoneComponent implements OnInit, OnDestroy {
   }
 
   onSpeciesUpdated(updatedSpecies: RercordedSpecies): void {
-    const currentSpecies = this.recordedSpecies();
-    const index = currentSpecies.findIndex(s => s.speciesId === updatedSpecies.speciesId);
-    
-    if (index !== -1) {
-      const newSpecies = [...currentSpecies];
-      newSpecies[index] = updatedSpecies;
-      this.recordedSpecies.set(newSpecies);
-      console.log('Especie actualizada:', updatedSpecies);
-    }
+    // Recargar las especies desde el servidor
+    this.loadSpeciesData(this.zoneId);
+    console.log('Especie actualizada:', updatedSpecies);
   }
 
   deleteSpecies(speciesId: number): void {
     if (confirm('¿Estás seguro de que deseas eliminar esta especie?')) {
-      console.log('Eliminar especie con ID:', speciesId);
-      
-      const updatedSpecies = this.recordedSpecies().filter(s => s.speciesId !== speciesId);
-      this.recordedSpecies.set(updatedSpecies);
-      this.openMenuId = null; 
+      this.speciesService.deleteSpeciesFromZone(this.zoneId, speciesId).subscribe({
+        next: () => {
+          console.log('Especie eliminada');
+          this.loadSpeciesData(this.zoneId);
+          this.openMenuId = null;
+        },
+        error: (err) => {
+          console.error('Error eliminando especie:', err);
+          alert('Error: ' + err.message);
+        }
+      });
     }
   }
 

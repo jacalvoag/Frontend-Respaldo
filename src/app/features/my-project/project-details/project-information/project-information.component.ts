@@ -58,13 +58,13 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
               numberOfZones: zones.length
             };
             this.info.set(updatedProject);
-            console.log('✅ Proyecto con zonas cargado');
+            console.log('Proyecto con zonas cargado');
           },
-          error: (err: any) => console.error('❌ Error cargando zonas:', err)
+          error: (err: any) => console.error('Error cargando zonas:', err)
         });
       },
       error: (err: any) => {
-        console.error('❌ Error cargando proyecto:', err);
+        console.error('Error cargando proyecto:', err);
         this.info.set(null);
       }
     });
@@ -91,6 +91,7 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   }
 
   onZoneCreated(newZone: Zones): void {
+    // Recargar el proyecto completo con las zonas actualizadas
     this.loadProjectWithZones(this.projectId);
   }
 
@@ -102,12 +103,12 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
     if (confirm('¿Estás seguro de que deseas eliminar esta zona?')) {
       this.studyZoneService.deleteStudyZone(this.projectId, zoneId).subscribe({
         next: () => {
-          console.log('✅ Zona eliminada');
+          console.log('Zona eliminada');
           this.loadProjectWithZones(this.projectId);
           this.openMenuId = null;
         },
         error: (err: any) => {
-          console.error('❌ Error:', err);
+          console.error('Error:', err);
           alert('Error: ' + err.message);
         }
       });

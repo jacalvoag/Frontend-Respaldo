@@ -32,10 +32,10 @@ export class MyProjectComponent implements OnInit {
       next: (data: Project[]) => {
         this.projects = data;
         this.loading = false;
-        console.log('✅ Proyectos cargados:', this.projects.length);
+        console.log('Proyectos cargados:', this.projects.length);
       },
       error: (err: any) => {
-        console.error('❌ Error cargando proyectos:', err);
+        console.error('Error cargando proyectos:', err);
         this.loading = false;
         this.textError = err.message || 'Error al cargar proyectos';
       }
@@ -51,8 +51,9 @@ export class MyProjectComponent implements OnInit {
   }
 
   onProjectCreated(newProject: Project): void {
+    // Agregar el nuevo proyecto a la lista
     this.projects = [newProject, ...this.projects];
-    console.log('✅ Nuevo proyecto agregado');
+    console.log('Nuevo proyecto agregado a la lista');
   }
 
   deleteProject(projectId: number): void {
@@ -61,10 +62,10 @@ export class MyProjectComponent implements OnInit {
         next: () => {
           this.projects = this.projects.filter(p => p.id !== projectId);
           this.openMenuId = null;
-          console.log('✅ Proyecto eliminado');
+          console.log('Proyecto eliminado');
         },
         error: (err: any) => {
-          console.error('❌ Error eliminando proyecto:', err);
+          console.error('Error eliminando proyecto:', err);
           alert('Error: ' + err.message);
         }
       });

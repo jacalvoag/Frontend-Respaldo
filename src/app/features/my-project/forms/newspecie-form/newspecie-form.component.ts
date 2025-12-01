@@ -1,7 +1,9 @@
 import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { RercordedSpecies } from '../../../../core/models/recorded-species.model';
+import { SpeciesService } from '../../../../core/services/species.service';
 import { ImageUploadService } from '../../../../core/services/image-upload.service';
 
 @Component({
@@ -19,6 +21,8 @@ export class NewSpecieFormComponent implements OnInit {
 
   speciesForm: FormGroup;
   isEditMode: boolean = false;
+  isSubmitting: boolean = false;
+  zoneId: number = 0;
 
   imageUrl: string = '';
   imagePreview: string = '';
@@ -35,7 +39,11 @@ export class NewSpecieFormComponent implements OnInit {
     'Industrial'
   ];
 
-  constructor(private imageUploadService: ImageUploadService) {
+  constructor(
+    private speciesService: SpeciesService,
+    private imageUploadService: ImageUploadService,
+    private route: ActivatedRoute
+  ) {
     this.speciesForm = new FormGroup({
       speciesName: new FormControl('', [Validators.required]),
       samplingUnit: new FormControl('', [Validators.required]),
@@ -46,6 +54,9 @@ export class NewSpecieFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Obtener zoneId de la ruta
+    this.zoneId = +this.route.snapshot.paramMap.get('idZone')!;
+
     if (this.species) {
       this.isEditMode = true;
       this.speciesForm.patchValue({
@@ -90,7 +101,7 @@ export class NewSpecieFormComponent implements OnInit {
         console.log('Imagen subida exitosamente:', url);
       },
       error: (err) => {
-        console.error('❌ Error subiendo imagen:', err);
+        console.error('Error subiendo imagen:', err);
         this.uploadError = err.message || 'Error al subir la imagen';
         this.uploading = false;
         this.imagePreview = '';
@@ -112,31 +123,47 @@ export class NewSpecieFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.speciesForm.valid) {
+    if (this.speciesForm.valid && !this.isSubmitting) {
+      this.isSubmitting = true;
+
+      const speciesData: Partial<RercordedSpecies> = {
+        speciesName: this.speciesForm.value.speciesName,
+        samplingUnit: this.speciesForm.value.samplingUnit,
+        functionalType: this.speciesForm.value.functionalType,
+        numberOfIndividuals: this.speciesForm.value.numberOfIndividuals,
+        heightOrStratum: this.speciesForm.value.heightOrStratum,
+        speciesPhoto: this.imageUrl || undefined
+      };
+
       if (this.isEditMode && this.species) {
-        const updatedSpecies: RercordedSpecies = {
-          ...this.species,
-          speciesName: this.speciesForm.value.speciesName,
-          samplingUnit: this.speciesForm.value.samplingUnit,
-          functionalType: this.speciesForm.value.functionalType,
-          numberOfIndividuals: this.speciesForm.value.numberOfIndividuals,
-          heightOrStratum: this.speciesForm.value.heightOrStratum,
-          speciesPhoto: this.imageUrl || undefined
-        };
-        this.speciesUpdated.emit(updatedSpecies);
+        this.speciesService.updateSpeciesInZone(this.zoneId, this.species.speciesId, speciesData).subscribe({
+          next: (updatedSpecies: RercordedSpecies) => {
+            console.log('Especie actualizada:', updatedSpecies);
+            this.speciesUpdated.emit(updatedSpecies);
+            this.isSubmitting = false;
+            this.onClose();
+          },
+          error: (err: any) => {
+            console.error('Error actualizando especie:', err);
+            alert('Error: ' + err.message);
+            this.isSubmitting = false;
+          }
+        });
       } else {
-        const newSpecies: RercordedSpecies = {
-          speciesId: Date.now(),
-          speciesName: this.speciesForm.value.speciesName,
-          samplingUnit: this.speciesForm.value.samplingUnit,
-          functionalType: this.speciesForm.value.functionalType,
-          numberOfIndividuals: this.speciesForm.value.numberOfIndividuals,
-          heightOrStratum: this.speciesForm.value.heightOrStratum,
-          speciesPhoto: this.imageUrl || undefined
-        };
-        this.speciesCreated.emit(newSpecies);
+        this.speciesService.createSpeciesInZone(this.zoneId, speciesData).subscribe({
+          next: (newSpecies: RercordedSpecies) => {
+            console.log('Especie creada:', newSpecies);
+            this.speciesCreated.emit(newSpecies);
+            this.isSubmitting = false;
+            this.onClose();
+          },
+          error: (err: any) => {
+            console.error('Error creando especie:', err);
+            alert('Error: ' + err.message);
+            this.isSubmitting = false;
+          }
+        });
       }
-      this.onClose();
     }
   }
 
