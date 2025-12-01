@@ -5,11 +5,12 @@ import { Subscription } from 'rxjs';
 import { Zones } from '../../../../core/models/zones.model';
 import { RercordedSpecies } from '../../../../core/models/recorded-species.model';
 import { ProjectService } from '../../../../core/services/project.service';
+import { NewSpecieFormComponent } from '../../forms/newspecie-form/newspecie-form.component';
 
 @Component({
   selector: 'app-species-zone.component',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, NewSpecieFormComponent],
   templateUrl: './species-zone.component.html',
   styleUrl: './species-zone.component.css',
 })
@@ -18,6 +19,9 @@ export class SpeciesZoneComponent implements OnInit, OnDestroy {
   recordedSpecies = signal<RercordedSpecies[]>([]);
   loading = signal(true);
   openMenuId: number | null = null;
+  showAddSpeciesModal = false;
+  showEditSpeciesModal = false;
+  selectedSpecies: RercordedSpecies | null = null;
 
   private paramSub!: Subscription;
 
@@ -78,15 +82,43 @@ export class SpeciesZoneComponent implements OnInit, OnDestroy {
     this.router.navigate(['../../'], { relativeTo: this.route });
   }
 
-
   openAddSpeciesModal(): void {
-    console.log('Abrir modal para agregar especie');
+    this.selectedSpecies = null;
+    this.showAddSpeciesModal = true;
+  }
+
+  closeAddSpeciesModal(): void {
+    this.showAddSpeciesModal = false;
+    this.selectedSpecies = null;
+  }
+
+  onSpeciesCreated(newSpecies: RercordedSpecies): void {
+    const currentSpecies = this.recordedSpecies();
+    this.recordedSpecies.set([...currentSpecies, newSpecies]);
+    console.log('Nueva especie creada:', newSpecies);
   }
 
   editSpecies(species: RercordedSpecies): void {
-    console.log('Editar especie:', species);
-
+    this.selectedSpecies = species;
+    this.showEditSpeciesModal = true;
     this.openMenuId = null; 
+  }
+
+  closeEditSpeciesModal(): void {
+    this.showEditSpeciesModal = false;
+    this.selectedSpecies = null;
+  }
+
+  onSpeciesUpdated(updatedSpecies: RercordedSpecies): void {
+    const currentSpecies = this.recordedSpecies();
+    const index = currentSpecies.findIndex(s => s.speciesId === updatedSpecies.speciesId);
+    
+    if (index !== -1) {
+      const newSpecies = [...currentSpecies];
+      newSpecies[index] = updatedSpecies;
+      this.recordedSpecies.set(newSpecies);
+      console.log('Especie actualizada:', updatedSpecies);
+    }
   }
 
   deleteSpecies(speciesId: number): void {
@@ -95,7 +127,7 @@ export class SpeciesZoneComponent implements OnInit, OnDestroy {
       
       const updatedSpecies = this.recordedSpecies().filter(s => s.speciesId !== speciesId);
       this.recordedSpecies.set(updatedSpecies);
-      this.openMenuId = null; // Cerrar el menú
+      this.openMenuId = null; 
     }
   }
 

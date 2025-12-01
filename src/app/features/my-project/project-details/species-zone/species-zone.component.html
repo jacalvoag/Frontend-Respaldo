@@ -75,3 +75,18 @@
 
     }
 </div>
+
+@if (showAddSpeciesModal) {
+  <app-newspecie-form
+    (closeModal)="closeAddSpeciesModal()"
+    (speciesCreated)="onSpeciesCreated($event)">
+  </app-newspecie-form>
+}
+
+@if (showEditSpeciesModal) {
+  <app-newspecie-form
+    [species]="selectedSpecies"
+    (closeModal)="closeEditSpeciesModal()"
+    (speciesUpdated)="onSpeciesUpdated($event)">
+  </app-newspecie-form>
+}
