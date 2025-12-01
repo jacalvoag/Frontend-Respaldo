@@ -11,6 +11,11 @@
     <div class="loading-state">
       <p>Cargando proyectos...</p>
     </div>
+  } @else if (displayProjects.length === 0) {
+    <div class="empty-state">
+      <p>No hay proyectos activos todavía</p>
+      <p style="font-size: 0.9rem; margin-top: 10px;">Crea tu primer proyecto para comenzar</p>
+    </div>
   } @else {
     <div class="projects-list">
       @for (project of displayProjects; track project.id) {
@@ -24,8 +29,6 @@
           </div>
           <span class="status-badge">{{ project.status }}</span>
         </div>
-      } @empty {
-        <p class="empty-state">No hay proyectos activos</p>
       }
     </div>
   }
