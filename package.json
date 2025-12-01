@@ -28,7 +28,10 @@
     "@angular/forms": "^20.3.14",
     "@angular/platform-browser": "^20.3.14",
     "@angular/router": "^20.3.14",
+    "@cloudinary/ng": "^2.1.5",
+    "@cloudinary/url-gen": "^1.22.0",
     "@swimlane/ngx-charts": "^23.1.0",
+    "cloudinary": "^2.8.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

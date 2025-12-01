@@ -64,16 +64,53 @@
             </div>
 
             <div class="image-upload-section">
-                <button 
-                    type="button" 
-                    class="image-upload-button"
-                    disabled>
-                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="currentColor">
-                        <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h360v80H200v560h560v-360h80v360q0 33-23.5 56.5T760-120H200Zm120-160h320L553-408 448-272l-65-87-63 79Zm440-320v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Z"/>
-                    </svg>
-                    Agregar imágenes
-                </button>
-                <p class="image-upload-note">(Próximamente disponible)</p>
+                <input 
+                    type="file" 
+                    id="imageInput" 
+                    accept="image/*"
+                    (change)="onFileSelected($event)"
+                    style="display: none;">
+
+                @if (!imagePreview) {
+                    <button 
+                        type="button" 
+                        class="image-upload-button"
+                        (click)="triggerFileInput()">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="currentColor">
+                            <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h360v80H200v560h560v-360h80v360q0 33-23.5 56.5T760-120H200Zm120-160h320L553-408 448-272l-65-87-63 79Zm440-320v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Z"/>
+                        </svg>
+                        Agregar imagen
+                    </button>
+                    <p class="image-upload-note">JPG, PNG, GIF o WEBP (máx. 5MB)</p>
+                } @else {
+                    <div class="image-preview-container">
+                        <img [src]="imagePreview" alt="Preview" class="image-preview">
+                        <button 
+                            type="button" 
+                            class="remove-image-button"
+                            (click)="removeImage()"
+                            [disabled]="uploading">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="currentColor">
+                                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+                            </svg>
+                        </button>
+                        
+                        @if (uploading) {
+                            <div class="uploading-overlay">
+                                <div class="spinner"></div>
+                                <p>Subiendo...</p>
+                            </div>
+                        }
+                    </div>
+                    
+                    @if (imageUrl && !uploading) {
+                        <p class="upload-success">Imagen guardada exitosamente</p>
+                    }
+                }
+
+                @if (uploadError) {
+                    <p class="upload-error">❌ {{ uploadError }}</p>
+                }
             </div>
 
             <div class="modal-actions">

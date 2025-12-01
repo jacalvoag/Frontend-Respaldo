@@ -20,14 +20,20 @@
 
         <div class="species-grid">
         @for (species of recordedSpecies(); track species.speciesId) {
-            <div class="species-card">
+            <div class="species-card" [class.species-card--no-image]="!species.speciesPhoto">
+
+            @if (species.speciesPhoto) {
+                <div class="image-container">
+                    <img [src]="species.speciesPhoto" [alt]="species.speciesName" class="species-image">
+                </div>
+            }
 
             <div class="species-info">
                 <h3>{{ species.speciesName }}</h3>
                 <p><strong>Unidad de muestreo:</strong> {{ species.samplingUnit || 'No especificado' }}</p>
                 <p><strong>Tipo funcional:</strong> {{ species.functionalType || 'No especificado' }}</p>
-                <p><strong>No. de individuos:</strong> {{ species.numberOfIndividuals || '0' }}</p>
-                <p><strong>Altura/Estrato:</strong> {{ species.heightOrStratum || 'No especificado' }}</p>
+                <p><strong>Número de individuos:</strong> {{ species.numberOfIndividuals || '0' }}</p>
+                <p><strong>Altura o estrato:</strong> {{ species.heightOrStratum || 'No especificado' }}</p>
             </div>
 
             <div class="species-footer">

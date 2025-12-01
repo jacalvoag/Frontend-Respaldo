@@ -4,5 +4,6 @@ export interface RercordedSpecies{
     samplingUnit: string,
     functionalType: string,
     numberOfIndividuals: string,
-    heightOrStratum: string
+    heightOrStratum: string,
+    speciesPhoto?: string
 }
