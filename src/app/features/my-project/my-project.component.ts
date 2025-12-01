@@ -64,6 +64,16 @@ export class MyProjectComponent implements OnInit {
     console.log('Nuevo proyecto creado:', newProject);
   }
 
+  deleteProject(projectId: number): void {
+    if (confirm('¿Estás seguro de que deseas eliminar este proyecto? Esta acción no se puede deshacer.')) {
+      this.projects = this.projects.filter(p => p.id !== projectId);
+      this.openMenuId = null;
+      console.log('Proyecto eliminado:', projectId);
+      // Aquí puedes agregar la llamada al servicio cuando esté disponible:
+      // this.projectService.deleteProject(projectId).subscribe(...)
+    }
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;

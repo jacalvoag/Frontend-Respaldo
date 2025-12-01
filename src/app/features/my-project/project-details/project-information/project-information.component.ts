@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet, RouterLinkWithHref, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from '../../../../core/models/project.model';
@@ -22,6 +22,7 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   showGrid = true;
   showEditModal = false;
   showNewZoneModal = false;
+  openMenuId: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -78,6 +79,37 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
       };
       this.info.set(updatedProject);
       console.log('Nueva zona creada:', newZone);
+    }
+  }
+
+  toggleMenu(zoneId: number): void {
+    this.openMenuId = this.openMenuId === zoneId ? null : zoneId;
+  }
+
+  deleteZone(zoneId: number): void {
+    if (confirm('¿Estás seguro de que deseas eliminar esta zona de estudio? Esta acción eliminará también todas las especies registradas en esta zona.')) {
+      const currentProject = this.info();
+      if (currentProject) {
+        const updatedZones = currentProject.zone.filter(z => z.idZone !== zoneId);
+        const updatedProject = {
+          ...currentProject,
+          zone: updatedZones,
+          numberOfZones: updatedZones.length
+        };
+        this.info.set(updatedProject);
+        this.openMenuId = null;
+        console.log('Zona eliminada:', zoneId);
+        // Aquí puedes agregar la llamada al servicio cuando esté disponible:
+        // this.projectService.deleteZone(projectId, zoneId).subscribe(...)
+      }
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.button-option')) {
+      this.openMenuId = null;
     }
   }
 

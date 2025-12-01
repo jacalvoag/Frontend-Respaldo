@@ -41,8 +41,6 @@ export class ConfigurationModule implements OnInit {
           fullName: user.fullName,
           bio: user.bio,
           email: user.email,
-          phone: user.phone,
-          location: user.location
         });
         this.loading.set(false);
       },

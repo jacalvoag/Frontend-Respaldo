@@ -33,6 +33,7 @@ export class ProjectService {
                         functionalType: 'Frutal',
                         numberOfIndividuals: '13',
                         heightOrStratum: '10 - 40m',
+                        speciesPhoto: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.es%2Ffotos-vectores-gratis%2Fmango&psig=AOvVaw3nBEZfdj2GfdTNkzf4vs8c&ust=1764656993745000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCLiw29zhm5EDFQAAAAAdAAAAABAL'
                     }]
                 }
             ]

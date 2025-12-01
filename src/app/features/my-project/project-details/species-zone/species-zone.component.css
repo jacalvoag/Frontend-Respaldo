@@ -32,27 +32,25 @@
   color: #1B5E20;
 }
 
-/* Grid de especies - 1 por fila en diseño horizontal */
+/* Grid de especies - 3 por fila */
 .species-grid {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 25px;
   margin-top: 20px;
 }
 
-/* Card de especie - Layout horizontal */
+/* Card de especie */
 .species-card {
   background-color: #FFFFFF;
   border: 4px solid #2E7D32;
   border-radius: 20px;
-  padding: 30px;
-  display: grid;
-  grid-template-columns: 350px 1fr auto;
-  gap: 30px;
-  align-items: center;
+  padding: 25px;
   position: relative;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .species-card:hover {
@@ -60,43 +58,48 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
+/* Título de la especie - ARRIBA */
+.species-name {
+  color: #2E7D32;
+  font-size: 2rem;
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #E8F5E8;
+}
+
+/* Contenedor principal: imagen izquierda + info derecha */
+.species-card-main {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 20px;
+  flex: 1;
+}
+
 /* Imagen de la especie */
 .species-image {
-  width: 100%;
-  height: 250px;
+  width: 180px;
+  height: 180px;
   object-fit: cover;
   border-radius: 15px;
   border: none;
-}
-
-/* Contenedor de imagen - solo cuando hay imagen */
-.image-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /* Información de la especie */
 .species-info {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
   justify-content: center;
-}
-
-.species-info h3 {
-  color: #2E7D32;
-  font-size: 2.5rem;
-  margin: 0 0 10px 0;
-  font-weight: 700;
-  text-align: left;
 }
 
 .species-info p {
   color: #2E7D32;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   margin: 0;
-  line-height: 1.8;
+  line-height: 1.6;
   font-weight: 500;
 }
 
@@ -107,20 +110,19 @@
 /* Footer de la card con badge y opciones */
 .species-footer {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
   justify-content: space-between;
-  gap: 15px;
-  align-self: stretch;
+  align-items: center;
+  padding-top: 15px;
+  border-top: 2px solid #E8F5E8;
 }
 
 .species-badge {
   background-color: #C8E6C9;
   border-radius: 20px;
   color: #1B5E20;
-  padding: 8px 16px;
+  padding: 6px 14px;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 /* Botón de opciones */
@@ -135,7 +137,6 @@
   padding: 4px;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  margin-top: auto;
 }
 
 .options-button:hover {
@@ -149,8 +150,8 @@
 /* Menú desplegable de opciones */
 .options-dropdown {
   position: absolute;
-  top: 70px;
-  right: 30px;
+  bottom: 60px;
+  right: 20px;
   background: #FFFFFF;
   border: 2px solid #1B5E20;
   border-radius: 12px;
@@ -159,7 +160,7 @@
   z-index: 100;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-8px);
+  transform: translateY(8px);
   transition: all 0.2s ease;
   overflow: hidden;
 }
@@ -206,6 +207,7 @@
 .empty-state {
   text-align: center;
   padding: 60px 20px;
+  grid-column: 1 / -1;
 }
 
 .empty-state p {
@@ -214,69 +216,36 @@
   margin-bottom: 25px;
 }
 
-/* Card sin imagen - centrar contenido */
-.species-card--no-image {
-  grid-template-columns: 1fr auto;
+/* Card sin imagen - ajustar layout */
+.species-card--no-image .species-card-main {
+  grid-template-columns: 1fr;
 }
 
-.species-card--no-image .species-info {
-  padding-left: 20px;
+/* Responsive - 2 columnas en tablets */
+@media (max-width: 1400px) {
+  .species-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-/* Responsive - tablets */
-@media (max-width: 1024px) {
-  .species-card {
-    grid-template-columns: 300px 1fr auto;
-    gap: 25px;
-    padding: 25px;
+/* Responsive - ajustar tamaño de imagen y texto en pantallas medianas */
+@media (max-width: 1200px) {
+  .species-card-main {
+    grid-template-columns: 150px 1fr;
+    gap: 15px;
   }
 
   .species-image {
-    height: 220px;
+    width: 150px;
+    height: 150px;
   }
 
-  .species-info h3 {
-    font-size: 2rem;
-  }
-
-  .species-info p {
-    font-size: 1.1rem;
-  }
-}
-
-/* Responsive - móviles */
-@media (max-width: 768px) {
-  .species-card {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    padding: 20px;
-  }
-
-  .species-image {
-    height: 200px;
-    max-width: 100%;
-  }
-
-  .species-info {
-    text-align: center;
-  }
-
-  .species-info h3 {
-    font-size: 1.8rem;
-    text-align: center;
+  .species-name {
+    font-size: 1.7rem;
   }
 
   .species-info p {
     font-size: 1rem;
   }
-
-  .species-footer {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .options-dropdown {
-    right: 20px;
-  }
 }
+

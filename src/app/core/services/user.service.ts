@@ -12,9 +12,6 @@ export class UserService {
         fullName: 'María Gónzález',
         bio: 'Estudiante de 4to semestre en la Universidad Politécnica de Chiapas',
         email: 'ariaria@gmail.com',
-        phone: '961232323',
-        location: 'La triste suchiapa',
-        photoUrl: undefined,
         age: 28,    
     };
     // Este método simula una llamada a la API
