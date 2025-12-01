@@ -39,10 +39,28 @@
     <h2>Gráficas por zona de estudio</h2>
 </div>
 
-<div class="charts-grid">
-    @for (zone of info()?.zone; track zone.idZone; let i = $index) {
-        <div>
-            <app-study-zone-charts></app-study-zone-charts>
-        </div>
+<section class="analysis-charts-section">
+    
+    @if (zonesList.length > 0) {
+        <h2>Análisis de Índices de Biodiversidad por Zona</h2>
+        
+        @for (zone of zonesList; track zone.idZone) { 
+            
+            <div class="zone-chart-wrapper">
+                <h3 class="zone-title">{{ zone.zoneName }}</h3>
+                
+                <app-study-zone-charts
+                    [single]="transformAnalysisToChartData(zone.biodiversityAnalysis)" 
+                    [xAxisLabel]="zone.zoneName">
+                </app-study-zone-charts>
+
+                <hr>
+            </div>
+
+        } @empty {
+            <p>No se encontraron análisis de biodiversidad para las zonas de este proyecto.</p>
+        }
+    } @else {
+        <p>Cargando datos de zonas o no hay zonas disponibles.</p>
     }
-</div>
+</section>

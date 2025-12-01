@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BarChartModule, Color, ScaleType, LegendPosition } from '@swimlane/ngx-charts';
 
@@ -11,11 +11,8 @@ import { BarChartModule, Color, ScaleType, LegendPosition } from '@swimlane/ngx-
 })
 export class StudyZoneChartsComponent {
 
-  @Input()
-  public single: any[] = [];
-
-  @Input()
-  public xAxisLabel: string = '[name_zone]'; // Etiqueta del eje X y nombre de la zona
+  @Input() public single: any[] = [];
+  @Input() public xAxisLabel: string = ''; // Etiqueta del eje X y nombre de la zona
 
   public view: [number, number] = [300, 300]; 
 
@@ -25,7 +22,7 @@ export class StudyZoneChartsComponent {
   public showXAxisLabel = true;
   
   public colorScheme: Color = {
-  domain: ['#5AA454', '#A10A28', '#C7B42C', '#4a3131ff'],
+  domain: ['#689F38', '#33691E', '#7CB342', '#558B2F'],
   group: ScaleType.Ordinal,
   name: 'biodiversity-graphic-indices',
   selectable: true,
