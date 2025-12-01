@@ -1,26 +1,26 @@
 import { Component, OnInit, OnDestroy, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet, RouterLinkWithHref, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from '../../../../core/models/project.model';
 import { Zones } from '../../../../core/models/zones.model';
 import { ProjectService } from '../../../../core/services/project.service';
-import { StudyZoneChartsComponent } from '../study-zone-charts/study-zone-charts.component';
 import { filter } from 'rxjs';
-import { BiodiversityAnalysisComponent } from '../biodiversity-analysis/biodiversity-analysis.component';
+import { NewZoneFormComponent } from '../../forms/newzone-form/newzone-form.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-study-zones',
   templateUrl: './study-zones.component.html',
   styleUrl: './study-zones.component.css',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkWithHref] // RouterOutlet, StudyZoneChartsComponent, BiodiversityAnalysisComponent,
+  imports: [RouterLink, RouterOutlet, RouterLinkWithHref, NewZoneFormComponent, CommonModule]
 })
 export class StudyZonesComponent implements OnInit, OnDestroy {
   project = signal<Project | null>(null);
   zones = signal<Zones[]>([]); 
   private paramSub!: Subscription;
   showGrid = true;
+  showEditZoneModal = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -46,7 +46,8 @@ export class StudyZonesComponent implements OnInit, OnDestroy {
         this.project.set(data || null);
         
         if (data?.zone) {
-          this.zones.set(data.zone);
+          const specificZone = data.zone.find(z => z.idZone === zoneId);
+          this.zones.set(specificZone ? [specificZone] : []);
         } else {
           this.zones.set([]);
         }
@@ -56,6 +57,19 @@ export class StudyZonesComponent implements OnInit, OnDestroy {
         this.zones.set([]);
       }
     });
+  }
+
+  openEditZoneModal(): void {
+    this.showEditZoneModal = true;
+  }
+
+  closeEditZoneModal(): void {
+    this.showEditZoneModal = false;
+  }
+
+  onZoneUpdated(updatedZone: Zones): void {
+    this.zones.set([updatedZone]);
+    console.log('Zona actualizada:', updatedZone);
   }
 
   goBack(): void {

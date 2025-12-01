@@ -1,6 +1,7 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Project } from '../../../../core/models/project.model';
 
 @Component({
   selector: 'app-newproject-form',
@@ -9,11 +10,14 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
   templateUrl: './newproject-form.component.html',
   styleUrls: ['./newproject-form.component.css']
 })
-export class NewProjectFormComponent {
+export class NewProjectFormComponent implements OnInit {
+  @Input() project: Project | null = null; // Para modo edición
   @Output() closeModal = new EventEmitter<void>();
   @Output() projectCreated = new EventEmitter<any>();
+  @Output() projectUpdated = new EventEmitter<any>();
 
   projectForm: FormGroup;
+  isEditMode: boolean = false;
 
   constructor() {
     this.projectForm = new FormGroup({
@@ -22,10 +26,20 @@ export class NewProjectFormComponent {
     });
   }
 
+  ngOnInit(): void {
+    if (this.project) {
+      this.isEditMode = true;
+      this.projectForm.patchValue({
+        name: this.project.name,
+        description: this.project.description
+      });
+    }
+  }
+
   onSubmit(): void {
     if (this.projectForm.valid) {
       const newProject = {
-        id: Date.now(),
+        id: Date.now(), // ID temporal
         name: this.projectForm.value.name,
         description: this.projectForm.value.description || '',
         status: 'Activo' as 'Activo' | 'Terminado',

@@ -1,7 +1,7 @@
 <div class="modal-overlay" (click)="onOverlayClick($event)">
     <div class="modal-container">
         <div class="modal-header">
-        <h2>{{ isEditMode ? 'Editar Proyecto' : 'Nuevo Proyecto' }}</h2>
+        <h2>{{ isEditMode ? 'Editar zona de estudio' : 'Nueva zona de estudio' }}</h2>
         <button class="close-button" (click)="onClose()">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
             <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
@@ -9,25 +9,35 @@
         </button>
         </div>
 
-        <form [formGroup]="projectForm" (submit)="onSubmit()" class="modal-form">
+        <form [formGroup]="zoneForm" (submit)="onSubmit()" class="modal-form">
         <div class="form-group">
-            <label for="name">Nombre del proyecto *</label>
+            <label for="zoneName">Nombre de la zona de estudio *</label>
             <input 
-            id="name" 
+            id="zoneName" 
             class="form-input" 
-            formControlName="name" 
+            formControlName="zoneName" 
             type="text"
-            placeholder="Ej: Rancho Cuba Libre">
+            placeholder="Obligatorio">
         </div>
 
         <div class="form-group">
-            <label for="description">Descripción (opcional)</label>
+            <label for="zoneDescription">Descripción de la zona de estudio (opcional)</label>
             <textarea 
-            id="description" 
+            id="zoneDescription" 
             class="form-textarea" 
-            formControlName="description"
+            formControlName="zoneDescription"
             rows="4"
-            placeholder="Describe tu proyecto..."></textarea>
+            placeholder="Opcional"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="squareFootage">Extensión de la zona de estudio (m2) *</label>
+            <input 
+            id="squareFootage" 
+            class="form-input" 
+            formControlName="squareFootage" 
+            type="text"
+            placeholder="Obligatorio">
         </div>
 
         <div class="modal-actions">
@@ -40,8 +50,8 @@
             <button 
             type="submit" 
             class="button-modal-action button-modal-action--elverde"
-            [disabled]="!projectForm.valid">
-            {{ isEditMode ? 'Guardar Cambios' : 'Crear Proyecto' }}
+            [disabled]="!zoneForm.valid">
+            {{ isEditMode ? 'Guardar' : 'Guardar' }}
             </button>
         </div>
         </form>

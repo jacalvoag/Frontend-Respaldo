@@ -1,35 +1,37 @@
 .active-projects-card {
   background-color: #fff;
   border-radius: 12px;
-  padding: 25px;
+  padding: 35px 30px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  height: 100%;
+  gap: 25px;
+  height: 97%;
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #E8F5E8;
 }
 
 .header-title {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
   color: #2E7D32;
 }
 
 .icon-header {
-  font-size: 32px;
+  font-size: 36px;
   color: #2E7D32;
 }
 
 .header-title h2 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 600;
   color: #2E7D32;
 }
@@ -37,92 +39,90 @@
 .count-badge {
   background-color: #C8E6C9;
   color: #1B5E20;
-  padding: 6px 16px;
+  padding: 8px 20px;
   border-radius: 20px;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
+  min-width: 50px;
+  text-align: center;
 }
 
 .projects-list {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
   flex: 1;
 }
 
 .project-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: 50px 1fr auto;
   align-items: center;
-  gap: 15px;
-  padding: 15px;
+  gap: 18px;
+  padding: 20px;
   background-color: #E8F5E8;
   border: 2px solid #7CB342;
   border-left: 8px solid #7CB342;
-  border-radius: 10px;
-  transition: transform 0.2s ease;
+  border-radius: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 90px;
+  min-height: 90px;
+  max-height: 90px;
 }
 
 .project-item:hover {
   transform: translateX(5px);
+  box-shadow: 0 2px 8px rgba(46, 125, 50, 0.15);
 }
 
 .project-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   background-color: #C8E6C9;
-  border-radius: 8px;
+  border-radius: 10px;
   flex-shrink: 0;
 }
 
 .project-icon .material-icons {
   color: #2E7D32;
-  font-size: 24px;
+  font-size: 28px;
 }
 
 .project-info {
   flex: 1;
+  overflow: hidden;
 }
 
 .project-info h3 {
-  margin: 0 0 4px 0;
-  font-size: 1.1rem;
+  margin: 0 0 6px 0;
+  font-size: 1.25rem;
   color: #2E7D32;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .project-info p {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: #558B5F;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .status-badge {
   background-color: #C8E6C9;
   color: #1B5E20;
-  padding: 4px 12px;
+  padding: 6px 16px;
   border-radius: 15px;
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
-.button-new-project {
-  width: 100%;
-  padding: 14px;
-  background-color: #2E7D32;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.button-new-project:hover {
-  background-color: #1B5E20;
 }
 
 .loading-state {
