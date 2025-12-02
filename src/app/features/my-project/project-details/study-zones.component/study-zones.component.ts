@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy, signal } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink, RouterOutlet, RouterLinkWithHref, NavigationEnd } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from '../../../../core/models/project.model';
 import { Zones } from '../../../../core/models/zones.model';
 import { ProjectService } from '../../../../core/services/project.service';
 import { StudyZoneService } from '../../../../core/services/study-zone.service';
-import { BiodiversityAnalysisComponent } from '../biodiversity-analysis/biodiversity-analysis.component';
 import { filter } from 'rxjs';
 import { NewZoneFormComponent } from '../../forms/newzone-form/newzone-form.component';
 import { CommonModule } from '@angular/common';
@@ -15,7 +14,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './study-zones.component.html',
   styleUrl: './study-zones.component.css',
   standalone: true,
-  imports: [RouterLink, RouterOutlet, RouterLinkWithHref, NewZoneFormComponent, CommonModule, BiodiversityAnalysisComponent]
+  imports: [RouterLink, NewZoneFormComponent, CommonModule]
 })
 export class StudyZonesComponent implements OnInit, OnDestroy {
   project = signal<Project | null>(null);

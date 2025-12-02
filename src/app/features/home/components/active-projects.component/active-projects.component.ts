@@ -10,16 +10,13 @@ import { Project } from '../../../../core/models/project.model';
   styleUrl: './active-projects.component.css',
 })
 export class ActiveProjectsComponent {
-  // Recibe los proyectos desde el componente padre (home)
   @Input() projects: Project[] = [];
   @Input() loading: boolean = false;
 
- // Filtra solo los proyectos activos (primeros 4)
 get displayProjects(): Project[] {
   return this.projects.filter(p => p.status === 'Activo').slice(0, 4);
 }
 
-  // Cuenta total de proyectos activos
   get activeCount(): number {
     return this.projects.filter(p => p.status === 'Activo').length;
   }

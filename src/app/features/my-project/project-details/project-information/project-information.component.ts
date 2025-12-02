@@ -85,44 +85,39 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
     this.showNewZoneModal = false;
   }
 
-  /**
-   * ✅ NUEVO: Manejador del evento projectUpdated
-   */
 onProjectUpdated(event: { id: number; data: any }): void {
-  console.log('📥 Evento de actualización recibido:', event);
+  console.log('Evento de actualización recibido:', event);
   
-  // ✅ Enviar solo event.data, el id ya está en la URL
   this.projectService.updateProject(event.id, event.data).subscribe({
     next: (updatedProject: Project) => {
-      console.log('✅ Proyecto actualizado exitosamente:', updatedProject);
+      console.log('Proyecto actualizado exitosamente:', updatedProject);
       this.loadProjectWithZones(this.projectId);
       this.closeEditModal();
     },
     error: (err: any) => {
-      console.error('❌ Error actualizando proyecto:', err);
+      console.error('Error actualizando proyecto:', err);
       alert('Error al actualizar proyecto: ' + err.message);
     }
   });
 }
 
 onZoneCreated(zonePayload: any): void {
-  console.log('📥 Payload de zona recibido:', zonePayload);
+  console.log('Payload de zona recibido:', zonePayload);
   
-  // Verificar que el projectId esté presente
   if (!zonePayload.projectId) {
-    console.error('❌ Error: El payload no contiene projectId');
+    console.error('Error: El payload no contiene projectId');
     alert('Error: No se puede crear la zona sin un proyecto asociado');
     return;
   }
   
   this.studyZoneService.createStudyZone(zonePayload).subscribe({
     next: (createdZone) => {
-      console.log('✅ Zona creada exitosamente:', createdZone);
+      console.log('Zona creada exitosamente:', createdZone);
       this.loadProjectWithZones(this.projectId);
       this.closeNewZoneModal();
     },
     error: (err: any) => {
-      console.error('❌ Error creando zona:', err);
+      console.error('Error creando zona:', err);
       alert('Error al crear zona: ' + err.message);
     }
   });
@@ -136,12 +131,12 @@ onZoneCreated(zonePayload: any): void {
     if (confirm('¿Estás seguro de que deseas eliminar esta zona?')) {
       this.studyZoneService.deleteStudyZone(this.projectId, zoneId).subscribe({
         next: () => {
-          console.log('✅ Zona eliminada');
+          console.log('Zona eliminada');
           this.loadProjectWithZones(this.projectId);
           this.openMenuId = null;
         },
         error: (err: any) => {
-          console.error('❌ Error:', err);
+          console.error('Error:', err);
           alert('Error: ' + err.message);
         }
       });

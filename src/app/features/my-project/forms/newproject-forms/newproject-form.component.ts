@@ -11,10 +11,10 @@ import { Project } from '../../../../core/models/project.model';
   styleUrls: ['./newproject-form.component.css']
 })
 export class NewProjectFormComponent implements OnInit {
-  @Input() project: Project | null = null; // ✅ Para modo edición
+  @Input() project: Project | null = null; 
   @Output() closeModal = new EventEmitter<void>();
   @Output() projectCreated = new EventEmitter<any>();
-  @Output() projectUpdated = new EventEmitter<any>(); // ✅ Nuevo evento
+  @Output() projectUpdated = new EventEmitter<any>(); 
 
   projectForm: FormGroup;
   isEditMode: boolean = false;
@@ -33,7 +33,7 @@ export class NewProjectFormComponent implements OnInit {
         name: this.project.name,
         description: this.project.description
       });
-      console.log('📝 Modo edición activado para proyecto:', this.project.id);
+      console.log('Modo edición activado para proyecto:', this.project.id);
     }
   }
 
@@ -42,7 +42,6 @@ export class NewProjectFormComponent implements OnInit {
       const userId = this.getUserIdFromStorage();
       
       if (this.isEditMode && this.project) {
-        // ✅ MODO EDICIÓN
         const updatePayload = {
           projectId: this.project.id,
           userId: userId,
@@ -55,7 +54,6 @@ export class NewProjectFormComponent implements OnInit {
         this.projectUpdated.emit({ id: this.project.id, data: updatePayload });
         
       } else {
-        // ✅ MODO CREACIÓN
         const createPayload = {
           userId: userId,
           projectName: this.projectForm.value.name,
@@ -63,7 +61,7 @@ export class NewProjectFormComponent implements OnInit {
           projectDescription: this.projectForm.value.description || null
         };
         
-        console.log('📤 POST - Enviando creación:', JSON.stringify(createPayload, null, 2));
+        console.log('POST - Enviando creación:', JSON.stringify(createPayload, null, 2));
         this.projectCreated.emit(createPayload);
       }
       

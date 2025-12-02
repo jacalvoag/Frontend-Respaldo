@@ -1,4 +1,3 @@
-// src/app/core/services/study-zone.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -9,8 +8,6 @@ import { RercordedSpecies } from '../models/recorded-species.model';
 
 const BASE_URL = `${environment.apiUrl}`;
 
-// ==================== BACKEND INTERFACES ====================
-// Solo para comunicación con el backend, no se exportan
 interface BackendStudyZone {
   studyZoneId?: number;
   projectId: number;
@@ -53,7 +50,7 @@ export class StudyZoneService {
   getStudyZoneById(id: number): Observable<Zones> {
     return this.http.get<BackendStudyZone>(`${BASE_URL}/study-zones/${id}`).pipe(
       map(backendZone => this.adaptBackendZone(backendZone)),
-      tap(zone => console.log('✅ Zona obtenida:', zone.zoneName)),
+      tap(zone => console.log('Zona obtenida:', zone.zoneName)),
       catchError(this.handleError)
     );
   }
@@ -78,10 +75,6 @@ createStudyZone(zonePayload: any): Observable<Zones> {
   );
 }
 
-  /**
-   * PUT /study-zone-details/{zoneId}
-   * Actualizar zona de estudio
-   */
 updateStudyZone(zoneId: number, zonePayload: any): Observable<Zones> {
   console.log('PUT a /study-zone-details/' + zoneId);
   console.log('Payload:', JSON.stringify(zonePayload, null, 2));
@@ -93,34 +86,23 @@ updateStudyZone(zoneId: number, zonePayload: any): Observable<Zones> {
   );
 }
 
-  /**
-   * DELETE /project-details/{projectId}/study-zones/{zoneId}
-   * Eliminar zona de estudio
-   */
+
   deleteStudyZone(projectId: number, zoneId: number): Observable<void> {
     return this.http.delete<void>(`${BASE_URL}/project-details/${projectId}/study-zones/${zoneId}`).pipe(
-      tap(() => console.log('✅ Zona eliminada:', zoneId)),
+      tap(() => console.log('Zona eliminada:', zoneId)),
       catchError(this.handleError)
     );
   }
 
-  /**
-   * GET /study-zone-details/{zoneId}/biodiversity
-   * Obtener índices de biodiversidad de la zona
-   */
+
   getStudyZoneBiodiversity(zoneId: number): Observable<BackendBiodiversityIndices> {
     return this.http.get<StudyZoneDetails>(`${BASE_URL}/study-zone-details/${zoneId}/biodiversity`).pipe(
       map(details => details.biodiversityIndices),
-      tap(indices => console.log('✅ Índices de biodiversidad obtenidos:', indices)),
+      tap(indices => console.log('Índices de biodiversidad obtenidos:', indices)),
       catchError(this.handleError)
     );
   }
 
-  // ==================== ADAPTADORES ====================
-
-  /**
-   * Convierte una zona del backend al formato del frontend
-   */
   private adaptBackendZone(backendZone: BackendStudyZone, index: number = 0): Zones {
     return {
       idZone: backendZone.studyZoneId || 0,
@@ -138,26 +120,15 @@ updateStudyZone(zoneId: number, zonePayload: any): Observable<Zones> {
     };
   }
 
-  /**
-   * Convierte múltiples zonas del backend al frontend
-   */
   private adaptBackendZones(backendZones: BackendStudyZone[]): Zones[] {
     return backendZones.map((zone, index) => this.adaptBackendZone(zone, index));
   }
 
-  /**
-   * Extrae el número del campo squareFootage (ej: "420m²" -> 420)
-   */
   private extractSquareArea(squareFootage: string): number {
     const match = squareFootage.match(/[\d.]+/);
     return match ? parseFloat(match[0]) : 0;
   }
 
-  // ==================== HELPER METHODS ====================
-
-  /**
-   * Manejo centralizado de errores
-   */
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'Ocurrió un error desconocido';
 
@@ -175,7 +146,7 @@ updateStudyZone(zoneId: number, zonePayload: any): Observable<Zones> {
       }
     }
 
-    console.error('❌ Error en StudyZoneService:', errorMessage);
+    console.error('Error en StudyZoneService:', errorMessage);
     return throwError(() => new Error(errorMessage));
   }
 }

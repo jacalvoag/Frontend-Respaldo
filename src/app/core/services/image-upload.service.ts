@@ -23,11 +23,6 @@ export class ImageUploadService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Sube una imagen a Cloudinary
-   * @param file 
-   * @returns 
-   */
   uploadImage(file: File): Observable<string> {
     if (!this.isValidImageType(file)) {
       return throwError(() => new Error('Tipo de archivo no válido. Solo se permiten imágenes.'));
@@ -52,11 +47,6 @@ export class ImageUploadService {
     );
   }
 
-  /**
-   * Sube múltiples imágenes a Cloudinary
-   * @param files Array de archivos a subir
-   * @returns Observable con array de URLs
-   */
   uploadMultipleImages(files: File[]): Observable<string[]> {
     const uploadObservables = files.map(file => this.uploadImage(file));
     

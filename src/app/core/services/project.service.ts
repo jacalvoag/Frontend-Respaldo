@@ -18,7 +18,6 @@ interface BackendProject {
   createdAt?: string;
 }
 
-// ✅ Interface para el payload que enviamos al backend
 interface CreateProjectPayload {
   userId: number;
   projectName: string;
@@ -42,14 +41,13 @@ export class ProjectService {
 
   constructor(private http: HttpClient) { }
 
-  // ==================== PROJECT CRUD ====================
 
   getUserProjects(): Observable<Project[]> {
     const userId = this.getUserIdFromStorage();
     
     return this.http.get<BackendProject[]>(`${BASE_URL}/projects/user/${userId}`).pipe(
       map(backendProjects => this.adaptBackendProjects(backendProjects)),
-      tap(projects => console.log('✅ Proyectos obtenidos:', projects.length)),
+      tap(projects => console.log('Proyectos obtenidos:', projects.length)),
       catchError(this.handleError)
     );
   }
@@ -67,25 +65,21 @@ getProjectById(id: number): Observable<Project> {
   );
 }
 
-  /**
-   * POST /projects - Crear nuevo proyecto
-   * ✅ CORREGIDO: Envía el JSON exacto que espera el backend
-   */
+
   createProject(projectPayload: CreateProjectPayload): Observable<Project> {
-    console.log('📤 Enviando al backend:', JSON.stringify(projectPayload, null, 2));
+    console.log('Enviando al backend:', JSON.stringify(projectPayload, null, 2));
     
-    // ✅ Enviar directamente el payload sin transformaciones
     return this.http.post<BackendProject>(`${BASE_URL}/projects`, projectPayload).pipe(
       map(created => this.adaptBackendProject(created)),
-      tap(newProject => console.log('✅ Proyecto creado:', newProject)),
+      tap(newProject => console.log('Proyecto creado:', newProject)),
       catchError(this.handleError)
     );
   }
 
 
 updateProject(id: number, projectData: any): Observable<Project> {
-  console.log('📤 PUT a /projects/' + id);
-  console.log('📤 Payload que se enviará:', JSON.stringify(projectData, null, 2));
+  console.log('PUT a /projects/' + id);
+  console.log('Payload que se enviará:', JSON.stringify(projectData, null, 2));
   
   const payload = {
     projectId: projectData.projectId || id,
@@ -111,16 +105,14 @@ updateProject(id: number, projectData: any): Observable<Project> {
     );
   }
 
-  // ==================== HOME STATS ====================
 
   getHomeStats(): Observable<HomeStats> {
     return this.http.get<HomeStats>(`${BASE_URL}/home`).pipe(
-      tap(stats => console.log('✅ Estadísticas obtenidas:', stats)),
+      tap(stats => console.log('Estadísticas obtenidas:', stats)),
       catchError(this.handleError)
     );
   }
 
-  // ==================== ADAPTADORES ====================
 
   private adaptBackendProject(backendProject: BackendProject): Project {
     return {
@@ -162,7 +154,7 @@ updateProject(id: number, projectData: any): Observable<Project> {
       }
     }
 
-    console.error('❌ Error en ProjectService:', errorMessage);
+    console.error('Error en ProjectService:', errorMessage);
     return throwError(() => new Error(errorMessage));
   }
 }
