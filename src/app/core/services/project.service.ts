@@ -44,7 +44,7 @@ export class ProjectService {
 
   getUserProjects(): Observable<Project[]> {
     const userId = this.getUserIdFromStorage();
-    
+
     return this.http.get<BackendProject[]>(`${BASE_URL}/projects/user/${userId}`).pipe(
       map(backendProjects => this.adaptBackendProjects(backendProjects)),
       tap(projects => console.log('Proyectos obtenidos:', projects.length)),
@@ -52,23 +52,23 @@ export class ProjectService {
     );
   }
 
-getProjectById(id: number): Observable<Project> {
-  return this.http.get<BackendProject>(`${BASE_URL}/projects/${id}`).pipe(
-    map(backendProject => {
-      console.log('Backend project recibido:', backendProject);
-      const adaptedProject = this.adaptBackendProject(backendProject);
-      console.log('Proyecto adaptado:', adaptedProject);
-      return adaptedProject;
-    }),
-    tap(project => console.log('Proyecto final:', project)),
-    catchError(this.handleError)
-  );
-}
+  getProjectById(id: number): Observable<Project> {
+    return this.http.get<BackendProject>(`${BASE_URL}/projects/${id}`).pipe(
+      map(backendProject => {
+        console.log('Backend project recibido:', backendProject);
+        const adaptedProject = this.adaptBackendProject(backendProject);
+        console.log('Proyecto adaptado:', adaptedProject);
+        return adaptedProject;
+      }),
+      tap(project => console.log('Proyecto final:', project)),
+      catchError(this.handleError)
+    );
+  }
 
 
   createProject(projectPayload: CreateProjectPayload): Observable<Project> {
     console.log('Enviando al backend:', JSON.stringify(projectPayload, null, 2));
-    
+
     return this.http.post<BackendProject>(`${BASE_URL}/projects`, projectPayload).pipe(
       map(created => this.adaptBackendProject(created)),
       tap(newProject => console.log('Proyecto creado:', newProject)),
@@ -77,26 +77,26 @@ getProjectById(id: number): Observable<Project> {
   }
 
 
-updateProject(id: number, projectData: any): Observable<Project> {
-  console.log('PUT a /projects/' + id);
-  console.log('Payload que se enviará:', JSON.stringify(projectData, null, 2));
-  
-  const payload = {
-    projectId: projectData.projectId || id,
-    userId: projectData.userId,
-    projectName: projectData.projectName,
-    projectStatus: projectData.projectStatus,
-    projectDescription: projectData.projectDescription
-  };
-  
-  console.log('Payload final:', JSON.stringify(payload, null, 2));
-  
-  return this.http.put<BackendProject>(`${BASE_URL}/projects/${id}`, payload).pipe(
-    map(updated => this.adaptBackendProject(updated)),
-    tap(updatedProject => console.log('Proyecto actualizado:', updatedProject)),
-    catchError(this.handleError)
-  );
-}
+  updateProject(id: number, projectData: any): Observable<Project> {
+    console.log('PUT a /projects/' + id);
+    console.log('Payload que se enviará:', JSON.stringify(projectData, null, 2));
+
+    const payload = {
+      projectId: projectData.projectId || id,
+      userId: projectData.userId,
+      projectName: projectData.projectName,
+      projectStatus: projectData.projectStatus,
+      projectDescription: projectData.projectDescription
+    };
+
+    console.log('Payload final:', JSON.stringify(payload, null, 2));
+
+    return this.http.put<BackendProject>(`${BASE_URL}/projects/${id}`, payload).pipe(
+      map(updated => this.adaptBackendProject(updated)),
+      tap(updatedProject => console.log('Proyecto actualizado:', updatedProject)),
+      catchError(this.handleError)
+    );
+  }
 
   deleteProject(id: number): Observable<void> {
     return this.http.delete<void>(`${BASE_URL}/projects/${id}`).pipe(
@@ -106,8 +106,8 @@ updateProject(id: number, projectData: any): Observable<Project> {
   }
 
 
-  getHomeStats(): Observable<HomeStats> {
-    return this.http.get<HomeStats>(`${BASE_URL}/home`).pipe(
+  getHomeStats(): Observable<any> {
+    return this.http.get<any>(`${BASE_URL}/home`).pipe(
       tap(stats => console.log('Estadísticas obtenidas:', stats)),
       catchError(this.handleError)
     );
