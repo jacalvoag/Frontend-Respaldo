@@ -9,7 +9,6 @@ import { Zones } from '../models/zones.model';
 
 const BASE_URL = `${environment.apiUrl}`;
 
-
 interface BackendProject {
   projectId?: number;
   userId: number;
@@ -17,6 +16,13 @@ interface BackendProject {
   projectStatus: 'activo' | 'inactivo' | 'completado';
   projectDescription?: string;
   createdAt?: string;
+}
+
+interface CreateProjectPayload {
+  userId: number;
+  projectName: string;
+  projectStatus: string;
+  projectDescription: string | null;
 }
 
 interface HomeStats {
@@ -35,116 +41,93 @@ export class ProjectService {
 
   constructor(private http: HttpClient) { }
 
-  // ==================== PROJECT CRUD ====================
 
-  /**
-   * GET /projects/user/{userId} - Obtener proyectos del usuario autenticado
-   */
   getUserProjects(): Observable<Project[]> {
     const userId = this.getUserIdFromStorage();
-    
+
     return this.http.get<BackendProject[]>(`${BASE_URL}/projects/user/${userId}`).pipe(
       map(backendProjects => this.adaptBackendProjects(backendProjects)),
-      tap(projects => console.log('✅ Proyectos obtenidos:', projects.length)),
+      tap(projects => console.log('Proyectos obtenidos:', projects.length)),
       catchError(this.handleError)
     );
   }
 
-  /**
-   * GET /projects/{id} - Obtener proyecto por ID
-   */
   getProjectById(id: number): Observable<Project> {
     return this.http.get<BackendProject>(`${BASE_URL}/projects/${id}`).pipe(
-      map(backendProject => this.adaptBackendProject(backendProject)),
-      tap(project => console.log('✅ Proyecto obtenido:', project.name)),
+      map(backendProject => {
+        console.log('Backend project recibido:', backendProject);
+        const adaptedProject = this.adaptBackendProject(backendProject);
+        console.log('Proyecto adaptado:', adaptedProject);
+        return adaptedProject;
+      }),
+      tap(project => console.log('Proyecto final:', project)),
       catchError(this.handleError)
     );
   }
 
-  /**
-   * POST /projects - Crear nuevo proyecto
-   */
-  createProject(project: Partial<Project>): Observable<Project> {
-    const userId = this.getUserIdFromStorage();
-    
-    const backendProject: BackendProject = {
-      userId: userId,
-      projectName: project.name || '',
-      projectStatus: project.status === 'Terminado' ? 'completado' : 'activo',
-      projectDescription: project.description || ''
-    };
 
-    return this.http.post<BackendProject>(`${BASE_URL}/projects`, backendProject).pipe(
+  createProject(projectPayload: CreateProjectPayload): Observable<Project> {
+    console.log('Enviando al backend:', JSON.stringify(projectPayload, null, 2));
+
+    return this.http.post<BackendProject>(`${BASE_URL}/projects`, projectPayload).pipe(
       map(created => this.adaptBackendProject(created)),
-      tap(newProject => console.log('✅ Proyecto creado:', newProject)),
+      tap(newProject => console.log('Proyecto creado:', newProject)),
       catchError(this.handleError)
     );
   }
 
-  /**
-   * PUT /projects/{id} - Actualizar proyecto
-   */
-  updateProject(id: number, project: Partial<Project>): Observable<Project> {
-    const userId = this.getUserIdFromStorage();
-    
-    const backendProject: BackendProject = {
-      projectId: id,
-      userId: userId,
-      projectName: project.name || '',
-      projectStatus: project.status === 'Terminado' ? 'completado' : 'activo',
-      projectDescription: project.description || ''
+
+  updateProject(id: number, projectData: any): Observable<Project> {
+    console.log('PUT a /projects/' + id);
+    console.log('Payload que se enviará:', JSON.stringify(projectData, null, 2));
+
+    const payload = {
+      projectId: projectData.projectId || id,
+      userId: projectData.userId,
+      projectName: projectData.projectName,
+      projectStatus: projectData.projectStatus,
+      projectDescription: projectData.projectDescription
     };
 
-    return this.http.put<BackendProject>(`${BASE_URL}/projects/${id}`, backendProject).pipe(
+    console.log('Payload final:', JSON.stringify(payload, null, 2));
+
+    return this.http.put<BackendProject>(`${BASE_URL}/projects/${id}`, payload).pipe(
       map(updated => this.adaptBackendProject(updated)),
-      tap(updatedProject => console.log('✅ Proyecto actualizado:', updatedProject)),
+      tap(updatedProject => console.log('Proyecto actualizado:', updatedProject)),
       catchError(this.handleError)
     );
   }
 
-  /**
-   * DELETE /projects/{id} - Eliminar proyecto
-   */
   deleteProject(id: number): Observable<void> {
     return this.http.delete<void>(`${BASE_URL}/projects/${id}`).pipe(
-      tap(() => console.log('✅ Proyecto eliminado:', id)),
+      tap(() => console.log('Proyecto eliminado:', id)),
       catchError(this.handleError)
     );
   }
 
-  // ==================== HOME STATS ====================
 
-  /**
-   * GET /home - Obtener estadísticas del home
-   */
-  getHomeStats(): Observable<HomeStats> {
-    return this.http.get<HomeStats>(`${BASE_URL}/home`).pipe(
-      tap(stats => console.log('✅ Estadísticas obtenidas:', stats)),
+  getHomeStats(): Observable<any> {
+    return this.http.get<any>(`${BASE_URL}/home`).pipe(
+      tap(stats => console.log('Estadísticas obtenidas:', stats)),
       catchError(this.handleError)
     );
   }
 
-  // ==================== ADAPTADORES ====================
 
-  /**
-   * Convierte un proyecto del backend al formato del frontend
-   */
   private adaptBackendProject(backendProject: BackendProject): Project {
     return {
       id: backendProject.projectId || 0,
       name: backendProject.projectName,
-      numberOfZones: 0, // Se cargará con las zonas
+      numberOfZones: 0,
       status: backendProject.projectStatus === 'completado' ? 'Terminado' : 'Activo',
       description: backendProject.projectDescription || '',
       zone: []
     };
   }
 
- 
   private adaptBackendProjects(backendProjects: BackendProject[]): Project[] {
     return backendProjects.map(p => this.adaptBackendProject(p));
   }
-
 
   private getUserIdFromStorage(): number {
     const userId = localStorage.getItem('user_id');
@@ -153,7 +136,6 @@ export class ProjectService {
     }
     return parseInt(userId);
   }
-
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'Ocurrió un error desconocido';
@@ -172,7 +154,7 @@ export class ProjectService {
       }
     }
 
-    console.error('❌ Error en ProjectService:', errorMessage);
+    console.error('Error en ProjectService:', errorMessage);
     return throwError(() => new Error(errorMessage));
   }
 }

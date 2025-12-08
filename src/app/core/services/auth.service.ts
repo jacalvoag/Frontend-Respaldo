@@ -58,7 +58,6 @@ export class AuthService {
         return !!this.getToken(); 
     }
 
-    // POST /auth/login
     login(credentials: LoginRequest): Observable<LoginResponse> {
         return this.http.post<LoginResponse>(`${BASE_URL_AUTH}/login`, credentials).pipe(
             tap(response => {
@@ -69,7 +68,6 @@ export class AuthService {
         );
     }
 
-    // POST /auth/register
     register(userData: RegisterRequest): Observable<LoginResponse> {
         return this.http.post<LoginResponse>(`${BASE_URL_AUTH}/register`, userData).pipe(
             tap(response => {

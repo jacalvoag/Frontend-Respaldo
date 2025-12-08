@@ -32,7 +32,7 @@
                 <div class="species-info">
                     <p><strong>Unidad de muestreo:</strong> {{ species.samplingUnit || 'No especificado' }}</p>
                     <p><strong>Tipo funcional:</strong> {{ species.functionalType || 'No especificado' }}</p>
-                    <p><strong>Número de individuos:</strong> {{ species.numberOfIndividuals || '0' }}</p>
+                    <p><strong>Numero de individuos:</strong> {{ species.numberOfIndividuals || '0' }}</p>
                     <p><strong>Altura o estrato:</strong> {{ species.heightOrStratum || 'No especificado' }}</p>
                 </div>
             </div>
@@ -74,7 +74,7 @@
             </div>
         } @empty {
             <div class="empty-state">
-            <p>No hay especies registradas en esta zona de estudio todavía.</p>
+            <p>No hay especies registradas en esta zona de estudio todavia.</p>
             </div>
         }
         </div>
@@ -84,15 +84,19 @@
 
 @if (showAddSpeciesModal) {
   <app-newspecie-form
-    (closeModal)="closeAddSpeciesModal()"
-    (speciesCreated)="onSpeciesCreated($event)">
+    [show]="showAddSpeciesModal"
+    [zoneId]="zoneId"
+    (close)="closeAddSpeciesModal()"
+    (save)="onSpeciesCreated($event)">
   </app-newspecie-form>
 }
 
 @if (showEditSpeciesModal) {
   <app-newspecie-form
-    [species]="selectedSpecies"
-    (closeModal)="closeEditSpeciesModal()"
+    [show]="showEditSpeciesModal"
+    [zoneId]="zoneId"
+    [speciesData]="selectedSpecies"
+    (close)="closeEditSpeciesModal()"
     (speciesUpdated)="onSpeciesUpdated($event)">
   </app-newspecie-form>
 }

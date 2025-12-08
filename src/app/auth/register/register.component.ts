@@ -25,7 +25,6 @@ export class RegisterComponent {
   isLoading: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {
-    // Crear FormControls con validaciones
     this.email = new FormControl('', [Validators.required, Validators.email]);
     this.password = new FormControl('', [
       Validators.required, 
@@ -46,13 +45,11 @@ export class RegisterComponent {
     });
   }
 
-  // Método para verificar errores de cada campo
   hasError(field: string, error: string): boolean {
     const control = this.loginForm.get(field);
     return !!(control && control.hasError(error) && (control.dirty || control.touched));
   }
 
-  // Obtener mensaje de error específico
   getErrorMessage(field: string): string {
     const control = this.loginForm.get(field);
     
@@ -77,25 +74,21 @@ export class RegisterComponent {
   handleSubmit(): void {
     this.errorMessage = null;
     
-    // Marcar todos los campos como touched para mostrar errores
     Object.keys(this.loginForm.controls).forEach(key => {
       this.loginForm.get(key)?.markAsTouched();
     });
     
-    // Validar que el formulario sea válido
     if (this.loginForm.invalid) {
       this.errorMessage = 'Por favor, completa todos los campos correctamente.';
       return;
     }
 
-    // Validar que las contraseñas coincidan
     if (this.password.value !== this.confirmPassword.value) {
       this.errorMessage = 'Las contraseñas no coinciden.';
       this.confirmPassword.setErrors({ mismatch: true });
       return;
     }
 
-    // Validar que la contraseña tenga al menos 8 caracteres (doble verificación)
     if (this.password.value.length < 8) {
       this.errorMessage = 'La contraseña debe tener al menos 8 caracteres.';
       return;
@@ -103,7 +96,6 @@ export class RegisterComponent {
 
     this.isLoading = true;
 
-    // Convertir la fecha al formato YYYY-MM-DD que espera el backend
     const birthDate = new Date(this.birthDate.value);
     const formattedDate = birthDate.toISOString().split('T')[0];
 
@@ -113,30 +105,26 @@ export class RegisterComponent {
       userBirthday: formattedDate,
       userEmail: this.email.value,
       userPassword: this.password.value
-      // biography es opcional, no se incluye si no hay valor
     };
 
-    console.log('📤 Enviando datos de registro:', {
+    console.log('Enviando datos de registro:', {
       ...registerData,
-      userPassword: '***' // No mostrar la contraseña en consola
+      userPassword: '***'
     });
 
     this.authService.register(registerData).subscribe({
       next: (response) => {
-        console.log('✅ Registro exitoso:', response);
+        console.log('Registro exitoso:', response);
         this.isLoading = false;
         
-        // Mostrar mensaje de éxito
         alert('¡Registro exitoso! Redirigiendo al inicio...');
         
-        // Redirigir a /home
         this.router.navigate(['/home']);
       },
       error: (err: any) => {
         console.error('❌ Error en el registro:', err);
         this.isLoading = false;
         
-        // Extraer mensaje de error del backend
         let apiError = 'Error al registrar usuario. Intenta nuevamente.';
         
         if (err.error) {
@@ -156,7 +144,6 @@ export class RegisterComponent {
     });
   }
 
-  // Método para navegar al login
   navigateToLogin(): void {
     this.router.navigate(['/login']);
   }

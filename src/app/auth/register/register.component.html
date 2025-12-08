@@ -9,7 +9,6 @@
             </div>
 
             <form [formGroup]="loginForm" (ngSubmit)="handleSubmit()" class="form"> 
-                <!-- Nombre -->
                 <div style="width: 100%;">
                     <input 
                         id="name" 
@@ -37,7 +36,6 @@
                     }
                 </div>
 
-                <!-- Email -->
                 <div style="width: 100%;">
                     <input 
                         id="email" 
@@ -51,7 +49,6 @@
                     }
                 </div>
 
-                <!-- Fecha de Nacimiento -->
                 <div style="width: 100%;">
                     <input 
                         id="birthDate" 
@@ -65,7 +62,6 @@
                     }
                 </div>
 
-                <!-- Contraseña -->
                 <div style="width: 100%;">
                     <input 
                         id="password" 
@@ -79,7 +75,6 @@
                     }
                 </div>
 
-                <!-- Confirmar Contraseña -->
                 <div style="width: 100%;">
                     <input 
                         id="confirmPassword" 
@@ -96,14 +91,12 @@
                     }
                 </div>
 
-                <!-- Mensaje de error general -->
                 @if (errorMessage) {
                     <div class="error-message">
                         {{ errorMessage }}
                     </div>
                 }
 
-                <!-- Botón de registro -->
                 <button 
                     class="button-login-register" 
                     type="submit"
@@ -115,7 +108,6 @@
                     }
                 </button>
 
-                <!-- Link a login -->
                 <div class="register-link">
                     <span>¿Ya tienes una cuenta? </span>
                     <a (click)="navigateToLogin()" style="cursor: pointer;">Inicia sesión aquí</a>

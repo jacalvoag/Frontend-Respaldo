@@ -12,10 +12,15 @@ import { ProjectService } from '../../../../core/services/project.service';
   styleUrls: ['./newproject-form.component.css']
 })
 export class NewProjectFormComponent implements OnInit {
-  @Input() project: Project | null = null; // Para modo edición
+  @Input() project: Project | null = null; 
   @Output() closeModal = new EventEmitter<void>();
+<<<<<<< HEAD
   @Output() projectCreated = new EventEmitter<Project>();
   @Output() projectUpdated = new EventEmitter<Project>();
+=======
+  @Output() projectCreated = new EventEmitter<any>();
+  @Output() projectUpdated = new EventEmitter<any>(); 
+>>>>>>> 525c9cbfcb9cb62662db30fdc49b171cd354c53d
 
   projectForm: FormGroup;
   isEditMode: boolean = false;
@@ -35,10 +40,12 @@ export class NewProjectFormComponent implements OnInit {
         name: this.project.name,
         description: this.project.description
       });
+      console.log('Modo edición activado para proyecto:', this.project.id);
     }
   }
 
   onSubmit(): void {
+<<<<<<< HEAD
     if (this.projectForm.valid && !this.isSubmitting) {
       this.isSubmitting = true;
 
@@ -76,7 +83,45 @@ export class NewProjectFormComponent implements OnInit {
           }
         });
       }
+=======
+    if (this.projectForm.valid) {
+      const userId = this.getUserIdFromStorage();
+      
+      if (this.isEditMode && this.project) {
+        const updatePayload = {
+          projectId: this.project.id,
+          userId: userId,
+          projectName: this.projectForm.value.name,
+          projectStatus: this.project.status === 'Terminado' ? 'completado' : 'activo',
+          projectDescription: this.projectForm.value.description || null
+        };
+        
+        console.log('📤 PUT - Enviando actualización:', JSON.stringify(updatePayload, null, 2));
+        this.projectUpdated.emit({ id: this.project.id, data: updatePayload });
+        
+      } else {
+        const createPayload = {
+          userId: userId,
+          projectName: this.projectForm.value.name,
+          projectStatus: 'activo',
+          projectDescription: this.projectForm.value.description || null
+        };
+        
+        console.log('POST - Enviando creación:', JSON.stringify(createPayload, null, 2));
+        this.projectCreated.emit(createPayload);
+      }
+      
+      this.onClose();
+>>>>>>> 525c9cbfcb9cb62662db30fdc49b171cd354c53d
     }
+  }
+
+  private getUserIdFromStorage(): number {
+    const userId = localStorage.getItem('user_id');
+    if (!userId) {
+      throw new Error('Usuario no autenticado. Por favor inicia sesión.');
+    }
+    return parseInt(userId);
   }
 
   onClose(): void {
