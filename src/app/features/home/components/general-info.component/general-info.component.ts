@@ -29,6 +29,10 @@ export class GeneralInfoComponent implements OnInit {
   loadStats(): void {
     this.projectService.getHomeStats().subscribe({
       next: (data: any) => {
+<<<<<<< HEAD
+=======
+        // Asegúrate de que el backend devuelva estas propiedades
+>>>>>>> bed4df7ad669e580904d34669d52dd9c11f6e375
         this.stats = {
           totalProjects: data.totalProjects || 0,
           projectsThisMonth: data.monthlyProjects || 0,
