@@ -50,27 +50,37 @@
         <h2 class="section-title">Índices de biodiversidad</h2>
     </div>
 
-    <div class="indices">
-        <span class="cuadrito">
-            <section class="index-value">{{ zone.biodiversityAnalysis.shannonWiener}}</section>
-            <section class="index-name">Shannon Wiener</section>
-        </span>
-        
-        <span class="cuadrito">
-            <section class="index-value">{{ zone.biodiversityAnalysis.simpson}}</section>
-            <section class="index-name">Simpson</section>
-        </span>
+    @if (loadingIndices()) {
+        <div class="loading-state">
+            <p>Cargando índices de biodiversidad...</p>
+        </div>
+    } @else if (biodiversityIndices()) {
+        <div class="indices">
+            <span class="cuadrito">
+                <section class="index-value">{{ formatIndex(biodiversityIndices()!.shannonWiener) }}</section>
+                <section class="index-name">Shannon Wiener</section>
+            </span>
+            
+            <span class="cuadrito">
+                <section class="index-value">{{ formatIndex(biodiversityIndices()!.simpson) }}</section>
+                <section class="index-name">Simpson</section>
+            </span>
 
-        <span class="cuadrito">
-            <section class="index-value">{{ zone.biodiversityAnalysis.margaleft}}</section>
-            <section class="index-name">Margalef</section>
-        </span>
+            <span class="cuadrito">
+                <section class="index-value">{{ formatIndex(biodiversityIndices()!.margalef) }}</section>
+                <section class="index-name">Margalef</section>
+            </span>
 
-        <span class="cuadrito">
-            <section class="index-value">{{ zone.biodiversityAnalysis.pielou}}</section>
-            <section class="index-name">Pielou</section>
-        </span>
-    </div>
+            <span class="cuadrito">
+                <section class="index-value">{{ formatIndex(biodiversityIndices()!.pielou) }}</section>
+                <section class="index-name">Pielou</section>
+            </span>
+        </div>
+    } @else {
+        <div class="empty-state">
+            <p>No hay suficientes datos para calcular índices de biodiversidad</p>
+        </div>
+    }
 
 } @else {
     <p class="empty-message">Cargando zona o la zona seleccionada no existe.</p>

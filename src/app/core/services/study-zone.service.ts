@@ -1,3 +1,4 @@
+// src/app/core/services/study-zone.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -5,6 +6,7 @@ import { catchError, tap, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Zones } from '../models/zones.model';
 import { RercordedSpecies } from '../models/recorded-species.model';
+import { StudyZoneDetails, BiodiversityAnalysis } from '../models/biodiversity.model';
 
 const BASE_URL = `${environment.apiUrl}`;
 
@@ -22,12 +24,6 @@ interface BackendBiodiversityIndices {
   simpson: number;
   margalef: number;
   pielou: number;
-}
-
-interface StudyZoneDetails {
-  studyZone: BackendStudyZone;
-  biodiversityIndices: BackendBiodiversityIndices;
-  speciesCount: number;
 }
 
 @Injectable({
@@ -55,37 +51,36 @@ export class StudyZoneService {
     );
   }
 
-createStudyZone(zonePayload: any): Observable<Zones> {
-  const projectId = zonePayload.projectId;
-  
-  if (!projectId) {
-    throw new Error('projectId es requerido para crear una zona');
+  createStudyZone(zonePayload: any): Observable<Zones> {
+    const projectId = zonePayload.projectId;
+    
+    if (!projectId) {
+      throw new Error('projectId es requerido para crear una zona');
+    }
+    
+    console.log('POST a /project-details/' + projectId + '/study-zones');
+    console.log('Payload:', JSON.stringify(zonePayload, null, 2));
+    
+    return this.http.post<BackendStudyZone>(
+      `${BASE_URL}/project-details/${projectId}/study-zones`,
+      zonePayload
+    ).pipe(
+      map(created => this.adaptBackendZone(created)),
+      tap(newZone => console.log('Zona creada:', newZone)),
+      catchError(this.handleError)
+    );
   }
-  
-  console.log('POST a /project-details/' + projectId + '/study-zones');
-  console.log('Payload:', JSON.stringify(zonePayload, null, 2));
-  
-  return this.http.post<BackendStudyZone>(
-    `${BASE_URL}/project-details/${projectId}/study-zones`,
-    zonePayload
-  ).pipe(
-    map(created => this.adaptBackendZone(created)),
-    tap(newZone => console.log('Zona creada:', newZone)),
-    catchError(this.handleError)
-  );
-}
 
-updateStudyZone(zoneId: number, zonePayload: any): Observable<Zones> {
-  console.log('PUT a /study-zone-details/' + zoneId);
-  console.log('Payload:', JSON.stringify(zonePayload, null, 2));
+  updateStudyZone(zoneId: number, zonePayload: any): Observable<Zones> {
+    console.log('PUT a /study-zone-details/' + zoneId);
+    console.log('Payload:', JSON.stringify(zonePayload, null, 2));
 
-  return this.http.put<BackendStudyZone>(`${BASE_URL}/study-zone-details/${zoneId}`, zonePayload).pipe(
-    map(updated => this.adaptBackendZone(updated)),
-    tap(updatedZone => console.log('Zona actualizada:', updatedZone)),
-    catchError(this.handleError)
-  );
-}
-
+    return this.http.put<BackendStudyZone>(`${BASE_URL}/study-zone-details/${zoneId}`, zonePayload).pipe(
+      map(updated => this.adaptBackendZone(updated)),
+      tap(updatedZone => console.log('Zona actualizada:', updatedZone)),
+      catchError(this.handleError)
+    );
+  }
 
   deleteStudyZone(projectId: number, zoneId: number): Observable<void> {
     return this.http.delete<void>(`${BASE_URL}/project-details/${projectId}/study-zones/${zoneId}`).pipe(
@@ -94,11 +89,20 @@ updateStudyZone(zoneId: number, zonePayload: any): Observable<Zones> {
     );
   }
 
-
-  getStudyZoneBiodiversity(zoneId: number): Observable<BackendBiodiversityIndices> {
+  getBiodiversityIndices(zoneId: number): Observable<StudyZoneDetails> {
+    console.log('GET a /study-zone-details/' + zoneId + '/biodiversity');
+    
     return this.http.get<StudyZoneDetails>(`${BASE_URL}/study-zone-details/${zoneId}/biodiversity`).pipe(
-      map(details => details.biodiversityIndices),
-      tap(indices => console.log('Índices de biodiversidad obtenidos:', indices)),
+      tap(details => console.log('Índices de biodiversidad obtenidos para zona:', zoneId, details.biodiversityIndices)),
+      catchError(this.handleError)
+    );
+  }
+
+  getBiodiversityAnalysis(projectId: number): Observable<BiodiversityAnalysis> {
+    console.log('GET a /biodiversity-analysis/' + projectId);
+    
+    return this.http.get<BiodiversityAnalysis>(`${BASE_URL}/biodiversity-analysis/${projectId}`).pipe(
+      tap(analysis => console.log('Análisis de biodiversidad obtenido para proyecto:', projectId, 'Zonas:', analysis.zones.length)),
       catchError(this.handleError)
     );
   }

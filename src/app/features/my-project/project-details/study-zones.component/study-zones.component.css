@@ -65,6 +65,9 @@
 .indices {
     display: flex;
     margin-top: 40px;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
 }
 
 .cuadrito {
@@ -74,14 +77,11 @@
     padding: 30px 20px;
     border: 3px solid #7CB342;
     border-radius: 5px;
-    margin: 0 40px;
     gap: 15px;
-
     width: 270px;      
     height: 150px;     
     overflow: hidden;
 }
-
 
 .cuadrito section {
     display: flex;
@@ -98,4 +98,28 @@
 .index-name {
     color: #2E7D32;
     font-size: 1rem;
+}
+
+.loading-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    color: #558B5F;
+}
+
+.empty-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    color: #558B5F;
+    font-style: italic;
+}
+
+.empty-message {
+    text-align: center;
+    padding: 40px;
+    color: #558B5F;
+    font-style: italic;
 }

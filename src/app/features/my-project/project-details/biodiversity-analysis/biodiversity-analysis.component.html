@@ -13,31 +13,7 @@
 
 <div class="rayita"></div>
 
-<h2>Índices de biodiversidad por zona de estudio</h2>
-
-<div class="projects-grid">
-    @for (zone of info()?.zone; track zone.idZone; let i = $index) {
-        <div>
-            <div class="base-card">
-                <div class="info-container">
-                    <h3>{{zone.zoneName}}</h3>
-                    <p>S' = {{ zone.biodiversityAnalysis.shannonWiener}}</p>
-                    <p>D = {{ zone.biodiversityAnalysis.simpson}}</p>
-                    <p>d = {{ zone.biodiversityAnalysis.margaleft}}</p>
-                    <p>J' = {{ zone.biodiversityAnalysis.pielou}}</p>
-                </div>
-
-                <div class="badge-container">
-                            <span class="badge">{{zone.squareFootage}}</span>
-                        </div>
-            </div>
-        </div>
-    }
-</div>
-
-<div>
-    <h2>Gráficas por zona de estudio</h2>
-</div>
+<h2>Gráficas por zona de estudio</h2>
 
 <div class="projects-grid">
     

@@ -1,8 +1,10 @@
+// src/app/features/my-project/project-details/study-zones.component/study-zones.component.ts
 import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from '../../../../core/models/project.model';
 import { Zones } from '../../../../core/models/zones.model';
+import { BiodiversityIndices } from '../../../../core/models/biodiversity.model';
 import { ProjectService } from '../../../../core/services/project.service';
 import { StudyZoneService } from '../../../../core/services/study-zone.service';
 import { filter } from 'rxjs';
@@ -20,6 +22,8 @@ export class StudyZonesComponent implements OnInit, OnDestroy {
   project = signal<Project | null>(null);
   zones = signal<Zones[]>([]); 
   activeZone = signal<Zones | null>(null);
+  biodiversityIndices = signal<BiodiversityIndices | null>(null);
+  loadingIndices = signal(false);
   
   private paramSub!: Subscription;
   showGrid = true;
@@ -46,6 +50,7 @@ export class StudyZonesComponent implements OnInit, OnDestroy {
         this.projectId = projectId;
         this.zoneId = zoneId;
         this.loadProjectWithZones(projectId, zoneId);
+        this.loadBiodiversityIndices(zoneId); 
       }
       this.setupRouteListener();
     });
@@ -86,6 +91,46 @@ export class StudyZonesComponent implements OnInit, OnDestroy {
     });
   }
 
+  private loadBiodiversityIndices(zoneId: number): void {
+    this.loadingIndices.set(true);
+    
+    this.studyZoneService.getBiodiversityIndices(zoneId).subscribe({
+      next: (details) => {
+        console.log('Índices de biodiversidad cargados:', details.biodiversityIndices);
+        this.biodiversityIndices.set(details.biodiversityIndices);
+        
+        // Actualizar también la zona activa con los índices
+        const currentZone = this.activeZone();
+        if (currentZone) {
+          const updatedZone: Zones = {
+            ...currentZone,
+            biodiversityAnalysis: {
+              shannonWiener: details.biodiversityIndices.shannonWiener || 0,
+              simpson: details.biodiversityIndices.simpson || 0,
+              margaleft: details.biodiversityIndices.margalef || 0,
+              pielou: details.biodiversityIndices.pielou || 0
+            }
+          };
+          this.activeZone.set(updatedZone);
+        }
+        
+        this.loadingIndices.set(false);
+      },
+      error: (err: any) => {
+        console.error('Error cargando índices de biodiversidad:', err);
+        this.biodiversityIndices.set(null);
+        this.loadingIndices.set(false);
+      }
+    });
+  }
+
+  formatIndex(value: number | null): string {
+    if (value === null || value === undefined) {
+      return 'N/A';
+    }
+    return value.toFixed(4);
+  }
+
   openEditZoneModal(): void {
     const zone = this.activeZone();
     console.log('Intentando abrir modal de edicion');
@@ -116,6 +161,7 @@ export class StudyZonesComponent implements OnInit, OnDestroy {
       next: (updatedZone: Zones) => {
         console.log('Zona actualizada exitosamente:', updatedZone);
         this.loadProjectWithZones(this.projectId, this.zoneId);
+        this.loadBiodiversityIndices(this.zoneId); 
         this.closeEditZoneModal();
       },
       error: (err: any) => {
