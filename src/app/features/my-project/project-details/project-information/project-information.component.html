@@ -176,9 +176,10 @@
 
 
 @if (showNewZoneModal) {
-  <app-newzone-form
+    <app-newzone-form 
     [projectId]="projectId"
+    (zoneCreated)="onZoneCreated($event)"
     (closeModal)="closeNewZoneModal()"
-    (zoneCreated)="onZoneCreated($event)">
-  </app-newzone-form>
+    (cancelled)="closeNewZoneModal()">
+    </app-newzone-form>
 }

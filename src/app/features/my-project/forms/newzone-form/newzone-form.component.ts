@@ -12,10 +12,12 @@ import { Zones } from '../../../../core/models/zones.model';
 })
 export class NewZoneFormComponent implements OnInit {
   @Input() zone: Zones | null = null;
-  @Input() projectId: number = 0;
+  @Input() projectId!: number;
   @Output() closeModal = new EventEmitter<void>();
   @Output() zoneCreated = new EventEmitter<any>();
   @Output() zoneUpdated = new EventEmitter<{id: number, data: any}>();
+  @Output() cancelled = new EventEmitter<void>();
+
 
   zoneForm: FormGroup;
   isEditMode: boolean = false;

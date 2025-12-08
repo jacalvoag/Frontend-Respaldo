@@ -18,20 +18,28 @@ export class ConfigurationModule implements OnInit {
   loading = signal(true);
   isEditMode = signal(false);
   profileForm: FormGroup;
+  userId: number = 0;
 
   constructor(private userService: UserService) {
     this.profileForm = new FormGroup({
       fullName: new FormControl('', [Validators.required]),
-      bio: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      phone: new FormControl('', [Validators.required]),
-      location: new FormControl('', [Validators.required])
+      bio: new FormControl(''),
+      email: new FormControl('', [Validators.required, Validators.email])
     });
   }
 
   ngOnInit(): void {
+    this.userId = this.getUserIdFromStorage();
     this.loadUserProfile();
     this.profileForm.disable();
+  }
+
+  private getUserIdFromStorage(): number {
+    const userId = localStorage.getItem('user_id');
+    if (!userId) {
+      throw new Error('Usuario no autenticado');
+    }
+    return parseInt(userId);
   }
 
   loadUserProfile(): void {
@@ -39,8 +47,8 @@ export class ConfigurationModule implements OnInit {
       next: (user) => {
         this.profileForm.patchValue({
           fullName: user.fullName,
-          bio: user.bio,
-          email: user.email,
+          bio: user.biography,
+          email: user.email
         });
         this.loading.set(false);
       },
@@ -61,30 +69,44 @@ export class ConfigurationModule implements OnInit {
     this.isEditMode.set(!this.isEditMode());
     if (this.isEditMode()) {
       this.profileForm.enable();
+      this.profileForm.get('email')?.disable();
     } else {
       this.profileForm.disable();
+      this.loadUserProfile();
     }
   }
 
   onSaveChanges(): void {
     if (this.profileForm.valid) {
-      const updatedUser: User = {
-        id: 1,
-        ...this.profileForm.value
+      const formValue = this.profileForm.getRawValue();
+      const [firstName, ...lastNameParts] = formValue.fullName.split(' ');
+      const lastName = lastNameParts.join(' ');
+
+      const updatePayload = {
+        userName: firstName,
+        userLastname: lastName,
+        biography: formValue.bio || null,
+        userEmail: formValue.email,
+        userBirthday: new Date().toISOString().split('T')[0],
+        userPassword: 'unchanged'
       };
 
-      this.userService.updateUserProfile(updatedUser).subscribe({
-        next: (user) => {
-          console.log('Cambios guardados:', user);
+      this.userService.updateUserProfile(updatePayload as any).subscribe({
+        next: () => {
+          console.log('Perfil actualizado exitosamente');
           this.showSuccessMessage.set(true);
           setTimeout(() => this.showSuccessMessage.set(false), 3000);
           this.isEditMode.set(false);
           this.profileForm.disable();
+          this.loadUserProfile();
         },
         error: (err) => {
-          console.error('Error guardando cambios', err);
+          console.error('Error guardando cambios:', err);
+          alert('Error al actualizar el perfil: ' + (err.message || 'Error desconocido'));
         }
       });
+    } else {
+      alert('Por favor completa todos los campos requeridos');
     }
   }
 

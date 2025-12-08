@@ -69,12 +69,19 @@
   </div>
 
   <div class="form-section form-section--danger">
-    <h3 class="section-subtitle section-subtitle--danger">Eliminar cuenta</h3>
+    <h3 class="section-subtitle section-subtitle--danger">Zona de peligro</h3>
     <p class="danger-text">
-      Eliminar la cuenta hara que se eliminen todos tus trabajos y no podrás conservar ningún progreso dentro de la aplicación
+      Estas acciones son irreversibles. Por favor, ten cuidado.
     </p>
     
     <div class="danger-actions">
+      <button 
+        type="button" 
+        class="button-danger-outline" 
+        (click)="onLogout()">
+        Cerrar sesión
+      </button>
+      
       <button 
         type="button" 
         class="button-danger-outline" 

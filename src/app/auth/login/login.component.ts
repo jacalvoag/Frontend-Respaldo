@@ -54,5 +54,11 @@ export class LoginComponent {
       });
   }
 
+  navigateToRegister(): void {
+    this.router.navigate(['/register']);
+  }
 
+  showForgotPasswordMessage(): void {
+    alert('Lo sentimos, esta función aún no está disponible :(');
+  }
 }

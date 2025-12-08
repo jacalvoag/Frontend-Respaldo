@@ -106,9 +106,9 @@ export class ProjectService {
   }
 
 
-  getHomeStats(): Observable<any> {
-    return this.http.get<any>(`${BASE_URL}/home`).pipe(
-      tap(stats => console.log('Estadísticas obtenidas:', stats)),
+  getHomeStats(userId: number): Observable<any> {
+    return this.http.get<any>(`${BASE_URL}/home/${userId}`).pipe(
+      tap(stats => console.log('Estadísticas obtenidas para usuario:', userId, stats)),
       catchError(this.handleError)
     );
   }

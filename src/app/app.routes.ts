@@ -1,10 +1,8 @@
-// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './layout/main-layout.component/main-layout.component';
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-    // Rutas públicas (sin autenticación)
     {
         path: 'login',
         loadComponent: () => import('./auth/login/login.component')
@@ -27,7 +25,7 @@ export const routes: Routes = [
     {
         path: '',
         component: MainLayoutComponent,
-        canActivate: [authGuard], // 🔒 Proteger todas las rutas hijas
+        canActivate: [authGuard],
         children: [
             {
                 path: 'home',
@@ -71,12 +69,11 @@ export const routes: Routes = [
                     .then(m => m.ConfigurationModule),
                 data: { title: 'Configuración' }
             },
-            { path: '', redirectTo: 'home', pathMatch: 'full' },
-            { path: '**', redirectTo: 'home' }   
+            { path: '', redirectTo: 'home', pathMatch: 'full' }
         ]
     },
 
-    // Redirección por defecto a landing si no está autenticado
+    // Redirecciones por defecto
     { path: '', redirectTo: 'landing', pathMatch: 'full' },
     { path: '**', redirectTo: 'landing' }
 ];

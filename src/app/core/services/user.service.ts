@@ -18,9 +18,9 @@ export class UserService {
         return this.http.get<any>(`${BASE_URL}/${userId}`);
     }
 
-    updateUserProfile(user: User): Observable<User> {
+    updateUserProfile(profileData: any): Observable<any> {
         const userId = this.getUserIdFromStorage();
-        return this.http.put<User>(`${BASE_URL}/${userId}`, user); 
+        return this.http.put<any>(`${BASE_URL}/${userId}`, profileData);
     }
 
     changePassword(passwordData: PasswordChange): Observable<boolean> {

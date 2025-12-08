@@ -27,12 +27,18 @@ export class GeneralInfoComponent implements OnInit {
   }
 
   loadStats(): void {
-    this.projectService.getHomeStats().subscribe({
+    // Obtener el userId del usuario autenticado
+    const userId = localStorage.getItem('user_id');
+    
+    if (!userId) {
+      console.error('No se encontró user_id en localStorage');
+      this.loading = false;
+      return;
+    }
+
+    // Pasar el userId al servicio
+    this.projectService.getHomeStats(parseInt(userId)).subscribe({
       next: (data: any) => {
-<<<<<<< HEAD
-=======
-        // Asegúrate de que el backend devuelva estas propiedades
->>>>>>> bed4df7ad669e580904d34669d52dd9c11f6e375
         this.stats = {
           totalProjects: data.totalProjects || 0,
           projectsThisMonth: data.monthlyProjects || 0,

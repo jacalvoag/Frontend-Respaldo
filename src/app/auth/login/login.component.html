@@ -9,7 +9,7 @@
                 
             </div>
 
-            <form [formGroup]="loginForm" (submit)="handleSubmit() " class="form"> 
+            <form [formGroup]="loginForm" (submit)="handleSubmit()" class="form"> 
                 <input id="email" class="input" formControlName="email" type="email" placeholder="Ingresa tu correo electronico" >
                 <input id="password" class="input" formControlName="password" type="password" placeholder="Ingresa tu contraseña">
                 
@@ -18,14 +18,14 @@
                         <input id="remember-me" class="remember-input" type="checkbox" >
                         <label for="remember-me">Recordarme</label>
                     </div>
-                    <a href="">¿Olvidaste tu contraseña?</a>
+                    <a (click)="showForgotPasswordMessage()" style="cursor: pointer;">¿Olvidaste tu contraseña?</a>
                 </div>
 
                 <button class="button-login-register">Iniciar sesión</button>
 
                 <div class="register-link">
                     <span>¿No tienes una cuenta? </span>
-                    <a href="">Registrate aquí</a>
+                    <a (click)="navigateToRegister()" style="cursor: pointer;">Registrate aquí</a>
                 </div>
             </form>
         </section>

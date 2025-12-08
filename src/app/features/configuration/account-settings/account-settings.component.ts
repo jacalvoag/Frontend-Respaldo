@@ -1,7 +1,9 @@
 import { Component, OnInit, signal, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../core/models/user.model';
 
 @Component({
@@ -19,7 +21,11 @@ export class AccountSettingsComponent implements OnInit {
   showDeleteModal = signal(false);
   accountForm: FormGroup;
 
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.accountForm = new FormGroup({
       newPassword: new FormControl('', [Validators.required, Validators.minLength(8)]),
       confirmPassword: new FormControl('', [Validators.required]),
@@ -116,6 +122,15 @@ export class AccountSettingsComponent implements OnInit {
     }
   }
 
+  onLogout(): void {
+    if (confirm('¿Estás seguro que deseas cerrar sesión?')) {
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('user_id');
+      
+      this.router.navigate(['/login']);
+    }
+  }
+
   onDeactivateAccount(): void {
     if (confirm('¿Estás seguro que deseas desactivar tu cuenta?')) {
       this.userService.deactivateAccount().subscribe({
@@ -137,12 +152,17 @@ export class AccountSettingsComponent implements OnInit {
   confirmDeleteAccount(): void {
     this.userService.deleteAccount().subscribe({
       next: () => {
-        console.log('Cuenta eliminada');
-        alert('Cuenta eliminada exitosamente');
+        console.log('Cuenta eliminada exitosamente');
         this.showDeleteModal.set(false);
+        
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user_id');
+        
+        this.router.navigate(['/landing']);
       },
       error: (err) => {
         console.error('Error eliminando cuenta', err);
+        alert('Error al eliminar la cuenta. Por favor intenta de nuevo.');
       }
     });
   }

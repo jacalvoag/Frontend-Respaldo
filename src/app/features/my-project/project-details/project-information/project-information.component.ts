@@ -95,19 +95,24 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  onZoneCreated(zonePayload: any): void {
-    if (!zonePayload.projectId) {
-      alert('Error: No se puede crear la zona sin un proyecto asociado');
-      return;
-    }
-    
-    this.studyZoneService.createStudyZone(zonePayload.projectId,).subscribe({
+  onZoneCreated(newZone: any): void {
+    // Asegurarse de que el projectId esté presente
+    const zoneWithProjectId = {
+      ...newZone,
+      projectId: this.projectId
+    };
+
+    console.log('Creando zona con datos:', zoneWithProjectId);
+
+    this.studyZoneService.createStudyZone(zoneWithProjectId).subscribe({
       next: (createdZone) => {
+        console.log('Zona creada exitosamente:', createdZone);
         this.loadProjectWithZones(this.projectId);
         this.closeNewZoneModal();
       },
-      error: (err: any) => {
-        alert('Error al crear zona: ' + err.message);
+      error: (err) => {
+        console.error('Error al crear zona:', err);
+        alert('Error al crear la zona de estudio');
       }
     });
   }
