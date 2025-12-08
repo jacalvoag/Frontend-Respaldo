@@ -23,10 +23,10 @@ export class SpeciesZoneComponent implements OnInit, OnDestroy {
   showAddSpeciesModal = false;
   showEditSpeciesModal = false;
   selectedSpecies: RercordedSpecies | null = null;
-
-  private paramSub!: Subscription;
   projectId: number = 0;
   zoneId: number = 0;
+
+  private paramSub!: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -113,7 +113,6 @@ export class SpeciesZoneComponent implements OnInit, OnDestroy {
         this.closeAddSpeciesModal();
       },
       error: (err: any) => {
-        console.error('Error creando especie:', err);
         alert('Error al crear especie: ' + err.message);
       }
     });
@@ -137,7 +136,6 @@ export class SpeciesZoneComponent implements OnInit, OnDestroy {
         this.closeEditSpeciesModal();
       },
       error: (err: any) => {
-        console.error('Error actualizando especie:', err);
         alert('Error al actualizar especie: ' + err.message);
       }
     });
@@ -151,7 +149,6 @@ export class SpeciesZoneComponent implements OnInit, OnDestroy {
           this.openMenuId = null;
         },
         error: (err: any) => {
-          console.error('Error eliminando especie:', err);
           alert('Error al eliminar especie: ' + err.message);
         }
       });

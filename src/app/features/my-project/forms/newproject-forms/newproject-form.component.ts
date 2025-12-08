@@ -14,7 +14,7 @@ export class NewProjectFormComponent implements OnInit {
   @Input() project: Project | null = null; 
   @Output() closeModal = new EventEmitter<void>();
   @Output() projectCreated = new EventEmitter<any>();
-  @Output() projectUpdated = new EventEmitter<any>(); 
+  @Output() projectUpdated = new EventEmitter<{id: number, data: any}>();
 
   projectForm: FormGroup;
   isEditMode: boolean = false;
@@ -33,7 +33,6 @@ export class NewProjectFormComponent implements OnInit {
         name: this.project.name,
         description: this.project.description
       });
-      console.log('Modo edición activado para proyecto:', this.project.id);
     }
   }
 
@@ -50,7 +49,6 @@ export class NewProjectFormComponent implements OnInit {
           projectDescription: this.projectForm.value.description || null
         };
         
-        console.log('📤 PUT - Enviando actualización:', JSON.stringify(updatePayload, null, 2));
         this.projectUpdated.emit({ id: this.project.id, data: updatePayload });
         
       } else {
@@ -61,7 +59,6 @@ export class NewProjectFormComponent implements OnInit {
           projectDescription: this.projectForm.value.description || null
         };
         
-        console.log('POST - Enviando creación:', JSON.stringify(createPayload, null, 2));
         this.projectCreated.emit(createPayload);
       }
       
@@ -71,9 +68,7 @@ export class NewProjectFormComponent implements OnInit {
 
   private getUserIdFromStorage(): number {
     const userId = localStorage.getItem('user_id');
-    if (!userId) {
-      throw new Error('Usuario no autenticado. Por favor inicia sesión.');
-    }
+    if (!userId) return 0;
     return parseInt(userId);
   }
 

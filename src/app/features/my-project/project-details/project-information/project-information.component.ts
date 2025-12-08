@@ -1,12 +1,12 @@
-// src/app/features/my-project/project-details/project-information/project-information.component.ts
 import { Component, OnInit, OnDestroy, signal, HostListener } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProjectService } from '../../../../core/services/project.service';
 import { StudyZoneService } from '../../../../core/services/study-zone.service';
 import { Project } from '../../../../core/models/project.model';
 import { Zones } from '../../../../core/models/zones.model';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { NewProjectFormComponent } from '../../forms/newproject-forms/newproject-form.component';
 import { NewZoneFormComponent } from '../../forms/newzone-form/newzone-form.component';
 
@@ -44,32 +44,30 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   }
 
   loadProjectWithZones(projectId: number): void {
-  this.projectService.getProjectById(projectId).subscribe({
-    next: (project: Project) => {
-      this.info.set(project);
-      
-      this.studyZoneService.getStudyZonesByProject(projectId).subscribe({
-        next: (zones: Zones[]) => {
-          const updatedProject = {
-            ...project,
-            zone: zones,
-            numberOfZones: zones.length
-          };
-          this.info.set(updatedProject);
-          console.log('Proyecto con zonas cargado');
-        },
-        error: (err: any) => console.error('Error cargando zonas:', err)
-      });
-    },
-    error: (err: any) => {
-      console.error('Error cargando proyecto:', err);
-      this.info.set(null);
-    }
-  });
-}
+    this.projectService.getProjectById(projectId).subscribe({
+      next: (project: Project) => {
+        this.info.set(project);
+        
+        this.studyZoneService.getStudyZonesByProject(projectId).subscribe({
+          next: (zones: Zones[]) => {
+            const updatedProject = {
+              ...project,
+              zone: zones,
+              numberOfZones: zones.length
+            };
+            this.info.set(updatedProject);
+          },
+          error: (err: any) => console.error('Error cargando zonas:', err)
+        });
+      },
+      error: (err: any) => {
+        console.error('Error cargando proyecto:', err);
+        this.info.set(null);
+      }
+    });
+  }
 
   openEditModal(): void {
-    console.log('🖊️ Abriendo modal de edición para proyecto:', this.info()?.id);
     this.showEditModal = true;
   }
 
@@ -85,43 +83,34 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
     this.showNewZoneModal = false;
   }
 
-onProjectUpdated(event: { id: number; data: any }): void {
-  console.log('Evento de actualización recibido:', event);
-  
-  this.projectService.updateProject(event.id, event.data).subscribe({
-    next: (updatedProject: Project) => {
-      console.log('Proyecto actualizado exitosamente:', updatedProject);
-      this.loadProjectWithZones(this.projectId);
-      this.closeEditModal();
-    },
-    error: (err: any) => {
-      console.error('Error actualizando proyecto:', err);
-      alert('Error al actualizar proyecto: ' + err.message);
-    }
-  });
-}
-
-onZoneCreated(zonePayload: any): void {
-  console.log('Payload de zona recibido:', zonePayload);
-  
-  if (!zonePayload.projectId) {
-    console.error('Error: El payload no contiene projectId');
-    alert('Error: No se puede crear la zona sin un proyecto asociado');
-    return;
+  onProjectUpdated(event: { id: number; data: any }): void {
+    this.projectService.updateProject(event.id, event.data).subscribe({
+      next: (updatedProject: Project) => {
+        this.loadProjectWithZones(this.projectId);
+        this.closeEditModal();
+      },
+      error: (err: any) => {
+        alert('Error al actualizar proyecto: ' + err.message);
+      }
+    });
   }
-  
-  this.studyZoneService.createStudyZone(zonePayload).subscribe({
-    next: (createdZone) => {
-      console.log('Zona creada exitosamente:', createdZone);
-      this.loadProjectWithZones(this.projectId);
-      this.closeNewZoneModal();
-    },
-    error: (err: any) => {
-      console.error('Error creando zona:', err);
-      alert('Error al crear zona: ' + err.message);
+
+  onZoneCreated(zonePayload: any): void {
+    if (!zonePayload.projectId) {
+      alert('Error: No se puede crear la zona sin un proyecto asociado');
+      return;
     }
-  });
-}
+    
+    this.studyZoneService.createStudyZone(zonePayload.projectId,).subscribe({
+      next: (createdZone) => {
+        this.loadProjectWithZones(this.projectId);
+        this.closeNewZoneModal();
+      },
+      error: (err: any) => {
+        alert('Error al crear zona: ' + err.message);
+      }
+    });
+  }
 
   toggleMenu(zoneId: number): void {
     this.openMenuId = this.openMenuId === zoneId ? null : zoneId;
@@ -131,12 +120,10 @@ onZoneCreated(zonePayload: any): void {
     if (confirm('¿Estás seguro de que deseas eliminar esta zona?')) {
       this.studyZoneService.deleteStudyZone(this.projectId, zoneId).subscribe({
         next: () => {
-          console.log('Zona eliminada');
           this.loadProjectWithZones(this.projectId);
           this.openMenuId = null;
         },
         error: (err: any) => {
-          console.error('Error:', err);
           alert('Error: ' + err.message);
         }
       });
@@ -156,6 +143,8 @@ onZoneCreated(zonePayload: any): void {
   }
 
   ngOnDestroy(): void {
-    this.paramSub.unsubscribe();
+    if (this.paramSub) {
+      this.paramSub.unsubscribe();
+    }
   }
 }

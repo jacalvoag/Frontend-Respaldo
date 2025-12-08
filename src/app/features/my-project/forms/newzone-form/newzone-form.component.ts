@@ -15,7 +15,7 @@ export class NewZoneFormComponent implements OnInit {
   @Input() projectId: number = 0;
   @Output() closeModal = new EventEmitter<void>();
   @Output() zoneCreated = new EventEmitter<any>();
-  @Output() zoneUpdated = new EventEmitter<any>();
+  @Output() zoneUpdated = new EventEmitter<{id: number, data: any}>();
 
   zoneForm: FormGroup;
   isEditMode: boolean = false;
@@ -29,9 +29,6 @@ export class NewZoneFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('NewZoneFormComponent - projectId recibido:', this.projectId);
-    console.log('NewZoneFormComponent - zone recibida:', this.zone);
-    
     if (this.zone) {
       this.isEditMode = true;
       const areaValue = this.extractNumber(this.zone.squareFootage);
@@ -41,9 +38,6 @@ export class NewZoneFormComponent implements OnInit {
         zoneDescription: this.zone.zoneDescription,
         squareFootage: areaValue
       });
-      
-      console.log('Modo edicion activado para zona:', this.zone.idZone);
-      console.log('Valores del formulario:', this.zoneForm.value);
     }
   }
 
@@ -58,12 +52,10 @@ export class NewZoneFormComponent implements OnInit {
           squareArea: squareArea
         };
         
-        console.log('PUT - Enviando actualizacion de zona:', JSON.stringify(updatePayload, null, 2));
         this.zoneUpdated.emit({ id: this.zone.idZone, data: updatePayload });
         
       } else {
         if (!this.projectId) {
-          console.error('Error: projectId no esta definido');
           alert('Error: No se puede crear la zona sin un proyecto asociado');
           return;
         }
@@ -75,13 +67,10 @@ export class NewZoneFormComponent implements OnInit {
           squareArea: squareArea
         };
         
-        console.log('POST - Enviando creacion de zona:', JSON.stringify(createPayload, null, 2));
         this.zoneCreated.emit(createPayload);
       }
       
       this.onClose();
-    } else {
-      console.error('Formulario invalido:', this.zoneForm.errors);
     }
   }
 
