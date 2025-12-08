@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GeneralStats } from '../../../../core/models/stats.model';
-import { StatsService } from '../../../../core/services/stats.service';
+import { ProjectService } from '../../../../core/services/project.service';
 
 @Component({
   selector: 'app-general-info',
@@ -20,16 +20,22 @@ export class GeneralInfoComponent implements OnInit {
 
   loading = true;
 
-  constructor(private statsService: StatsService) {}
+  constructor(private projectService: ProjectService) {}
 
   ngOnInit(): void {
     this.loadStats();
   }
 
   loadStats(): void {
-    this.statsService.getGeneralStats().subscribe({
-      next: (data) => {
-        this.stats = data;
+    this.projectService.getHomeStats().subscribe({
+      next: (data: any) => {
+        // Asegúrate de que el backend devuelva estas propiedades
+        this.stats = {
+          totalProjects: data.totalProjects || 0,
+          projectsThisMonth: data.monthlyProjects || 0,
+          totalAnalysis: data.totalAnalysis || 0,
+          analysisThisMonth: data.analysisThisMonth || 0
+        };
         this.loading = false;
       },
       error: (err) => {
