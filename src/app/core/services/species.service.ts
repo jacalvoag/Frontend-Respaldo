@@ -106,12 +106,12 @@ export class SpeciesService {
   private adaptBackendSpeciesDetail(backendSpecies: any): RercordedSpecies {
     return {
       speciesId: backendSpecies.speciesId,
-      speciesName: backendSpecies.commonName || backendSpecies.scientificName,
+      speciesName: backendSpecies.speciesName || backendSpecies.commonName || backendSpecies.scientificName || '',
       samplingUnit: backendSpecies.samplingUnit || '',
       functionalType: backendSpecies.functionalTypeName || backendSpecies.functionalType || '',
-      numberOfIndividuals: backendSpecies.quantity?.toString() || backendSpecies.individualCount?.toString() || '0',
-      heightOrStratum: backendSpecies.heightOrStratum || backendSpecies.heightStratum || '',
-      speciesPhoto: backendSpecies.speciesPhoto
+      numberOfIndividuals: backendSpecies.individualCount?.toString() || backendSpecies.quantity?.toString() || '0',
+      heightOrStratum: backendSpecies.heightStratum || backendSpecies.heightOrStratum || '',
+      speciesPhoto: backendSpecies.speciesPhoto || ''
     };
   }
 

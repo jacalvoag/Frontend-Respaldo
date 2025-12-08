@@ -86,6 +86,7 @@
   <app-newspecie-form
     [show]="showAddSpeciesModal"
     [zoneId]="zoneId"
+    [projectId]="projectId"
     (close)="closeAddSpeciesModal()"
     (save)="onSpeciesCreated($event)">
   </app-newspecie-form>
@@ -95,6 +96,7 @@
   <app-newspecie-form
     [show]="showEditSpeciesModal"
     [zoneId]="zoneId"
+    [projectId]="projectId"
     [speciesData]="selectedSpecies"
     (close)="closeEditSpeciesModal()"
     (speciesUpdated)="onSpeciesUpdated($event)">

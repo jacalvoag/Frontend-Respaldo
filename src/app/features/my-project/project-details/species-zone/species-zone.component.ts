@@ -39,8 +39,10 @@ export class SpeciesZoneComponent implements OnInit, OnDestroy {
     this.paramSub = this.route.paramMap.subscribe(params => {
       this.projectId = +params.get('id')!;
       this.zoneId = +params.get('idZone')!;
+      
+      console.log('ngOnInit - projectId:', this.projectId);
+      console.log('ngOnInit - zoneId:', this.zoneId);
 
-      console.log('Parametros - projectId:', this.projectId, 'zoneId:', this.zoneId);
       this.loadZoneData();
       this.loadSpeciesData();
     });
@@ -49,7 +51,6 @@ export class SpeciesZoneComponent implements OnInit, OnDestroy {
   private loadZoneData(): void {
     this.studyZoneService.getStudyZoneById(this.zoneId).subscribe({
       next: (zone) => {
-        console.log('Zona cargada:', zone);
         this.currentZone.set(zone);
       },
       error: (err) => {
@@ -63,7 +64,6 @@ export class SpeciesZoneComponent implements OnInit, OnDestroy {
 
     this.speciesService.getSpeciesByZone(this.zoneId).subscribe({
       next: (species) => {
-        console.log('Especies cargadas:', species);
         this.recordedSpecies.set(species);
         this.loading.set(false);
       },
@@ -95,29 +95,20 @@ export class SpeciesZoneComponent implements OnInit, OnDestroy {
   }
 
   openAddSpeciesModal(): void {
-    console.log('=== ABRIENDO MODAL DE AGREGAR ESPECIE ===');
-    console.log('showAddSpeciesModal ANTES:', this.showAddSpeciesModal);
-    console.log('zoneId:', this.zoneId);
-    
+    console.log('Abriendo modal - projectId:', this.projectId);
+    console.log('Abriendo modal - zoneId:', this.zoneId);
     this.selectedSpecies = null;
     this.showAddSpeciesModal = true;
-    
-    console.log('showAddSpeciesModal DESPUES:', this.showAddSpeciesModal);
-    console.log('selectedSpecies:', this.selectedSpecies);
-  }
+  } 
 
   closeAddSpeciesModal(): void {
-    console.log('=== CERRANDO MODAL DE AGREGAR ESPECIE ===');
     this.showAddSpeciesModal = false;
     this.selectedSpecies = null;
   }
 
   onSpeciesCreated(speciesPayload: any): void {
-    console.log('Payload de especie recibido:', speciesPayload);
-    
     this.speciesService.createSpeciesInZone(this.zoneId, speciesPayload).subscribe({
       next: (createdSpecies: RercordedSpecies) => {
-        console.log('Especie creada exitosamente:', createdSpecies);
         this.loadSpeciesData();
         this.closeAddSpeciesModal();
       },
@@ -129,29 +120,19 @@ export class SpeciesZoneComponent implements OnInit, OnDestroy {
   }
 
   editSpecies(species: RercordedSpecies): void {
-    console.log('=== ABRIENDO MODAL DE EDITAR ESPECIE ===');
-    console.log('Especie seleccionada:', species);
-    
     this.selectedSpecies = species;
     this.showEditSpeciesModal = true;
     this.openMenuId = null;
-    
-    console.log('showEditSpeciesModal:', this.showEditSpeciesModal);
-    console.log('selectedSpecies:', this.selectedSpecies);
   }
 
   closeEditSpeciesModal(): void {
-    console.log('=== CERRANDO MODAL DE EDITAR ESPECIE ===');
     this.showEditSpeciesModal = false;
     this.selectedSpecies = null;
   }
 
   onSpeciesUpdated(event: { id: number; data: any }): void {
-    console.log('Evento de actualizacion de especie:', event);
-    
     this.speciesService.updateSpeciesInZone(this.zoneId, event.id, event.data).subscribe({
       next: (updatedSpecies: RercordedSpecies) => {
-        console.log('Especie actualizada exitosamente:', updatedSpecies);
         this.loadSpeciesData();
         this.closeEditSpeciesModal();
       },
@@ -164,11 +145,8 @@ export class SpeciesZoneComponent implements OnInit, OnDestroy {
 
   deleteSpecies(speciesId: number): void {
     if (confirm('¿Estas seguro de que deseas eliminar esta especie?')) {
-      console.log('Eliminando especie con ID:', speciesId);
-      
       this.speciesService.deleteSpeciesFromZone(this.zoneId, speciesId).subscribe({
         next: () => {
-          console.log('Especie eliminada exitosamente');
           this.loadSpeciesData();
           this.openMenuId = null;
         },
@@ -179,6 +157,8 @@ export class SpeciesZoneComponent implements OnInit, OnDestroy {
       });
     }
   }
+
+  
 
   ngOnDestroy(): void {
     if (this.paramSub) {
