@@ -14,8 +14,7 @@ export class ActiveProjectsComponent {
   @Input() loading: boolean = false;
 
   get displayProjects(): Project[] {
-    // Filtra solo activos y muestra máximo 4
-    return this.projects.filter(p => p.status === 'Activo').slice(0, 4);
+    return this.projects.filter(p => p.status === 'Activo');
   }
 
   get activeCount(): number {

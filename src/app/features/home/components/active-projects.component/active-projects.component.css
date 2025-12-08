@@ -1,3 +1,4 @@
+/* src/app/features/home/components/active-projects.component/active-projects.component.css */
 .active-projects-card {
   background-color: #fff;
   border-radius: 12px;
@@ -6,7 +7,10 @@
   display: flex;
   flex-direction: column;
   gap: 25px;
-  height: 97%;
+  height: 460px;
+  min-height: 460px;
+  max-height: 460px;
+  overflow: hidden;
 }
 
 .card-header {
@@ -15,6 +19,7 @@
   align-items: center;
   padding-bottom: 15px;
   border-bottom: 2px solid #E8F5E8;
+  flex-shrink: 0;
 }
 
 .header-title {
@@ -52,6 +57,28 @@
   flex-direction: column;
   gap: 20px;
   flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 10px;
+  min-height: 0;
+}
+
+.projects-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.projects-list::-webkit-scrollbar-track {
+  background: #E8F5E8;
+  border-radius: 10px;
+}
+
+.projects-list::-webkit-scrollbar-thumb {
+  background: #7CB342;
+  border-radius: 10px;
+}
+
+.projects-list::-webkit-scrollbar-thumb:hover {
+  background: #689F38;
 }
 
 .project-item {
@@ -68,6 +95,7 @@
   height: 90px;
   min-height: 90px;
   max-height: 90px;
+  flex-shrink: 0;
 }
 
 .project-item:hover {

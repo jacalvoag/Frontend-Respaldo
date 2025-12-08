@@ -1,3 +1,4 @@
+/* src/app/features/home/components/general-info.component/general-info.component.css */
 .general-info-card {
   background-color: #fff;
   border-radius: 12px;
@@ -6,7 +7,10 @@
   display: flex;
   flex-direction: column;
   gap: 35px;
-  height: 100%;
+  height: 460px;
+  min-height: 460px;
+  max-height: 460px;
+  overflow: hidden;
 }
 
 .card-header {
@@ -16,6 +20,7 @@
   color: #2E7D32;
   padding-bottom: 10px;
   border-bottom: 2px solid #E8F5E8;
+  flex-shrink: 0;
 }
 
 .icon-header {
