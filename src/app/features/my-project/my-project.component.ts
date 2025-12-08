@@ -1,9 +1,8 @@
-// src/app/features/my-project/my-project.component.ts
 import { Component, OnInit } from '@angular/core';
-import { ProjectService } from '../../core/services/project.service';
-import { Project } from '../../core/models/project.model';
 import { CommonModule } from '@angular/common';
 import { RouterLinkWithHref } from '@angular/router';
+import { ProjectService } from '../../core/services/project.service';
+import { Project } from '../../core/models/project.model';
 import { NewProjectFormComponent } from './forms/newproject-forms/newproject-form.component';
 
 @Component({
@@ -15,19 +14,21 @@ import { NewProjectFormComponent } from './forms/newproject-forms/newproject-for
 })
 export class MyProjectComponent implements OnInit {
   projects: Project[] = [];
-  loading = true;
+  loading: boolean = true;
   textError: string = '';
   openMenuId: number | null = null;
-  showGrid = true;
-  showNewProjectModal = false;
+  showGrid: boolean = true;
+  showNewProjectModal: boolean = false;
 
   constructor(private projectService: ProjectService) {}
 
   ngOnInit(): void {
     this.loadProjects();
   }
-
   loadProjects(): void {
+    this.loading = true;
+    this.textError = '';
+    
     this.projectService.getUserProjects().subscribe({
       next: (data: Project[]) => {
         this.projects = data;
@@ -37,56 +38,61 @@ export class MyProjectComponent implements OnInit {
       error: (err: any) => {
         console.error('Error cargando proyectos:', err);
         this.loading = false;
-        this.textError = err.message || 'Error al cargar proyectos';
+        this.textError = 'No se pudieron cargar los proyectos. Inténtalo de nuevo más tarde.';
       }
     });
   }
 
+  onProjectCreated(projectPayload: any): void {
+    console.log('Procesando nuevo proyecto:', projectPayload);
+
+    if (projectPayload && projectPayload.id) {
+      this.updateLocalProjects(projectPayload);
+      this.closeNewProjectModal();
+      return;
+    }
+
+    this.projectService.createProject(projectPayload).subscribe({
+      next: (createdProject: Project) => {
+        this.updateLocalProjects(createdProject);
+        this.closeNewProjectModal();
+      },
+      error: (err: any) => {
+        console.error('Error al crear el proyecto:', err);
+        alert('Error: No se pudo guardar el proyecto.');
+      }
+    });
+  }
+
+  
+  private updateLocalProjects(newProject: Project): void {
+    this.projects = [newProject, ...this.projects];
+  }
+
+  
+  deleteProject(projectId: number): void {
+    if (!confirm('¿Estás seguro de que deseas eliminar este proyecto?')) return;
+
+    this.projectService.deleteProject(projectId).subscribe({
+      next: () => {
+        this.projects = this.projects.filter(p => p.id !== projectId);
+        this.openMenuId = null;
+        console.log(`Proyecto ${projectId} eliminado correctamente.`);
+      },
+      error: (err: any) => {
+        console.error('Error eliminando proyecto:', err);
+        alert('Ocurrió un error al intentar eliminar el proyecto.');
+      }
+    });
+  }
+
+ 
   openNewProjectModal(): void {
     this.showNewProjectModal = true;
   }
 
   closeNewProjectModal(): void {
     this.showNewProjectModal = false;
-  }
-
-<<<<<<< HEAD
-  onProjectCreated(newProject: Project): void {
-    // Agregar el nuevo proyecto a la lista
-    this.projects = [newProject, ...this.projects];
-    console.log('Nuevo proyecto agregado a la lista');
-=======
-  onProjectCreated(projectPayload: any): void {
-    console.log('📥 Payload recibido del modal:', projectPayload);
-    
-    this.projectService.createProject(projectPayload).subscribe({
-      next: (createdProject: Project) => {
-        console.log('Proyecto creado exitosamente:', createdProject);
-        this.projects = [createdProject, ...this.projects];
-        this.closeNewProjectModal();
-      },
-      error: (err: any) => {
-        console.error('Error creando proyecto:', err);
-        alert('Error al crear proyecto: ' + err.message);
-      }
-    });
->>>>>>> 525c9cbfcb9cb62662db30fdc49b171cd354c53d
-  }
-
-  deleteProject(projectId: number): void {
-    if (confirm('¿Estás seguro de que deseas eliminar este proyecto?')) {
-      this.projectService.deleteProject(projectId).subscribe({
-        next: () => {
-          this.projects = this.projects.filter(p => p.id !== projectId);
-          this.openMenuId = null;
-          console.log('Proyecto eliminado');
-        },
-        error: (err: any) => {
-          console.error('Error eliminando proyecto:', err);
-          alert('Error: ' + err.message);
-        }
-      });
-    }
   }
 
   toggleMenu(id: number): void {
